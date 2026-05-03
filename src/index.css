@@ -11,3 +11,38 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* ១. បង្ខំឱ្យប្តូរពណ៌សម្រាប់ប៊ូតុងដែលកំពុង Active (លេខ 4) */
+.pagination .page-item.active .page-link {
+  background-color: #124F9C !important; /* ពណ៌ខៀវ */
+  border-color: #124F9C !important;
+  color: white !important; /* អក្សរស */
+  box-shadow: none !important; /* បំបាត់ស្រមោលខៀវជុំវិញ */
+}
+
+/* ២. ប្តូរពណ៌សម្រាប់ប៊ូតុងធម្មតា (លេខ 1, 2, 3...) */
+.pagination .page-link {
+  color: #124F9C !important; /* អក្សរខៀវ */
+  background-color: white !important;
+  border: 1px solid #dee2e6 !important; /* បន្ទាត់ប្រផេះស្រាល */
+}
+
+/* ៣. ប្តូរពណ៌ពេលយក Mouse ទៅដាក់ពីលើ (Hover) */
+.pagination .page-link:hover {
+  background-color: #e9ecef !important;
+  color: #0d6efd !important;
+}
+
+/* ៤. បំបាត់ Border ខៀវដែលជាប់មកជាមួយ Bootstrap ពេលយើង Click */
+.page-link:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* ប្តូរពណ៌ប៊ូតុង "ថយក្រោយ" ឬ "បន្ទាប់" ពេលអស់ទំព័រ */
+.pagination .page-item.disabled .page-link {
+  background-color: #f8f9fa !important; /* ពណ៌ប្រផេះស្រាលខ្លាំង */
+  color: #adb5bd !important;           /* ពណ៌អក្សរប្រផេះស្រអាប់ */
+  border-color: #dee2e6 !important;
+  cursor: not-allowed;                 /* ប្តូររូប Mouse ទៅជាសញ្ញាហាមឃាត់ */
+  pointer-events: none;                /* បិទមិនឱ្យចុចបានទាំងស្រុង */
+}

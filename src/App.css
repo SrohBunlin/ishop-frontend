@@ -28,11 +28,33 @@
   color: #61dafb;
 }
 
+.btn {
+  border-radius: 8px; /* ធ្វើឱ្យប៊ូតុងរាងមូលជ្រុងបន្តិច */
+  transition: all 0.3s ease;
+}
+
+.btn-success {
+  background-color: #198754 !important; /* ពណ៌បៃតងដូចរូបភាពប្អូន */
+}
+
+.btn-info {
+  background-color: #0dcaf0 !important; /* ពណ៌ខៀវ Share */
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+  }
+  .receipt-container {
+    font-family: 'Khmer OS Battambang', sans-serif !important;
   }
 }
