@@ -14,7 +14,7 @@ const AddOrderForm = ({ onOrderAdded }) => {
         e.preventDefault();
         try {
             // ២. បាញ់ទិន្នន័យទៅកាន់ API /add ដែលប្អូនទើបតែបង្កើត
-            const response = await axios.post("http://localhost:8081/api/orders/add", formData);
+            const response = await axios.post("https://practical-light-production-55fd.up.railway.app/api/orders/add", formData);
 
             if (response.status === 200) {
                 alert("រក្សាទុកការបញ្ជាទិញបានជោគជ័យ!");

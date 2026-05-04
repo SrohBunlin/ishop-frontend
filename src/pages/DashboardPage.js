@@ -48,7 +48,7 @@ const DashboardPage = () => {
     const fetchReportStats = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8081/api/orders/stats', {
+            const response = await axios.get('https://practical-light-production-55fd.up.railway.app/api/orders/stats', {
                 headers: {
                     'Authorization': `Bearer ${token}` // ត្រូវតែមាន Token ដើម្បីកុំឱ្យជាប់ 403
                 }
@@ -76,7 +76,7 @@ const DashboardPage = () => {
     const fetchProducts = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8081/api/products/all', {
+            const response = await axios.get('https://practical-light-production-55fd.up.railway.app/api/products/all', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProducts(response.data);
@@ -86,7 +86,7 @@ const DashboardPage = () => {
     const fetchOrders = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8081/api/orders/all', {
+            const response = await axios.get('https://practical-light-production-55fd.up.railway.app/api/orders/all', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setOrders(response.data); // ✅ ទុកទិន្នន័យក្នុង Orders State
@@ -108,7 +108,7 @@ const DashboardPage = () => {
         if (window.confirm("តើអ្នកពិតជាចង់លុបទំនិញនេះមែនទេ?")) {
             try {
                 const token = localStorage.getItem('token'); // ទាញ Token មកប្រើ
-                await axios.delete(`http://localhost:8081/api/products/${id}`, {
+                await axios.delete(`https://practical-light-production-55fd.up.railway.app/api/products/${id}`, {
                     headers: { Authorization: `Bearer ${token}` } // បញ្ជូនទៅកាន់ Backend
                 });
                 alert("លុបបានជោគជ័យ!");
@@ -166,13 +166,13 @@ const DashboardPage = () => {
         try {
             if (isEditing) {
                 // ប្រើ currentId នៅទីនេះ ដើម្បីប្រាប់ API ថាត្រូវកែទំនិញមួយណា
-                await axios.put(`http://localhost:8081/api/products/${currentId}`, newProduct, {
+                await axios.put(`https://practical-light-production-55fd.up.railway.app/api/products/${currentId}`, newProduct, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 alert("កែសម្រួលបានជោគជ័យ!");
             } else {
                 // សម្រាប់បន្ថែមថ្មី
-                await axios.post('http://localhost:8081/api/products/add', newProduct, {
+                await axios.post('https://practical-light-production-55fd.up.railway.app/api/products/add', newProduct, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 alert("បន្ថែមបានជោគជ័យ!");

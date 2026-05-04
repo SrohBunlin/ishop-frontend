@@ -7,7 +7,7 @@ const LandingPage = () => {
     const [products, setProducts] = useState([]);
     useEffect(() => {
         // ទាញទិន្នន័យពី Backend (Spring Boot)
-        axios.get('http://localhost:8081/api/products/all')
+        axios.get('https://practical-light-production-55fd.up.railway.app/api/products/all')
             .then(res => setProducts(res.data))
             .catch(err => console.log(err));
     }, []);

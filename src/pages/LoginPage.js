@@ -14,12 +14,11 @@ const LoginPage = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8081/api/auth/login', credentials);
+            const response = await axios.post('https://practical-light-production-55fd.up.railway.app/api/auth/login', credentials);
 
             // រក្សាទុក Token និង Role ទៅក្នុង LocalStorage
             localStorage.setItem('token', response.data.token);
 
-            // response.data.roles ឥឡូវនេះមានតម្លៃហើយ (ផ្អែកលើការកែប្រែក្នុង Spring Boot របស់ប្អូន)
             if (response.data.roles && response.data.roles.length > 0) {
                 localStorage.setItem('role', response.data.roles[0]);
             }

@@ -29,7 +29,7 @@ const OrderTracking = () => {
         try {
             // ១. ទាញយក Token ពី localStorage
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8081/api/orders/all', {
+            const response = await axios.get('https://practical-light-production-55fd.up.railway.app/api/orders/all', {
                 headers: {
                     // ២. បញ្ជូន Token ទៅកាន់ Backend តាមរយៈ Header
                     'Authorization': `Bearer ${token}`
@@ -66,7 +66,7 @@ const OrderTracking = () => {
         console.log("Sending token:", token);
 
         try {
-            await axios.put(`http://localhost:8081/api/orders/${orderId}/status`,
+            await axios.put(`https://practical-light-production-55fd.up.railway.app/api/orders/${orderId}/status`,
                 { status: newStatus },
                 {
                     headers: {
