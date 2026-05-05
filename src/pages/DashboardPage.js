@@ -397,16 +397,18 @@ const DashboardPage = () => {
                 </div>
                     </div>
                     <div className="col-12 col-sm-6 col-lg-3">
-                <div style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', minWidth: '400px' }}>
+                <div className="flex-wrap" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', minWidth: '400px' }}>
                     <h3>📊 ក្រាបចំណូល</h3>
                     <Line data={lineData} />
                 </div>
                     </div>
             </div>
+                <div className="col-12 col-sm-6 col-lg-3 mb-3">
                 {/* បន្ថែម Pie Chart ថ្មីនៅទីនេះ */}
                 <div style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', minWidth: '400px' }}>
                     <h3>🍕 ចំណែកតម្លៃសរុបតាមផលិតផល</h3>
                    <Pie data={pieChartData} />
+                </div>
                 </div>
             </div>
 
