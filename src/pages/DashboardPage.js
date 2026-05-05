@@ -387,7 +387,7 @@ const DashboardPage = () => {
 
 
 
-            <div className="container-fluid flex-grow-1 align-items-start" style={{ display: 'flex', gap: '20px', marginBottom: '30px'}}>
+            <div className="container-fluid flex-grow-1 align-items-start" style={{  gap: '20px', marginBottom: '30px'}}>
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
                 <div className="align-items-start flex-column" style={{flex:1}}>
                     <div className="col-12 col-sm-6 col-lg-3">
