@@ -387,10 +387,10 @@ const DashboardPage = () => {
 
 
 
-            <div className="container-fluid flex-grow-1 align-items-start" style={{  gap: '20px'}}>
+            <div className="container-fluid align-items-start" style={{  gap: '20px'}}>
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
                 <div className="align-items-start mb-3" style={{flex:1}}>
-                    <div className="col-12 col-sm-6 col-lg-3">
+                    <div className="col-12 col-sm-6 col-lg-3 mb-3">
                 <div style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', minWidth: '400px' }}>
                     <h3>📊 ស្ថិតិចំនួនស្តុកទំនិញ</h3>
                     <Bar data={barChartData} />
