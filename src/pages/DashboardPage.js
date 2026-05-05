@@ -379,7 +379,7 @@ const DashboardPage = () => {
 
 
 
-            <div className="flex-grow-1 align-items-start" style={{ display: 'flex', gap: '20px', marginBottom: '30px'}}>
+            <div className="container-fluid flex-grow-1 align-items-start" style={{ display: 'flex', gap: '20px', marginBottom: '30px'}}>
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
                 <div className="align-items-start flex-column" style={{flex:1}}>
                 <div className="mb-3 flex-column" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
