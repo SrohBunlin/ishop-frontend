@@ -320,7 +320,7 @@ const DashboardPage = () => {
 
             {/* 2. MAIN CONTENT AREA */}
             <div className="d-flex container-fluid align-items-start">
-            <main className="flex-grow-1 p-4 container-fluid flex-wrap" style={{ backgroundColor: '#f8f9fa' }}>
+            <main className="flex-grow-1 p-4 container-fluid" style={{ backgroundColor: '#f8f9fa' }}>
 
                 {/* Header with Search (Facebook Style) */}
                 <div className="d-flex container-fluid justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm">
@@ -341,7 +341,7 @@ const DashboardPage = () => {
 
                 {/* Stats Cards */}
                 <div className="row g-4 mb-4">
-            <div className="stats-container ">
+            <div className="stats-container col-12 col-md-4">
                 <div className="stat-card">
                     <h3>មុខទំនិញសរុប</h3>
                     <p>{totalItems}</p>
