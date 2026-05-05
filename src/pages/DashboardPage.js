@@ -340,7 +340,7 @@ const DashboardPage = () => {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3 mb-3">
+                <div className="row row-cols-5 row-cols-md-5 row-cols-lg-5 g-3 mb-3">
                     <div className="col">
                 <div className="stat-card">
                     <h3>មុខទំនិញសរុប</h3>
