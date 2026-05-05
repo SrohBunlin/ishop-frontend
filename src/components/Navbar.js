@@ -44,7 +44,7 @@ const Navbar = () => {
         fontSize: '14px'
     };
     return (
-        <nav className="navbar navbar-expand-lg navbar-light container-fluid bg-white border-bottom sticky-top shadow-sm" style={{zindex: 1000}}>
+        <nav className="navbar navbar-expand-lg navbar-light container-fluid flex-wrap bg-white border-bottom sticky-top shadow-sm" style={{zindex: 1000}}>
             <div className="container-fluid px-3">
 
                 {/* LEFT SECTION: Logo & Search */}
