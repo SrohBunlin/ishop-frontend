@@ -319,12 +319,12 @@ const DashboardPage = () => {
         <div className="d-flex container-fluid flex-wrap">
 
             {/* 2. MAIN CONTENT AREA */}
-            <div className="d-flex align-items-start">
+            <div className="d-flex container-fluid align-items-start">
             <main className="flex-grow-1 p-4 container-fluid flex-wrap" style={{ backgroundColor: '#f8f9fa' }}>
 
                 {/* Header with Search (Facebook Style) */}
-                <div className="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm">
-                    <div className="search-pill d-flex align-items-center px-3 py-2" style={{ backgroundColor: '#f0f2f5', borderRadius: '20px', width: '300px' }}>
+                <div className="d-flex container-fluid justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm">
+                    <div className="search-pill d-flex container-fluid align-items-center px-3 py-2" style={{ backgroundColor: '#f0f2f5', borderRadius: '20px', width: '300px' }}>
                         <i className="bi bi-search text-muted me-2"></i>
                         <input
                             type="text"
@@ -340,8 +340,8 @@ const DashboardPage = () => {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="row g-4 mb-4">
-            <div className="stats-container">
+                <div className="container-fluid row g-4 mb-4">
+            <div className="stats-container ">
                 <div className="stat-card">
                     <h3>មុខទំនិញសរុប</h3>
                     <p>{totalItems}</p>
@@ -365,7 +365,7 @@ const DashboardPage = () => {
             </div>
                 </div>
             {lowStockProducts.length > 0 && (
-                <div style={alertContainerStyle}>
+                <div className="container-fluid" style={alertContainerStyle}>
                     <h4 style={{ margin: '0 0 10px 0', color: '#842029' }}>⚠️ ព្រមាន៖ ទំនិញជិតអស់ពីស្តុក!</h4>
                     <ul style={{ margin: 0, paddingLeft: '20px' }}>
                         {lowStockProducts.map(p => (
