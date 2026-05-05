@@ -389,7 +389,7 @@ const DashboardPage = () => {
 
             <div className="container-fluid align-items-start row g-3" >
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
-                <div className="align-items-start mb-3 " style={{flex:1}}>
+                <div className="align-items-start col-12 col-sm-6 col-lg-3 mb-3 " style={{flex:1}}>
                     <div className="col-12 col-sm-6 col-lg-3 mb-3">
                 <div className="stat-card" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
                     <h3>📊 ស្ថិតិចំនួនស្តុកទំនិញ</h3>
