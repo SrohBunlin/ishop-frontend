@@ -319,8 +319,8 @@ const DashboardPage = () => {
         <div className="d-flex container-fluid flex-wrap">
 
             {/* 2. MAIN CONTENT AREA */}
-            <div className="container-fluid align-items-start">
-            <main className="flex-grow-1 p-4 container-fluid" style={{ backgroundColor: '#f8f9fa' }}>
+            <div className="d-flex align-items-start">
+            <main className="flex-grow-1 p-4" style={{ backgroundColor: '#f8f9fa' }}>
 
                 {/* Header with Search (Facebook Style) */}
                 <div className="d-flex container-fluid justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm">
@@ -340,32 +340,32 @@ const DashboardPage = () => {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="row g-4 mb-4">
-                    <div className="col-12 col-sm-6 col-lg-3">
+                <div className="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-3 mb-3">
+                    <div className="col">
                 <div className="stat-card">
                     <h3>មុខទំនិញសរុប</h3>
                     <p>{totalItems}</p>
                 </div>
                     </div>
-                    <div className="col-12 col-sm-6 col-lg-3">
+                    <div className="col">
                 <div className="stat-card">
                     <h3>តម្លៃក្នុងស្តុកសរុប</h3>
                     <p>${totalValue.toLocaleString()}</p>
                 </div>
                     </div>
-                    <div className="col-12 col-sm-6 col-lg-3">
+                    <div className="col">
                 <div className="stat-card" style={{ borderLeft: '5px solid #dc3545' }}>
                     <h3>ទំនិញជិតអស់</h3>
                     <p style={{ color: '#dc3545' }}>{lowStockItems}</p>
                 </div>
                     </div>
-                    <div className="col-12 col-sm-6 col-lg-3">
+                    <div className="col">
                 <div className="stat-card" >
                     <h3>ចំនួនការកម៉្មង់</h3>
                     <p>{reportData.totalOrders} វិក្កយបត្រ</p>
                 </div>
                     </div>
-                    <div className="col-12 col-sm-6 col-lg-3">
+                    <div className="col">
                 <div className="stat-card">
                     <h3>ចំណូលសរុប</h3>
                     <p>${reportData.totalRevenue.toLocaleString()}</p>
@@ -387,41 +387,40 @@ const DashboardPage = () => {
 
 
 
-            <div className="container-fluid align-items-start row g-3" >
+            <div className="d-flex g-3 mb-3" >
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
-                <div className="align-items-start col-12 col-sm-6 col-lg-3 mb-3 " style={{flex:1, width: '100%', maxWidth: '400px'}}>
-                <div className="stat-card" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
+                <div className="d-flex flex-column flex-grow-1 me-3" style={{flex:1, width: '100%', maxWidth: '100%'}}>
+                <div className="stat-card mb-3" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '100%' }}>
                     <h3>📊 ស្ថិតិចំនួនស្តុកទំនិញ</h3>
                     <Bar data={barChartData} />
                 </div>
-                <div className="stat-card" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
+                <div className="stat-card" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '100%' }}>
                     <h3>📊 ក្រាបចំណូល</h3>
                     <Line data={lineData} />
                 </div>
             </div>
-                <div className="col-12 col-sm-6 col-lg-3 mb-3">
                 {/* បន្ថែម Pie Chart ថ្មីនៅទីនេះ */}
-                <div className="stat-card" style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' }}>
+                <div className="stat-card flex" style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '50%' }}>
                     <h3>🍕 ចំណែកតម្លៃសរុបតាមផលិតផល</h3>
                    <Pie data={pieChartData} />
-                </div>
                 </div>
             </div>
 
             {/* Form បន្ថែមទំនិញ */}
             {isAdmin() && (
-                <div style={{ marginBottom: '40px', padding: '25px', backgroundColor: '#fff',color:'#124F9C', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                <div className="mb-3" style={{ marginBottom: '40px', padding: '25px', backgroundColor: '#fff',color:'#124F9C', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
                     <h3 style={{ marginTop: 0, marginBottom: '20px' }}>បន្ថែមទំនិញថ្មី</h3>
                     <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-                        <input type="text" placeholder="ឈ្មោះទំនិញ" value={newProduct.name} style={inputStyle}
+                        <div className="row row-cols-1 row-cols-md-3 row-cols-lg-6 g-3 mb-3 gap-3">
+                        <input className="col" placeholder="ឈ្មោះទំនិញ" value={newProduct.name} style={inputStyle}
                                onChange={(e) => setNewProduct({...newProduct, name: e.target.value})} required />
 
-                        <input type="number" placeholder="តម្លៃ ($)" value={newProduct.price} style={inputStyle}
+                        <input className="col" type="number" placeholder="តម្លៃ ($)" value={newProduct.price} style={inputStyle}
                                onChange={(e) => setNewProduct({...newProduct, price: e.target.value})} required />
 
-                        <input type="number" placeholder="ចំនួនក្នុងស្តុក" value={newProduct.stockQuantity} style={inputStyle}
+                        <input className="col" type="number" placeholder="ចំនួនក្នុងស្តុក" value={newProduct.stockQuantity} style={inputStyle}
                                onChange={(e) => setNewProduct({...newProduct, stockQuantity: e.target.value})} required />
-                        <input
+                        <input className="col"
                             style={inputStyle}
                             type="text"
                             placeholder="Link រូបភាព (URL)"
@@ -446,6 +445,7 @@ const DashboardPage = () => {
                                 បោះបង់
                             </button>
                         )}
+                        </div>
                     </form>
                 </div>
             )}
@@ -460,26 +460,26 @@ const DashboardPage = () => {
                 />
             </div>
             {/* តារាងបង្ហាញទំនិញ */}
-            <div style={{ backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
+            <div className="table-responsive" style={{ backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+                <table className="table table-hover align-middle mb-0" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead className="table-light text-nowrap">
                     <tr>
-                        <th style={tableHeaderStyle}>ID</th>
-                        <th style={tableHeaderStyle}>ឈ្មោះទំនិញ</th>
-                        <th style={tableHeaderStyle}>តម្លៃ</th>
-                        <th style={tableHeaderStyle}>ចំនួនក្នុងស្តុក</th>
-                        <th style={tableHeaderStyle}>រូបភាព</th>
-                        <th style={tableHeaderStyle}>សកម្មភាព</th>
+                        <th scope="col" style={tableHeaderStyle}>ID</th>
+                        <th scope="col" style={tableHeaderStyle}>ឈ្មោះទំនិញ</th>
+                        <th scope="col" style={tableHeaderStyle}>តម្លៃ</th>
+                        <th scope="col" style={tableHeaderStyle}>ចំនួនក្នុងស្តុក</th>
+                        <th scope="col" style={tableHeaderStyle}>រូបភាព</th>
+                        <th scope="col" style={tableHeaderStyle}>សកម្មភាព</th>
                     </tr>
                     </thead>
                     <tbody>
                     {filteredProducts.map((product) => {
                         const status = getStockStatus(product.stockQuantity);
                         return (
-                            <tr key={product.id} style={{ borderBottom: '1px solid #eee' }}>
+                            <tr className="text-nowrap" key={product.id} style={{ borderBottom: '1px solid #eee' }}>
                                 <td style={{ padding: '12px', textAlign: 'center' }}>{product.id}</td>
-                                <td style={{ padding: '12px', textAlign: 'left' }}>{product.name}</td>
-                                <td style={{ padding: '12px', textAlign: 'left' }}>${product.price}</td>
+                                <td className="fw-bold" style={{ padding: '12px', textAlign: 'left' }}>{product.name}</td>
+                                <td className="text-success" style={{ padding: '12px', textAlign: 'left' }}>${product.price}</td>
                                 <td>
                 <span style={{
                     color: status.color,
@@ -606,7 +606,7 @@ const inputStyle = {
     borderRadius: '6px',
     border: '1px solid #ddd',
     fontSize: '14px',
-    width: '200px',
+    // minWidth: '200px',
     outline: 'none'
 };
 
