@@ -341,23 +341,31 @@ const DashboardPage = () => {
 
                 {/* Stats Cards */}
                 <div className="row g-4 mb-4">
-            <div className="stats-container col-12 col-md-4">
+                    <div className="col-12 col-sm-6 col-lg-3">
                 <div className="stat-card">
                     <h3>មុខទំនិញសរុប</h3>
                     <p>{totalItems}</p>
                 </div>
+                    </div>
+                    <div className="col-12 col-sm-6 col-lg-3">
                 <div className="stat-card">
                     <h3>តម្លៃក្នុងស្តុកសរុប</h3>
                     <p>${totalValue.toLocaleString()}</p>
                 </div>
+                    </div>
+                    <div className="col-12 col-sm-6 col-lg-3">
                 <div className="stat-card" style={{ borderLeft: '5px solid #dc3545' }}>
                     <h3>ទំនិញជិតអស់</h3>
                     <p style={{ color: '#dc3545' }}>{lowStockItems}</p>
                 </div>
+                    </div>
+                    <div className="col-12 col-sm-6 col-lg-3">
                 <div className="stat-card" >
                     <h3>ចំនួនការកម៉្មង់</h3>
                     <p>{reportData.totalOrders} វិក្កយបត្រ</p>
                 </div>
+                    </div>
+                    <div className="col-12 col-sm-6 col-lg-3">
                 <div className="stat-card">
                     <h3>ចំណូលសរុប</h3>
                     <p>${reportData.totalRevenue.toLocaleString()}</p>
