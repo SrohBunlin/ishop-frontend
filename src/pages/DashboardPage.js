@@ -316,7 +316,7 @@ const DashboardPage = () => {
     const npage = Math.ceil(filteredOrders.length / recordsPerPage); // ចំនួនទំព័រសរុប
     const numbers = [...Array(npage + 1).keys()].slice(1); // បង្កើតលេខ ១, ២, ៣...
     return (
-        <div className="flex container-fluid">
+        <div className="d-flex container-fluid flex-wrap">
 
             {/* 2. MAIN CONTENT AREA */}
             <div className="d-flex align-items-start">
@@ -381,18 +381,18 @@ const DashboardPage = () => {
 
             <div className="flex-grow-1 align-items-start" style={{ display: 'flex', gap: '20px', marginBottom: '30px'}}>
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
-                <div className="align-items-start">
-                <div className="mb-3" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
+                <div className="align-items-start flex-column" style={{flex:1}}>
+                <div className="mb-3 flex-column" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
                     <h3>📊 ស្ថិតិចំនួនស្តុកទំនិញ</h3>
                     <Bar data={barChartData} />
                 </div>
-                <div  style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
+                <div className="flex-column"  style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
                     <h3>📊 ក្រាបចំណូល</h3>
                     <Line data={lineData} />
                 </div>
             </div>
                 {/* បន្ថែម Pie Chart ថ្មីនៅទីនេះ */}
-                <div style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
+                <div className="flex-column" style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
                     <h3>🍕 ចំណែកតម្លៃសរុបតាមផលិតផល</h3>
                    <Pie data={pieChartData} />
                 </div>
