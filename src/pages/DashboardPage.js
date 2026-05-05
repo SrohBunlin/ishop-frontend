@@ -387,7 +387,7 @@ const DashboardPage = () => {
 
 
 
-            <div className="container-fluid align-items-start" style={{  gap: '20px'}}>
+            <div className="container-fluid align-items-start" >
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
                 <div className="align-items-start mb-3" style={{flex:1}}>
                     <div className="col-12 col-sm-6 col-lg-3 mb-3">
