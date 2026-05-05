@@ -411,7 +411,7 @@ const DashboardPage = () => {
                 <div className="mb-3" style={{ marginBottom: '40px', padding: '25px', backgroundColor: '#fff',color:'#124F9C', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
                     <h3 style={{ marginTop: 0, marginBottom: '20px' }}>បន្ថែមទំនិញថ្មី</h3>
                     <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-                        <div className="row row-cols-6 row-cols-md-6 row-cols-lg-6 g-3 mb-3 gap-3">
+                        <div className="row row-cols-5 row-cols-md-6 row-cols-lg-6 g-3 mb-3 gap-3">
                         <input className="col" placeholder="ឈ្មោះទំនិញ" value={newProduct.name} style={inputStyle}
                                onChange={(e) => setNewProduct({...newProduct, name: e.target.value})} required />
 
