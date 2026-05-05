@@ -391,20 +391,20 @@ const DashboardPage = () => {
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
                 <div className="align-items-start flex-column" style={{flex:1}}>
                     <div className="col-12 col-sm-6 col-lg-3">
-                <div className="mb-3 flex-column" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
+                <div style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
                     <h3>📊 ស្ថិតិចំនួនស្តុកទំនិញ</h3>
                     <Bar data={barChartData} />
                 </div>
                     </div>
                     <div className="col-12 col-sm-6 col-lg-3">
-                <div className="flex-column"  style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
+                <div style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
                     <h3>📊 ក្រាបចំណូល</h3>
                     <Line data={lineData} />
                 </div>
                     </div>
             </div>
                 {/* បន្ថែម Pie Chart ថ្មីនៅទីនេះ */}
-                <div className="flex-column" style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
+                <div style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', flex: 1, minWidth: '400px' }}>
                     <h3>🍕 ចំណែកតម្លៃសរុបតាមផលិតផល</h3>
                    <Pie data={pieChartData} />
                 </div>
