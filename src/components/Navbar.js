@@ -48,7 +48,7 @@ const Navbar = () => {
             <div className="container-fluid">
 
                 {/* LEFT SECTION: Logo & Search */}
-                <div className="d-flex align-items-center flex-grow-1" style={{ flexBasis: 0 }}>
+                <div className="align-items-center flex-grow-1" style={{ flexBasis: 0 }}>
                     <Link className="navbar-brand fw-bold text-primary" to="/" style={{ fontSize: '24px' }}>
                         I-Shop
                     </Link>
