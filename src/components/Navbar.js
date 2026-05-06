@@ -48,10 +48,11 @@ const Navbar = () => {
             <div className="container-fluid">
 
                 {/* LEFT SECTION: Logo & Search */}
-                <div className="align-items-center flex-grow-1" style={{ flexBasis: 0 }}>
+                <div>
                     <Link className="navbar-brand fw-bold text-primary" to="/" style={{ fontSize: '24px' }}>
                         I-Shop
                     </Link>
+                </div>
                     <div style={searchContainerStyle}>
                         <i className="bi bi-search text-muted" style={{ fontSize: '14px' }}></i>
                         <input
@@ -60,7 +61,6 @@ const Navbar = () => {
                             style={searchInputStyle}
                         />
                     </div>
-                </div>
 
                 {/* CENTER SECTION: Navigation Icons */}
                 <div className="d-none d-lg-flex justify-content-center flex-grow-1">
