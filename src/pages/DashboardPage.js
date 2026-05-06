@@ -316,8 +316,7 @@ const DashboardPage = () => {
     const npage = Math.ceil(filteredOrders.length / recordsPerPage); // ចំនួនទំព័រសរុប
     const numbers = [...Array(npage + 1).keys()].slice(1); // បង្កើតលេខ ១, ២, ៣...
     return (
-        <div className="d-flex container-fluid flex-wrap">
-
+        <div className="container-fluid flex-wrap">
             {/* 2. MAIN CONTENT AREA */}
             <div className="d-flex align-items-start">
             <main className="flex-grow-1 p-4" style={{ backgroundColor: '#f8f9fa' }}>
