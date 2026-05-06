@@ -12,7 +12,7 @@ const Sidebar = ({ handleLogout }) => {
                 backgroundColor: '#124F9C',
                 height: 'calc(100vh - 79px)', // កម្ពស់អេក្រង់ដក Navbar
                 top: '79px',                   // កម្ពស់ Navbar (កែឱ្យត្រូវតាមកម្ពស់ជាក់ស្តែង)
-                zIndex: 1010,
+                zIndex: 1040,
                 alignSelf: 'flex-start',
                 position: 'sticky',
                 overflowY: 'auto'// ការពារកុំឱ្យវាហួសពេល scroll ឡើងលើ
