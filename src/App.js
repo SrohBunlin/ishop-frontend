@@ -36,8 +36,8 @@ function App() {
 
     return (
         <CartProvider>
+            <Navbar />
             <Router>
-                <Navbar />
 
                 {/* ដាក់ MainLayout នៅទីនេះ */}
                 <MainLayout>
