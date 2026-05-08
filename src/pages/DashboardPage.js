@@ -319,7 +319,7 @@ const DashboardPage = () => {
         <div className="container-fluid p-0">
             {/* 2. MAIN CONTENT AREA */}
             <div className="d-flex align-items-start">
-            <main className="flex-grow-1 p-4" style={{ backgroundColor: '#f8f9fa' }}>
+            <main className="container-fluid flex-grow-1 p-4" style={{ backgroundColor: '#f8f9fa' }}>
 
                 {/* Header with Search (Facebook Style) */}
                 <div className="d-flex container-fluid justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm">
