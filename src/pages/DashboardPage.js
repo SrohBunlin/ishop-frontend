@@ -399,7 +399,7 @@ const DashboardPage = () => {
                 </div>
             </div>
                 {/* បន្ថែម Pie Chart ថ្មីនៅទីនេះ */}
-                <div className="container-fluid stat-card flex" style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', minWidth: '50%', maxWidth: '50%' }}>
+                <div className="container-fluid stat-card flex me-3" style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', minWidth: '50%', maxWidth: '50%' }}>
                     <h3>🍕 ចំណែកតម្លៃសរុបតាមផលិតផល</h3>
                    <Pie data={pieChartData} />
                 </div>
