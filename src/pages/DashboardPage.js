@@ -400,7 +400,7 @@ const DashboardPage = () => {
             </div>
                 {/* បន្ថែម Pie Chart ថ្មីនៅទីនេះ */}
                 <div className="col flex-column flex-grow-1">
-                <div className="stat-card container-fluid" >
+                <div className="stat-card" >
                     <h3>🍕 ចំណែកតម្លៃសរុបតាមផលិតផល</h3>
                    <Pie data={pieChartData} />
                 </div>
