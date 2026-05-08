@@ -388,7 +388,7 @@ const DashboardPage = () => {
 
             <div className="container-fluid row row-cols-2 g-3 mb-3 p-0" >
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
-                <div className="col d-flex flex-column flex-grow-1">
+                <div className="col">
                 <div className="stat-card mb-3" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
                     <h3>📊 ស្ថិតិចំនួនស្តុកទំនិញ</h3>
                     <Bar data={barChartData} />
