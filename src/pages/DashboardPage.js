@@ -400,7 +400,7 @@ const DashboardPage = () => {
             </div>
                 {/* បន្ថែម Pie Chart ថ្មីនៅទីនេះ */}
                 <div className="col">
-                <div className="stat-card" >
+                <div className="stat-card container-fluid" >
                     <h3>🍕 ចំណែកតម្លៃសរុបតាមផលិតផល</h3>
                    <Pie data={pieChartData} />
                 </div>
