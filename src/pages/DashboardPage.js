@@ -388,7 +388,7 @@ const DashboardPage = () => {
 
             <div className="container-fluid row row-cols-2 g-3 mb-3 p-0 flex-grow-1" >
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
-                <div className="col flex-column flex-grow-1 me-3">
+                <div className="col flex-column flex-grow-1">
                 <div className="stat-card mb-3" >
                     <h3>📊 ស្ថិតិចំនួនស្តុកទំនិញ</h3>
                     <Bar data={barChartData} />
@@ -399,9 +399,11 @@ const DashboardPage = () => {
                 </div>
             </div>
                 {/* បន្ថែម Pie Chart ថ្មីនៅទីនេះ */}
-                <div className="col stat-card" >
+                <div className="col">
+                <div className="stat-card" >
                     <h3>🍕 ចំណែកតម្លៃសរុបតាមផលិតផល</h3>
                    <Pie data={pieChartData} />
+                </div>
                 </div>
             </div>
 
