@@ -389,17 +389,17 @@ const DashboardPage = () => {
             <div className="container-fluid d-flex g-3 mb-3" >
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
                 <div className="container fluid d-flex flex-column flex-grow-1 me-3" style={{flex:1, width: '100%', maxWidth: '100%'}}>
-                <div className="stat-card mb-3" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '100%' }}>
+                <div className="stat-card mb-3" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', minWidth: '100%', maxWidth: '100%' }}>
                     <h3>📊 ស្ថិតិចំនួនស្តុកទំនិញ</h3>
                     <Bar data={barChartData} />
                 </div>
-                <div className="stat-card" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '100%' }}>
+                <div className="stat-card" style={{ backgroundColor: '#fff',color: '#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)',minWidth: '100%', maxWidth: '100%' }}>
                     <h3>📊 ក្រាបចំណូល</h3>
                     <Line data={lineData} />
                 </div>
             </div>
                 {/* បន្ថែម Pie Chart ថ្មីនៅទីនេះ */}
-                <div className="container-fluid stat-card flex" style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '50%' }}>
+                <div className="container-fluid stat-card flex" style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', minWidth: '50%', maxWidth: '50%' }}>
                     <h3>🍕 ចំណែកតម្លៃសរុបតាមផលិតផល</h3>
                    <Pie data={pieChartData} />
                 </div>
