@@ -6,7 +6,7 @@ const Sidebar = ({ handleLogout }) => {
     const isActive = (path) => location.pathname === path;
     return (
         <aside
-            className="d-none d-md-block sticky-top "
+            className="d-none d-md-block sticky-top flex-grow-1"
             style={{
                 width: '260px',
                 backgroundColor: '#124F9C',
