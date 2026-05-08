@@ -389,7 +389,7 @@ const DashboardPage = () => {
             <div className="container-fluid row row-cols-2 g-3 mb-3 p-0" >
                 {/* Bar Chart ដែលប្អូនមានស្រាប់ */}
                 <div className="col me-3">
-                <div className="stat-card mb-3" >
+                <div className="stat-card mb-3 flex-column" >
                     <h3>📊 ស្ថិតិចំនួនស្តុកទំនិញ</h3>
                     <Bar data={barChartData} />
                 </div>
