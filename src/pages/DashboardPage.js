@@ -399,7 +399,7 @@ const DashboardPage = () => {
                 </div>
             </div>
                 {/* បន្ថែម Pie Chart ថ្មីនៅទីនេះ */}
-                <div className="col stat-card" style={{ backgroundColor: '#fff',color:'#124F9C', padding: '20px', borderRadius: '10px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)'}}>
+                <div className="col stat-card container-fluid" >
                     <h3>🍕 ចំណែកតម្លៃសរុបតាមផលិតផល</h3>
                    <Pie data={pieChartData} />
                 </div>
