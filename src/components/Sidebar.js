@@ -5,19 +5,19 @@ const Sidebar = ({ handleLogout }) => {
     const location = useLocation();
     const isActive = (path) => location.pathname === path;
     return (
+        // ក្នុង Sidebar.js ត្រង់ tag <aside>
         <aside
-            className="d-none d-md-block sticky-top flex-grow-1"
+            className="d-none d-md-block sticky-top shadow-sm"
             style={{
                 width: '260px',
                 backgroundColor: '#124F9C',
-                height: 'calc(100vh - 79px)', // កម្ពស់អេក្រង់ដក Navbar
-                top: '79px',                   // កម្ពស់ Navbar (កែឱ្យត្រូវតាមកម្ពស់ជាក់ស្តែង)
-                zIndex: 1040,
-                alignSelf: 'flex-start',
+                top: '0',        // ជាប់នៅខាងលើបំផុត
                 position: 'sticky',
-                overflowY: 'auto'// ការពារកុំឱ្យវាហួសពេល scroll ឡើងលើ
+                overflowY: 'auto', // បើ Menu ច្រើន វានឹង Scroll ក្នុង Sidebar ខ្លួនឯង
+                flexShrink: 0     // ការពារកុំឱ្យ Sidebar រួញទទឹង
             }}
         >
+            {/* មាតិកា Sidebar របស់អ្នក... */}
             <div className="p-4 fs-4 fw-bold text-white border-bottom border-light border-opacity-25">
                 📦 iShop Admin
             </div>

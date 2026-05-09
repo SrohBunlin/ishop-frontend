@@ -13,17 +13,17 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Sidebar from "./components/Sidebar";
 const MainLayout = ({ children }) => {
     const location = useLocation();
-    // បញ្ជាក់ថា បើ Path ផ្តើមដោយ /admin ទើបបង្ហាញ Sidebar
-    const isAdminPath = ['/admin', '/orders-tracking'].some(path =>
+    const isAdminPath = ['/admin', '/products', '/orders-tracking'].some(path =>
         location.pathname.startsWith(path)
     );
 
     return (
-        <div className="d-flex align-items-start">
-            {/* បង្ហាញ Sidebar តែនៅលើទំព័រ Admin ប៉ុណ្ណោះ */}
+        <div className="d-flex" style={{ minHeight: '100vh', overflow: 'hidden'}}>
+            {/* Sidebar: វានឹងនៅជាប់មួយកន្លែង ទោះ scroll content ក៏ដោយ */}
             {isAdminPath && <Sidebar />}
 
-            <div className="flex-grow-1" style={{ minWidth: 0 }}>
+            {/* Content Area: កំណត់ឱ្យវាមាន Scroll ដាច់ដោយឡែក ឬឱ្យវារីកតាម Content */}
+            <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
                 {children}
             </div>
         </div>

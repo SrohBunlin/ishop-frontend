@@ -41,6 +41,23 @@
   background-color: #0dcaf0 !important; /* ពណ៌ខៀវ Share */
 }
 
+
+/* បង្ខំឱ្យ Sidebar វែងពេញអេក្រង់ និងជាប់នៅនឹងកន្លែង */
+aside.sticky-top {
+  height: 100vh !important;
+  top: 0 !important;
+  display: flex !important;
+  flex-direction: column;
+  position: sticky !important;
+  z-index: 1020;
+}
+
+/* ធានាថា Body មិនមានការកាត់កម្ពស់ */
+body, html, #root {
+  height: 100%;
+  margin: 0;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
