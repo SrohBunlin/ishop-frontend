@@ -249,43 +249,41 @@ const OrderTracking = () => {
         window.open(telegramUrl, '_blank'); // បើក Telegram ទៅកាន់កន្លែង Share ភ្លាម[cite: 1]
     };
     return (
-        <div className="container-fluid ">
-            <div className="align-items-start">
+        <div className="container-fluid p-0">
+            <div className="d-flex align-items-start">
+            <main className="container-fluid flex-grow-1 p-4" style={{ backgroundColor: '#f8f9fa' }}>
+            <div >
             <h2 style={{color:'#124F9C'}}>តាមដានការបញ្ជាទិញ (Order Tracking)</h2>
-            <div className="row mb-4">
-                <div className="col-md-4">
-                    <div className="stat-container">
+            <div className="row row-cols-md-3 row-cols-lg-3 g-3 mb-3">
+                <div className="col">
                         <div className="stat-card">
                             <h5>ការបញ្ជាទិញសរុប</h5>
                             <p>{totalOrders}</p>
                         </div>
-                    </div>
                 </div>
-                <div className="col-md-4">
-                    <div className="stat-container">
+                <div className="col">
                         <div className="stat-card">
                             <h5>ចំណូលសរុប (ដែលជោគជ័យ)</h5>
                             <p>${totalRevenue.toLocaleString()}</p>
                         </div>
-                    </div>
                 </div>
-                <div className="col-md-4">
-                    <div className="stat-container">
+                <div className="col">
                         <div className="stat-card">
                             <h5>នៅសល់ {pendingOrders} ទៀត</h5>
                             <p>កំពុងរង់ចាំ...</p>
                         </div>
-                    </div>
                 </div>
             </div>
             <AddOrderForm onOrderAdded={fetchOrders}
             />
+                <div className="search-container" style={searchBarStyle}>
             <input
                 type="text"
-                className="form-control w-25 shadow-sm"
+                className="search-input"
                 placeholder="ស្វែងរកតាមឈ្មោះ ឬលេខ ID..."
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
+                </div>
             <div className="table-responsive">
             <table className="table table-hover shadow-sm mt-4">
                 <thead className="table-dark">
@@ -424,6 +422,8 @@ const OrderTracking = () => {
                 </ul>
             </nav>
         </div>
+            </main>
+            </div>
         </div>
     );
 };
@@ -440,5 +440,13 @@ const tHeader = { border: '1px solid #ddd', padding: '12px', textAlign: 'center'
 const tCell = { border: '1px solid #ddd', padding: '12px', textAlign: 'center' };
 export default OrderTracking;
 
-
+const searchBarStyle = {
+    width: '100%',
+    padding: '12px 20px',
+    borderRadius: '8px',
+    border: '1px solid #ddd',
+    fontSize: '16px',
+    boxSizing: 'border-box',
+    boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)'
+};
 
