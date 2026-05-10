@@ -257,19 +257,19 @@ const OrderTracking = () => {
             <div className="row row-cols-md-3 row-cols-lg-3 g-3 mb-3">
                 <div className="col">
                         <div className="stat-card">
-                            <h5>ការបញ្ជាទិញសរុប</h5>
+                            <h3>ការបញ្ជាទិញសរុប</h3>
                             <p>{totalOrders}</p>
                         </div>
                 </div>
                 <div className="col">
                         <div className="stat-card">
-                            <h5>ចំណូលសរុប (ដែលជោគជ័យ)</h5>
+                            <h3>ចំណូលសរុប (ដែលជោគជ័យ)</h3>
                             <p>${totalRevenue.toLocaleString()}</p>
                         </div>
                 </div>
                 <div className="col">
                         <div className="stat-card">
-                            <h5>នៅសល់ {pendingOrders} ទៀត</h5>
+                            <h3>នៅសល់ {pendingOrders} ទៀត</h3>
                             <p>កំពុងរង់ចាំ...</p>
                         </div>
                 </div>
