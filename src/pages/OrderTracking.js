@@ -249,7 +249,8 @@ const OrderTracking = () => {
         window.open(telegramUrl, '_blank'); // បើក Telegram ទៅកាន់កន្លែង Share ភ្លាម[cite: 1]
     };
     return (
-        <div className="container mt-5">
+        <div className="container-fluid ">
+            <div className="align-items-start">
             <h2 style={{color:'#124F9C'}}>តាមដានការបញ្ជាទិញ (Order Tracking)</h2>
             <div className="row mb-4">
                 <div className="col-md-4">
@@ -423,7 +424,7 @@ const OrderTracking = () => {
                 </ul>
             </nav>
         </div>
-
+        </div>
     );
 };
 
