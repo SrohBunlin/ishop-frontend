@@ -19,7 +19,7 @@ FROM nginx:stable-alpine
 
 # ចម្លងយកតែ Folder 'build' ដែលបានមកពីដំណាក់កាលទី ១
 COPY --from=build-stage /app/build /usr/share/nginx/html
-
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 # បើក Port 80
 EXPOSE 80
 
