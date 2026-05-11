@@ -30,8 +30,8 @@ const AddOrderForm = ({ onOrderAdded }) => {
     return (
         <div className="card p-4 mb-4 shadow-sm">
             <h5 className="mb-3" style={{color:'#124F9C'}}>បន្ថែមការបញ្ជាទិញថ្មី</h5>
-            <form onSubmit={handleSubmit} className="row g-3">
-                <div className="col-md-5">
+            <form onSubmit={handleSubmit} className="row row-cols-3 g-3">
+                <div className="col">
                     <input
                         type="text"
                         placeholder="ឈ្មោះអតិថិជន"
@@ -41,7 +41,7 @@ const AddOrderForm = ({ onOrderAdded }) => {
                         required
                     />
                 </div>
-                <div className="col-md-4">
+                <div className="col">
                     <input
                         type="number"
                         placeholder="តម្លៃសរុប ($)"
@@ -51,7 +51,7 @@ const AddOrderForm = ({ onOrderAdded }) => {
                         required
                     />
                 </div>
-                <div className="col-md-3">
+                <div className="col">
                     <button type="submit" className="btn btn-primary w-100" style={{backgroundColor:'#124F9C'}}>រក្សាទុក</button>
                 </div>
             </form>
