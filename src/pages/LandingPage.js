@@ -7,7 +7,7 @@ const LandingPage = () => {
     const [products, setProducts] = useState([]);
     useEffect(() => {
         // ទាញទិន្នន័យពី Backend (Spring Boot)
-        axios.get('https://api.i-knet.com/api/products/all')
+        axios.get('/api/products/all')
             .then(res => setProducts(res.data))
             .catch(err => console.log(err));
     }, []);
