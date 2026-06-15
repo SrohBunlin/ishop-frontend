@@ -14,7 +14,7 @@ const LoginPage = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://practical-light-production-55fd.up.railway.app/api/auth/login', credentials);
+            const response = await axios.post('https://api.i-knet.com/api/auth/login', credentials);
 
             // រក្សាទុក Token និង Role ទៅក្នុង LocalStorage
             localStorage.setItem('token', response.data.token);

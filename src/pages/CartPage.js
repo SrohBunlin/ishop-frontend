@@ -24,7 +24,7 @@ const CartPage = () => {
         };
 
         try {
-            const response = await axios.post('https://practical-light-production-55fd.up.railway.app/api/orders/add', orderData);
+            const response = await axios.post('https://api.i-knet.com/api/orders/add', orderData);
             if (response.status === 200) {
                 alert("ការបញ្ជាទិញជោគជ័យ!");
                 clearCart();
