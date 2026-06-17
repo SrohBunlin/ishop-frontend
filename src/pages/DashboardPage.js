@@ -48,7 +48,7 @@ const DashboardPage = () => {
     const fetchReportStats = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8080/api/orders/stats', {
+            const response = await axios.get('https://api.i-knet.com/api/orders/stats', {
                 headers: {
                     'Authorization': `Bearer ${token}` // ត្រូវតែមាន Token ដើម្បីកុំឱ្យជាប់ 403
                 }
@@ -76,7 +76,7 @@ const DashboardPage = () => {
     const fetchProducts = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8080/api/products/all', {
+            const response = await axios.get('https://api.i-knet.com/api/products/all', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProducts(response.data);
@@ -86,7 +86,7 @@ const DashboardPage = () => {
     const fetchOrders = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8080/api/orders/all', {
+            const response = await axios.get('https://api.i-knet.com/api/orders/all', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setOrders(response.data); // ✅ ទុកទិន្នន័យក្នុង Orders State
@@ -108,7 +108,7 @@ const DashboardPage = () => {
         if (window.confirm("តើអ្នកពិតជាចង់លុបទំនិញនេះមែនទេ?")) {
             try {
                 const token = localStorage.getItem('token'); // ទាញ Token មកប្រើ
-                await axios.delete(`http://localhost:8080/api/products/${id}`, {
+                await axios.delete(`https://api.i-knet.com/api/products/${id}`, {
                     headers: { Authorization: `Bearer ${token}` } // បញ្ជូនទៅកាន់ Backend
                 });
                 alert("លុបបានជោគជ័យ!");
