@@ -105,7 +105,7 @@ const DashboardPage = () => {
 
     // ៦.បន្ថែម Function សម្រាប់លុប
     const deleteProduct = async (id) => {
-        if (window.confirm("តើអ្នកពិតជាចង់លុបទំនិញនេះមែនទេ?")) {
+        if (window.confirm("តើអ្នកពិតជាចង់លុបទំនិញនេះមែនទេ? ")) {
             try {
                 const token = localStorage.getItem('token'); // ទាញ Token មកប្រើ
                 await axios.delete(`https://api.i-knet.com/api/products/${id}`, {
