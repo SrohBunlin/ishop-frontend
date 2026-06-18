@@ -46,10 +46,10 @@ const LandingPage = () => {
                 {products.map(product => (
                     <div key={product.id} style={cardStyle}>
                         <img
-                            src={product.image ? `${API_BASE_URL}${product.image}` : LOCAL_PLACEHOLDER}
+                            src={product.image && product.image !== "undefined" ? `${API_BASE_URL}${product.image}` : LOCAL_PLACEHOLDER}
                             alt={product.name}
                             className="card-img-top"
-                            style={{ height: '200px', objectFit: 'cover' }} // ប្អូនអាចសារេកម្ពស់ (height) តាមចិត្តចង់
+                            style={{ height: '200px', objectFit: 'cover' }}
                             onError={(e) => {
                                 e.target.src = LOCAL_PLACEHOLDER;
                             }}
