@@ -30,7 +30,7 @@ ChartJS.register(
     ArcElement
 );
 
-const API_BASE_URL = 'https://api.iknet.com';
+const API_BASE_URL = 'https://api.i-knet.com';
 
 const DashboardPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
