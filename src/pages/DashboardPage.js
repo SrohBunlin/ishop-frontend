@@ -476,7 +476,7 @@ const DashboardPage = () => {
                                         </td>
                                         <td style={tableCellStyle}>
                                             <img
-                                                src={`${API_BASE_URL}${product.imageUrl}`}
+                                                src={`${API_BASE_URL}${product.image}`}
                                                 alt={product.name}
                                                 style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
                                                 onError={(e) => {
