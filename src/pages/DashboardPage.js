@@ -476,11 +476,10 @@ const DashboardPage = () => {
                                         </td>
                                         <td style={tableCellStyle}>
                                             <img
-                                                src={`${API_BASE_URL}${product.image}`}
+                                                src={product.image ? `${API_BASE_URL}${product.image}` : "https://via.placeholder.com/50"}
                                                 alt={product.name}
                                                 style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
                                                 onError={(e) => {
-                                                    // បន្ថែមការពារ បើរកដៅរូបភាពមិនឃើញ ឱ្យវាចេញរូបភាព Placeholder ជំនួស
                                                     e.target.src = "https://via.placeholder.com/50";
                                                 }}
                                             />
