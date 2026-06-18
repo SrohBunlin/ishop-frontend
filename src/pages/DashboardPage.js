@@ -197,16 +197,14 @@ const DashboardPage = () => {
             if (isEditing) {
                 await axios.put(`${API_BASE_URL}/api/products/${currentId}`, formData, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
+                        Authorization: `Bearer ${token}`
                     }
                 });
                 alert("កែសម្រួលបានជោគជ័យ!");
             } else {
                 await axios.post(`${API_BASE_URL}/api/products/add`, formData, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
+                        Authorization: `Bearer ${token}`
                     }
                 });
                 alert("បន្ថែមបានជោគជ័យ!");
