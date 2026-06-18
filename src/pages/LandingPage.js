@@ -90,7 +90,7 @@ const loginBtnStyle = {
 const heroStyle = { textAlign: 'center', padding: '60px 20px', backgroundColor: '#28a745', color: '#fff' };
 const gridContainer = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '25px', padding: '40px 50px' };
 const cardStyle = { backgroundColor: '#fff', borderRadius: '10px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center' };
-const imgStyle = { width: '100%', height: '200px', objectFit: 'cover' };
+// const imgStyle = { width: '100%', height: '200px', objectFit: 'cover' };
 const addBtnStyle = {
     backgroundColor: '#28a745', // ពណ៌បៃតងតំណាងឱ្យការទិញ
     color: 'white',
