@@ -3,8 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
+const API_BASE_URL = 'https://api.i-knet.com';
 const LandingPage = () => {
     const [products, setProducts] = useState([]);
+    const LOCAL_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'><rect width='100%' height='100%' fill='%23eeeeee'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%23aaaaaa'>No Image</text></svg>";
     useEffect(() => {
         // ទាញទិន្នន័យពី Backend (Spring Boot)
         axios.get('https://api.i-knet.com/api/products/all')
@@ -43,7 +45,16 @@ const LandingPage = () => {
             <div style={gridContainer}>
                 {products.map(product => (
                     <div key={product.id} style={cardStyle}>
-                        <img src={product.imageUrl} alt={product.name} style={imgStyle} />
+                        //  កូដថ្មីសម្រាប់ទំព័រមុខ (ប្តូរពី product.imageUrl មកជា product.image)
+                        <img
+                            src={product.image ? `${API_BASE_URL}${product.image}` : LOCAL_PLACEHOLDER}
+                            alt={product.name}
+                            className="card-img-top"
+                            style={{ height: '200px', objectFit: 'cover' }} // ប្អូនអាចសារេកម្ពស់ (height) តាមចិត្តចង់
+                            onError={(e) => {
+                                e.target.src = LOCAL_PLACEHOLDER;
+                            }}
+                        />
                         <div style={{ padding: '15px' }}>
                             <h4 style={{ margin: '10px 0' }}>{product.name}</h4>
                             <p style={{ color: '#28a745', fontWeight: 'bold', fontSize: '18px' }}>
