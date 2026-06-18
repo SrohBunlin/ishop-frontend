@@ -45,7 +45,6 @@ const LandingPage = () => {
             <div style={gridContainer}>
                 {products.map(product => (
                     <div key={product.id} style={cardStyle}>
-                        //  កូដថ្មីសម្រាប់ទំព័រមុខ (ប្តូរពី product.imageUrl មកជា product.image)
                         <img
                             src={product.image ? `${API_BASE_URL}${product.image}` : LOCAL_PLACEHOLDER}
                             alt={product.name}
