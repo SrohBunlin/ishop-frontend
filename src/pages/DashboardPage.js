@@ -48,7 +48,7 @@ const DashboardPage = () => {
     const [productPage, setProductPage] = useState(1);
     const [orderPage, setOrderPage] = useState(1);
     const recordsPerPage = 10;
-
+    const LOCAL_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='100%' height='100%' fill='%23eeeeee'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='10' fill='%23aaaaaa'>No Image</text></svg>";
     // 💡 គ្រប់គ្រងការបង្កើត និងសម្អាត Object URL សម្រាប់រូបភាព Preview ដើម្បីការពារ Memory Leak
     useEffect(() => {
         if (!imageFile) {
@@ -476,11 +476,11 @@ const DashboardPage = () => {
                                         </td>
                                         <td style={tableCellStyle}>
                                             <img
-                                                src={product.image ? `${API_BASE_URL}${product.image}` : "https://via.placeholder.com/50"}
+                                                src={product.image ? `${API_BASE_URL}${product.image}` : LOCAL_PLACEHOLDER}
                                                 alt={product.name}
                                                 style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
                                                 onError={(e) => {
-                                                    e.target.src = "https://via.placeholder.com/50";
+                                                    e.target.src = LOCAL_PLACEHOLDER;
                                                 }}
                                             />
                                         </td>
