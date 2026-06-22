@@ -32,21 +32,56 @@ ChartJS.register(
 
 const API_BASE_URL = 'https://api.i-knet.com';
 
-const DashboardPage = () => {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [isEditing, setIsEditing] = useState(false);
-    const fileInputRef = useRef(null);
-    const [currentId, setCurrentId] = useState(null);
-    const [products, setProducts] = useState([]);
-    const [newProduct, setNewProduct] = useState({ name: '', price: '', stockQuantity: '' });
-    const [imageFile, setImageFile] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState('');
-    const [reportData, setReportData] = useState({ totalRevenue: 0, totalOrders: 0 });
-    const [orders, setOrders] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
+// ១. បង្កើត Interfaces សម្រាប់កំណត់ប្រភេទ Type ឱ្យបានម៉ឺងម៉ាត់
+interface Product {
+    id: number;
+    name: string;
+    price: number;
+    stockQuantity: number;
+    image?: string;
+}
 
-    const [productPage, setProductPage] = useState(1);
-    const [orderPage, setOrderPage] = useState(1);
+interface NewProductState {
+    name: string;
+    price: string;
+    stockQuantity: string;
+}
+
+interface Order {
+    id: number;
+    customer_name: string;
+    order_date?: string;
+    status: string;
+    total_amount: number;
+}
+
+interface ReportStats {
+    totalRevenue: number;
+    totalOrders: number;
+}
+
+interface StockStatus {
+    text: string;
+    color: string;
+    bg: string;
+}
+
+const DashboardPage: React.FC = () => {
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [currentId, setCurrentId] = useState<number | null>(null);
+
+    const [products, setProducts] = useState<Product[]>([]);
+    const [newProduct, setNewProduct] = useState<NewProductState>({ name: '', price: '', stockQuantity: '' });
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string>('');
+    const [reportData, setReportData] = useState<ReportStats>({ totalRevenue: 0, totalOrders: 0 });
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+
+    const [productPage, setProductPage] = useState<number>(1);
+    const [orderPage, setOrderPage] = useState<number>(1);
     const recordsPerPage = 10;
     const LOCAL_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='100%' height='100%' fill='%23eeeeee'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='10' fill='%23aaaaaa'>No Image</text></svg>";
 
@@ -62,18 +97,18 @@ const DashboardPage = () => {
         return () => URL.revokeObjectURL(objectUrl);
     }, [imageFile]);
 
-    const handleFileChange = (e) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setImageFile(e.target.files[0]);
         }
     };
 
-    const lowStockProducts = products.filter(p => p.stockQuantity < 5);
+    const lowStockProducts = products.filter((p: Product) => p.stockQuantity < 5);
 
-    const fetchReportStats = async () => {
+    const fetchReportStats = async (): Promise<void> => {
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.get(`${API_BASE_URL}/api/orders/stats`, {
+            const response = await axios.get<ReportStats>(`${API_BASE_URL}/api/orders/stats`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setReportData(response.data);
@@ -82,10 +117,10 @@ const DashboardPage = () => {
         }
     };
 
-    const fetchProducts = async () => {
+    const fetchProducts = async (): Promise<void> => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`${API_BASE_URL}/api/products/all`, {
+            const response = await axios.get<Product[]>(`${API_BASE_URL}/api/products/all`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setProducts(response.data);
@@ -94,10 +129,10 @@ const DashboardPage = () => {
         }
     };
 
-    const fetchOrders = async () => {
+    const fetchOrders = async (): Promise<void> => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`${API_BASE_URL}/api/orders/all`, {
+            const response = await axios.get<Order[]>(`${API_BASE_URL}/api/orders/all`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setOrders(response.data);
@@ -121,10 +156,10 @@ const DashboardPage = () => {
     }, [searchTerm]);
 
     const totalItems = products.length;
-    const totalValue = products.reduce((acc, curr) => acc + (curr.price * curr.stockQuantity), 0);
-    const lowStockItems = products.filter(p => p.stockQuantity < 5).length;
+    const totalValue = products.reduce((acc: number, curr: Product) => acc + (curr.price * curr.stockQuantity), 0);
+    const lowStockItems = products.filter((p: Product) => p.stockQuantity < 5).length;
 
-    const deleteProduct = async (id) => {
+    const deleteProduct = async (id: number): Promise<void> => {
         if (window.confirm("តើអ្នកពិតជាចង់លុបទំនិញនេះមែនទេ? ")) {
             try {
                 const token = localStorage.getItem('token');
@@ -140,7 +175,7 @@ const DashboardPage = () => {
         }
     };
 
-    const filteredProducts = products.filter((product) => {
+    const filteredProducts = products.filter((product: Product) => {
         const searchTermLower = searchQuery.toLowerCase().trim();
         if (!searchTermLower) return true;
         return (
@@ -158,15 +193,14 @@ const DashboardPage = () => {
     const firstProductIndex = lastProductIndex - recordsPerPage;
     const currentProductRecords = filteredProducts.slice(firstProductIndex, lastProductIndex);
 
-    const handleEditClick = (product) => {
+    const handleEditClick = (product: Product) => {
         setIsEditing(true);
         setCurrentId(product.id);
         setNewProduct({
             name: product.name,
-            price: product.price,
-            stockQuantity: product.stockQuantity
+            price: product.price.toString(),
+            stockQuantity: product.stockQuantity.toString()
         });
-        // ✅ បានកែប្រែ៖ ប្តូរមកប្រើ Key 'image' និងលក្ខខណ្ឌត្រឹមត្រូវដើម្បីបង្ហាញរូបភាពចាស់ក្នុង Form ពេលចុច Edit
         setPreviewUrl(product.image && product.image !== "undefined" ? `${API_BASE_URL}${product.image}` : '');
         setImageFile(null);
     };
@@ -182,7 +216,7 @@ const DashboardPage = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         const token = localStorage.getItem('token');
         const formData = new FormData();
@@ -195,18 +229,14 @@ const DashboardPage = () => {
         }
 
         try {
-            if (isEditing) {
+            if (isEditing && currentId !== null) {
                 await axios.put(`${API_BASE_URL}/api/products/${currentId}`, formData, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    headers: { Authorization: `Bearer ${token}` }
                 });
                 alert("កែសម្រួលបានជោគជ័យ!");
             } else {
                 await axios.post(`${API_BASE_URL}/api/products/add`, formData, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    headers: { Authorization: `Bearer ${token}` }
                 });
                 alert("បន្ថែមបានជោគជ័យ!");
             }
@@ -220,7 +250,7 @@ const DashboardPage = () => {
 
     const exportPDF = () => {
         const doc = new jsPDF();
-        const tableRows = [];
+        const tableRows: any[][] = [];
         doc.setFontSize(18);
         doc.text("iShop Management System - Sales Report", 14, 22);
 
@@ -231,7 +261,7 @@ const DashboardPage = () => {
 
         const tableColumn = ["Order ID", "Customer", "Date", "Status", "Amount"];
 
-        orders.forEach(order => {
+        orders.forEach((order: Order) => {
             const orderData = [
                 order.id,
                 order.customer_name,
@@ -252,8 +282,8 @@ const DashboardPage = () => {
         doc.save(`Sales_Report_${new Date().getTime()}.pdf`);
     };
 
-    const stockLabels = products.map(p => p.name);
-    const stockData = products.map(p => p.stockQuantity);
+    const stockLabels = products.map((p: Product) => p.name);
+    const stockData = products.map((p: Product) => p.stockQuantity);
 
     const barChartData = {
         labels: stockLabels,
@@ -268,7 +298,7 @@ const DashboardPage = () => {
         ],
     };
 
-    const revenueByCustomer = (orders || []).reduce((acc, order) => {
+    const revenueByCustomer = (orders || []).reduce((acc: Record<string, number>, order: Order) => {
         if (!order || !order.customer_name) return acc;
         const name = order.customer_name;
         acc[name] = (acc[name] || 0) + (order.total_amount || 0);
@@ -288,13 +318,13 @@ const DashboardPage = () => {
         ],
     };
 
-    const getStockStatus = (quantity) => {
+    const getStockStatus = (quantity: number): StockStatus => {
         if (quantity === 0) return { text: 'អស់ពីស្តុក', color: '#ff4d4f', bg: '#fff2f0' };
         if (quantity <= 5) return { text: 'ជិតអស់', color: '#faad14', bg: '#fffbe6' };
         return { text: 'មានក្នុងស្តុក', color: '#52c41a', bg: '#f6ffed' };
     };
 
-    const revenueByDate = (orders || []).reduce((acc, order) => {
+    const revenueByDate = (orders || []).reduce((acc: Record<string, number>, order: Order) => {
         if (!order || !order.order_date) return acc;
         const date = order.order_date.split('T')[0];
         acc[date] = (acc[date] || 0) + (order.total_amount || 0);
@@ -320,9 +350,9 @@ const DashboardPage = () => {
         ],
     };
 
-    const isAdmin = () => localStorage.getItem('role') === 'ROLE_ADMIN';
+    const isAdmin = (): boolean => localStorage.getItem('role') === 'ROLE_ADMIN';
 
-    const filteredOrders = orders.filter(order => {
+    const filteredOrders = orders.filter((order: Order) => {
         const search = (searchTerm || "").toLowerCase();
         const customerName = (order?.customer_name || "").toLowerCase();
         const orderId = (order?.id || "").toString();
@@ -337,8 +367,8 @@ const DashboardPage = () => {
     const currentOrderRecords = filteredOrders.slice(firstOrderIndex, lastOrderIndex);
 
     // 💡 Helper Function សម្រាប់បង្កើត Pagination កាត់បន្ថយកូដស្ទួន (DRY)
-    const renderPagination = (currentPage, totalPages, setPageAction) => {
-        const pageNumbers = [...Array(totalPages + 1).keys()].slice(1);
+    const renderPagination = (currentPage: number, totalPages: number, setPageAction: React.Dispatch<React.SetStateAction<number>>) => {
+        const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
         return (
             <nav className="d-flex justify-content-center mt-3">
                 <ul className="pagination">
@@ -385,7 +415,7 @@ const DashboardPage = () => {
                         <div className="container-fluid" style={alertContainerStyle}>
                             <h4 style={{ margin: '0 0 10px 0', color: '#842029' }}>⚠️ ព្រមាន៖ ទំនិញជិតអស់ពីស្តុក!</h4>
                             <ul style={{ margin: 0, paddingLeft: '20px' }}>
-                                {lowStockProducts.map(p => (
+                                {lowStockProducts.map((p: Product) => (
                                     <li key={p.id} style={{ color: '#842029', fontSize: '14px' }}>
                                         {p.name} (នៅសល់ត្រឹមតែ {p.stockQuantity} គ្រឿង)
                                     </li>
@@ -463,7 +493,7 @@ const DashboardPage = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {currentProductRecords.map((product) => {
+                            {currentProductRecords.map((product: Product) => {
                                 const status = getStockStatus(product.stockQuantity);
                                 return (
                                     <tr className="text-nowrap" key={product.id} style={{ borderBottom: '1px solid #eee' }}>
@@ -476,13 +506,13 @@ const DashboardPage = () => {
                                                 </span>
                                         </td>
                                         <td style={tableCellStyle}>
-                                            {/* ✅ បានកែប្រែ៖ បន្ថែមលក្ខខណ្ឌការពារមិនឱ្យបែកលីងទោះជួប String "undefined" ក្នុងតារាងទំនិញ */}
                                             <img
                                                 src={product.image && product.image !== "undefined" ? `${API_BASE_URL}${product.image}` : LOCAL_PLACEHOLDER}
                                                 alt={product.name}
                                                 style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
-                                                onError={(e) => {
-                                                    e.target.src = LOCAL_PLACEHOLDER;
+                                                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                                                    const target = e.target as HTMLImageElement;
+                                                    target.src = LOCAL_PLACEHOLDER;
                                                 }}
                                             />
                                         </td>
@@ -521,7 +551,7 @@ const DashboardPage = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {currentOrderRecords.map((order) => (
+                            {currentOrderRecords.map((order: Order) => (
                                 <tr key={order.id} style={{ borderBottom: '1px solid #eee' }}>
                                     <td style={tCell}>{order.id}</td>
                                     <td style={{ border: '1px solid #ddd', padding: '12px', textAlign: 'left' }}>{order.customer_name}</td>
@@ -543,14 +573,14 @@ const DashboardPage = () => {
     );
 };
 
-const tHeader = { border: '1px solid #ddd', padding: '12px', textAlign: 'center', backgroundColor: '#124F9C', color: '#f8f9fa' };
-const tCell = { border: '1px solid #ddd', padding: '12px', textAlign: 'center' };
-const inputStyle = { padding: '10px 12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '14px', outline: 'none' };
-const tableHeaderStyle = { backgroundColor: '#124F9C', color: '#f8f9fa', fontWeight: '600', padding: '15px', textAlign: 'left', borderBottom: '2px solid #dee2e6' };
-const tableCellStyle = { padding: '15px', borderBottom: '1px solid #eee', color: '#555' };
-const searchBarStyle = { width: '100%', padding: '12px 20px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '16px', boxSizing: 'border-box', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)', backgroundColor: '#fff' };
-const saveBtnStyle = { padding: '10px 20px', backgroundColor: '#124F9C', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', flexGrow: 1, maxWidth: '150px' };
-const cancelBtnStyle = { padding: '10px 20px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', flexGrow: 1, maxWidth: '150px' };
-const alertContainerStyle = { backgroundColor: '#f8d7da', color: '#842029', padding: '15px', borderRadius: '8px', border: '1px solid #f5c2c7', marginBottom: '20px' };
+const tHeader: React.CSSProperties = { border: '1px solid #ddd', padding: '12px', textAlign: 'center', backgroundColor: '#124F9C', color: '#f8f9fa' };
+const tCell: React.CSSProperties = { border: '1px solid #ddd', padding: '12px', textAlign: 'center' };
+const inputStyle: React.CSSProperties = { padding: '10px 12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '14px', outline: 'none' };
+const tableHeaderStyle: React.CSSProperties = { backgroundColor: '#124F9C', color: '#f8f9fa', fontWeight: '600', padding: '15px', textAlign: 'left', borderBottom: '2px solid #dee2e6' };
+const tableCellStyle: React.CSSProperties = { padding: '15px', borderBottom: '1px solid #eee', color: '#555' };
+const searchBarStyle: React.CSSProperties = { width: '100%', padding: '12px 20px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '16px', boxSizing: 'border-box', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)', backgroundColor: '#fff' };
+const saveBtnStyle: React.CSSProperties = { padding: '10px 20px', backgroundColor: '#124F9C', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', flexGrow: 1, maxWidth: '150px', textAlign: 'center' };
+const cancelBtnStyle: React.CSSProperties = { padding: '10px 20px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', flexGrow: 1, maxWidth: '150px', textAlign: 'center' };
+const alertContainerStyle: React.CSSProperties = { backgroundColor: '#f8d7da', color: '#842029', padding: '15px', borderRadius: '8px', border: '1px solid #f5c2c7', marginBottom: '20px' };
 
 export default DashboardPage;

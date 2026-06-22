@@ -48,3 +48,8 @@ code {
   cursor: not-allowed;                 /* ប្តូររូប Mouse ទៅជាសញ្ញាហាមឃាត់ */
   pointer-events: none;                /* បិទមិនឱ្យចុចបានទាំងស្រុង */
 }
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

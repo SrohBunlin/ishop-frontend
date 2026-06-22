@@ -4,18 +4,31 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 const API_BASE_URL = 'https://api.i-knet.com';
-const LandingPage = () => {
-    const [products, setProducts] = useState([]);
+
+// ១. បង្កើត Interface សម្រាប់ផលិតផលដែលបង្ហាញនៅលើទំព័រមុខ
+interface Product {
+    id: number;
+    name: string;
+    price: number;
+    stockQuantity: number;
+    image?: string;
+}
+
+const LandingPage: React.FC = () => {
+    // ២. កំណត់ប្រភេទ State ជា Array នៃ Product interface
+    const [products, setProducts] = useState<Product[]>([]);
     const LOCAL_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'><rect width='100%' height='100%' fill='%23eeeeee'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%23aaaaaa'>No Image</text></svg>";
+
     useEffect(() => {
-        // ទាញទិន្នន័យពី Backend (Spring Boot)
-        axios.get('https://api.i-knet.com/api/products/all')
+        // ទាញទិន្នន័យពី Backend (Spring Boot) ដោយភ្ជាប់ប្រភេទទិន្នន័យ <Product[]> ជាមួយ Axios
+        axios.get<Product[]>('https://api.i-knet.com/api/products/all')
             .then(res => setProducts(res.data))
             .catch(err => console.log(err));
     }, []);
-    const { addToCart } = useCart();
+
+    const { addToCart, cartItems } = useCart();
     const navigate = useNavigate();
-    const { cartItems } = useCart();
+
     return (
         <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9' }}>
             {/* 1. Navbar */}
@@ -32,8 +45,7 @@ const LandingPage = () => {
                 </div>
 
                 {/* ក្នុងផ្នែក Navbar ត្រង់ប៊ូតុង Admin Login */}
-                <i onClick={() => navigate('/login')} style={loginBtnStyle} className="bi bi-person-circle fs-1">
-                </i>
+                <i onClick={() => navigate('/login')} style={loginBtnStyle} className="bi bi-person-circle fs-1"></i>
             </nav>
 
             {/* 2. Hero Section */}
@@ -41,17 +53,20 @@ const LandingPage = () => {
                 <h1>ស្វាគមន៍មកកាន់ iShop</h1>
                 <p>ទិញទំនិញបច្ចេកវិទ្យាចុងក្រោយបង្អស់នៅទីនេះ!</p>
             </header>
+
             {/* 3. Product Display */}
             <div style={gridContainer}>
-                {products.map(product => (
+                {products.map((product: Product) => (
                     <div key={product.id} style={cardStyle}>
                         <img
                             src={product.image && product.image !== "undefined" ? `${API_BASE_URL}${product.image}` : LOCAL_PLACEHOLDER}
                             alt={product.name}
                             className="card-img-top"
                             style={{ height: '200px', objectFit: 'cover' }}
-                            onError={(e) => {
-                                e.target.src = LOCAL_PLACEHOLDER;
+                            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                                // កំណត់ប្រភេទ Type Cast ឱ្យទៅ HTMLImageElement ដើម្បីអាចប្តូរ src ពេលរូបភាពបែក
+                                const target = e.target as HTMLImageElement;
+                                target.src = LOCAL_PLACEHOLDER;
                             }}
                         />
                         <div style={{ padding: '15px' }}>
@@ -62,9 +77,24 @@ const LandingPage = () => {
                             {/* ប៊ូតុងដាក់ក្នុងកន្ត្រក */}
                             <button
                                 style={addBtnStyle}
-                                onClick={() => addToCart(product)}
-                                onMouseOver={(e) => e.target.style.backgroundColor = '#218838'} // ពណ៌ចាស់ជាងមុនបន្តិចពេល Hover
-                                onMouseOut={(e) => e.target.style.backgroundColor = '#28a745'}
+                                onClick={() => {
+                                    // បំប្លែងប្រភេទ product ពី LandingPage ទៅជាទម្រង់ CartItem ដែល addToCart ត្រូវការ
+                                    addToCart({
+                                        id: product.id,
+                                        name: product.name,
+                                        price: product.price,
+                                        quantity: 1,
+                                        image: product.image
+                                    });
+                                }}
+                                onMouseOver={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                    const target = e.target as HTMLButtonElement;
+                                    target.style.backgroundColor = '#218838';
+                                }}
+                                onMouseOut={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                    const target = e.target as HTMLButtonElement;
+                                    target.style.backgroundColor = '#28a745';
+                                }}
                             >
                                 🛒 ដាក់ក្នុងកន្ត្រក
                             </button>
@@ -76,23 +106,21 @@ const LandingPage = () => {
     );
 };
 
-// --- Styles ---
-const searchStyle = { padding: '8px 15px', borderRadius: '20px', border: '1px solid #ddd', width: '300px' };
-const loginBtnStyle = {
-    backgroundColor: 'none',
+// --- Styles (ប្រើប្រាស់ React.CSSProperties ទាំងអស់ដើម្បីឱ្យមាន Autocomplete ក្នុង TSX) ---
+const searchStyle: React.CSSProperties = { padding: '8px 15px', borderRadius: '20px', border: '1px solid #ddd', width: '300px' };
+const loginBtnStyle: React.CSSProperties = {
+    backgroundColor: 'transparent',
     color: '#124F9C',
     border: 'none',
-    // padding: '8px 18px',
-    //borderRadius: '5px',
     cursor: 'pointer',
     fontWeight: '500'
 };
-const heroStyle = { textAlign: 'center', padding: '60px 20px', backgroundColor: '#28a745', color: '#fff' };
-const gridContainer = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '25px', padding: '40px 50px' };
-const cardStyle = { backgroundColor: '#fff', borderRadius: '10px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center' };
-// const imgStyle = { width: '100%', height: '200px', objectFit: 'cover' };
-const addBtnStyle = {
-    backgroundColor: '#28a745', // ពណ៌បៃតងតំណាងឱ្យការទិញ
+const heroStyle: React.CSSProperties = { textAlign: 'center', padding: '60px 20px', backgroundColor: '#28a745', color: '#fff' };
+const gridContainer: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '25px', padding: '40px 50px' };
+const cardStyle: React.CSSProperties = { backgroundColor: '#fff', borderRadius: '10px', overflow: 'hidden', boxShadow: '0 4px 15px rgba(0,0,0,0.05)', textAlign: 'center' };
+
+const addBtnStyle: React.CSSProperties = {
+    backgroundColor: '#28a745',
     color: 'white',
     padding: '10px 15px',
     border: 'none',
@@ -102,13 +130,14 @@ const addBtnStyle = {
     fontWeight: 'bold',
     width: '100%',
     marginTop: '10px',
-    transition: 'background-color 0.3s ease', // បន្ថែម Effect ពេលប្តូរពណ៌
+    transition: 'background-color 0.3s ease',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '8px' // ចន្លោះរវាង Icon និងអក្សរ
+    gap: '8px'
 };
-const badgeStyle = {
+
+const badgeStyle: React.CSSProperties = {
     position: 'absolute',
     top: '-8px',
     right: '-10px',
@@ -121,19 +150,14 @@ const badgeStyle = {
     border: '2px solid white'
 };
 
-const cartContainerStyle = {
+const cartContainerStyle: React.CSSProperties = {
     position: 'relative',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center'
 };
-// const navRightSide = {
-//     display: 'flex',
-//     alignItems: 'center',
-//     gap: '25px'
-// };
 
-const navStyle = {
+const navStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'space-between',
     padding: '15px 50px',

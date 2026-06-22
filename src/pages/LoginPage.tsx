@@ -2,19 +2,29 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-const LoginPage = () => {
+
+// ១. បង្កើត Interface សម្រាប់កំណត់ប្រភេទ Type នៃទិន្នន័យដែលបានមកពី API
+interface LoginResponse {
+    token: string;
+    roles: string[];
+}
+
+const LoginPage: React.FC = () => {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
-    const [error, setError] = useState('');
+    const [error, setError] = useState<string>('');
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
+    // ២. កំណត់ប្រភេទ Change Event ឱ្យត្រូវតាមស្តង់ដារ HTML Input
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
-    const handleLogin = async (e) => {
+    // ៣. កំណត់ប្រភេទ Form Submit Event និងការត្រឡប់មកវិញជា Promise<void>
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://api.i-knet.com/api/auth/login', credentials);
+            // ភ្ជាប់ Interface <LoginResponse> ជាមួយ axios.post ដើម្បីឱ្យស្គាល់ response.data ច្បាស់លាស់
+            const response = await axios.post<LoginResponse>('https://api.i-knet.com/api/auth/login', credentials);
 
             // រក្សាទុក Token និង Role ទៅក្នុង LocalStorage
             localStorage.setItem('token', response.data.token);
@@ -63,12 +73,12 @@ const LoginPage = () => {
     );
 };
 
-// --- Styles ---
-const loginPageStyle = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f0f2f5' };
-const loginCardStyle = { width: '400px', padding: '40px', backgroundColor: '#fff', borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' };
-const inputGroup = { marginBottom: '20px' };
-const inputStyle = { width: '100%', padding: '12px', marginTop: '8px', borderRadius: '6px', border: '1px solid #ddd', boxSizing: 'border-box' };
-const loginBtnStyle = { width: '100%', padding: '12px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold' };
-const backBtnStyle = { width: '100%', marginTop: '10px', padding: '10px', backgroundColor: 'transparent', color: '#666', border: 'none', cursor: 'pointer' };
+// --- Styles (ប្រើប្រាស់ React.CSSProperties ដើម្បីផ្ដល់ភាពម៉ឺងម៉ាត់ និងទប់ស្កាត់ Typo) ---
+const loginPageStyle: React.CSSProperties = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f0f2f5' };
+const loginCardStyle: React.CSSProperties = { width: '400px', padding: '40px', backgroundColor: '#fff', borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' };
+const inputGroup: React.CSSProperties = { marginBottom: '20px' };
+const inputStyle: React.CSSProperties = { width: '100%', padding: '12px', marginTop: '8px', borderRadius: '6px', border: '1px solid #ddd', boxSizing: 'border-box' };
+const loginBtnStyle: React.CSSProperties = { width: '100%', padding: '12px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold' };
+const backBtnStyle: React.CSSProperties = { width: '100%', marginTop: '10px', padding: '10px', backgroundColor: 'transparent', color: '#666', border: 'none', cursor: 'pointer' };
 
 export default LoginPage;

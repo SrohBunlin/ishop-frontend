@@ -12,7 +12,7 @@ export interface CartItem {
 // ២. កំណត់ប្រភេទលីង Function និង State ទាំងអស់ដែលមាននៅក្នុង Context
 interface CartContextType {
     cartItems: CartItem[];
-    addToCart: (product: Omit<CartItem, 'qty'>) => void; // ទទួល product ដែលមិនទាន់មាន qty
+    addToCart: (product: { id: number; name: string; price: number; quantity: number; image: string | undefined }) => void; // ទទួល product ដែលមិនទាន់មាន qty
     removeFromCart: (id: number) => void;
     updateQty: (id: number, action: 'inc' | 'dec') => void; // action បង្ខំឱ្យយកតែ 'inc' ឬ 'dec'
     clearCart: () => void;
