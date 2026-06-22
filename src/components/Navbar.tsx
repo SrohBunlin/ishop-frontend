@@ -56,8 +56,8 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                 .custom-dropdown-btn::after { display: none !important; }
             `}</style>
 
-            <div className="container-fluid">
-                <div className="d-flex align-items-center" style={{ width: '300px' }}>
+            <div className="container-fluid flex-grow-1">
+                <div className="d-flex align-items-center" style={{ width: '100px' }}>
                     <span
                         className="navbar-brand fw-bold text-primary fs-3"
                         style={{ cursor: 'pointer' }}
@@ -66,7 +66,6 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                         iShop
                     </span>
                 </div>
-
                 <div className="d-flex align-items-center justify-content-center flex-grow-1">
                     {openedPages.map((page) => (
                         <div
@@ -89,8 +88,6 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                             onTouchStart={() => handlePressStart(page.id)}
                             onTouchEnd={handlePressEnd}
                             onTouchCancel={handlePressEnd}
-
-                            // មុខងារចុចធម្មតា (Click)
                             onClick={() => handleTabClick(page.id)}
                         >
                             <i className={`bi ${page.icon} fs-4 ${currentPageId === page.id ? 'text-primary' : 'text-secondary'}`}></i>
@@ -122,7 +119,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                         </ul>
                     </div>
                 </div>
-                <div style={{ width: '300px' }}></div>
+                <div style={{ width: '100px' }}></div>
             </div>
         </nav>
     );
