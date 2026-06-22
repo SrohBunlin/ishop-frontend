@@ -1,11 +1,18 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-const Sidebar = ({ handleLogout }) => {
+// ១. កំណត់ប្រភេទ Props សម្រាប់ Sidebar (ទទួល handleLogout ជា Function ដែលគ្មាន Return)
+interface SidebarProps {
+    handleLogout: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ handleLogout }) => {
     const location = useLocation();
-    const isActive = (path) => location.pathname === path;
+
+    // ២. កំណត់ឱ្យត្រឡប់តម្លៃជា boolean ច្បាស់លាស់
+    const isActive = (path: string): boolean => location.pathname === path;
+
     return (
-        // ក្នុង Sidebar.js ត្រង់ tag <aside>
         <aside
             className="d-none d-md-block sticky-top shadow-sm"
             style={{
@@ -17,7 +24,6 @@ const Sidebar = ({ handleLogout }) => {
                 flexShrink: 0     // ការពារកុំឱ្យ Sidebar រួញទទឹង
             }}
         >
-            {/* មាតិកា Sidebar របស់អ្នក... */}
             <div className="p-4 fs-4 fw-bold text-white border-bottom border-light border-opacity-25">
                 📦 iShop Admin
             </div>

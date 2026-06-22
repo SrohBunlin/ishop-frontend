@@ -1,32 +1,31 @@
-
 import React from 'react';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate();
 
     // Helper function to determine if a link is active
-    const isActive = (path) => location.pathname === path;
+    const isActive = (path: string): boolean => location.pathname === path;
 
-    const navItemStyle = (path) => ({
-        // Adds the blue bottom border only when active
+    // កំណត់ប្រភេទលទ្ធផលជា React.CSSProperties សម្រាប់កូដ Inline Style របស់ TypeScript
+    const navItemStyle = (path: string): React.CSSProperties => ({
         borderBottom: isActive(path) ? '3px solid #1877f2' : '3px solid transparent',
         transition: 'all 0.2s ease'
     });
 
-    const iconStyle = (path) => ({
-        // Changes icon color to blue when active, grey when not
+    const iconStyle = (path: string): React.CSSProperties => ({
         color: isActive(path) ? '#1877f2' : '#65676b',
         fontSize: '1.8rem'
     });
-    const navigate = useNavigate(); // 👈 ២. ប្រកាស variable ឈ្មោះ navigate
 
-    const handleLogout = () => {
+    const handleLogout = (): void => {
         localStorage.removeItem('token');
         localStorage.removeItem('role');
-        navigate('/login'); // ឥឡូវនេះវានឹងឈប់លោត Error ហើយ
+        navigate('/login');
     };
-    const searchContainerStyle = {
+
+    const searchContainerStyle: React.CSSProperties = {
         backgroundColor: '#f0f2f5',
         borderRadius: '20px',
         padding: '5px 12px',
@@ -35,7 +34,7 @@ const Navbar = () => {
         width: '240px'
     };
 
-    const searchInputStyle = {
+    const searchInputStyle: React.CSSProperties = {
         border: 'none',
         backgroundColor: 'transparent',
         outline: 'none',
@@ -43,16 +42,16 @@ const Navbar = () => {
         width: '100%',
         fontSize: '14px'
     };
+
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top shadow-sm w-100" style={{zindex: 1050, top: 0}} >
+        <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top shadow-sm w-100">
             <div className="container-fluid">
 
                 {/* LEFT SECTION: Logo & Search */}
-                <div>
-                    <Link className="navbar-brand fw-bold text-primary" to="/" style={{ fontSize: '24px' }}>
+                <div className="d-flex align-items-center">
+                    <Link className="navbar-brand fw-bold text-primary me-3" to="/" style={{ fontSize: '24px' }}>
                         I-Shop
                     </Link>
-                </div>
                     <div style={searchContainerStyle}>
                         <i className="bi bi-search text-muted" style={{ fontSize: '14px' }}></i>
                         <input
@@ -61,6 +60,7 @@ const Navbar = () => {
                             style={searchInputStyle}
                         />
                     </div>
+                </div>
 
                 {/* CENTER SECTION: Navigation Icons */}
                 <div className="d-none d-lg-flex justify-content-center flex-grow-1">
@@ -107,8 +107,4 @@ const Navbar = () => {
     );
 };
 
-
-//const searchStyle = { padding: '8px 15px', borderRadius: '20px', border: '1px solid #ddd', width: '300px' };
-
 export default Navbar;
-
