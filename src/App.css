@@ -75,3 +75,6 @@ body, html, #root {
     font-family: 'Khmer OS Battambang', sans-serif !important;
   }
 }
+.dropdown-toggle.hide-toggle::after {
+  display: none !important;
+}
