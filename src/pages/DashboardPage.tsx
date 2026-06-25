@@ -18,6 +18,7 @@ import {
     ArcElement
 } from 'chart.js';
 
+
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -30,7 +31,7 @@ ChartJS.register(
     ArcElement
 );
 
-const API_BASE_URL = 'https://api.i-knet.com';
+const API_BASE_URL=process.env.REACT_APP_API_URL;
 
 // ១. បង្កើត Interfaces សម្រាប់កំណត់ប្រភេទ Type ឱ្យបានម៉ឺងម៉ាត់
 interface Product {

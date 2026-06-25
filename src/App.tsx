@@ -1,5 +1,5 @@
 // src/App.tsx
-import React, { ReactNode, useState } from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import InvoiceDetail from './pages/InvoiceDetail';
 import LandingPage from './pages/LandingPage';
@@ -41,27 +41,46 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 const App: React.FC = () => {
     const isAuthenticated = () => localStorage.getItem('token') !== null;
 
-    // 🌟 ពេលបើកដំបូង មិនទាន់មាន Icon ណាបង្ហាញលើ Navbar ឡើយ
-    const [openedPages, setOpenedPages] = useState<OpenedPageItem[]>([]);
-    const [currentPageId, setCurrentPageId] = useState<string | null>(null);
+    // ១. កែសម្រួល State ដើម្បីអានពី localStorage
+    const [openedPages, setOpenedPages] = useState<OpenedPageItem[]>(() => {
+        const saved = localStorage.getItem('ishop_opened_pages');
+        return saved ? JSON.parse(saved) : [];
+    });
 
-    // 🌟 កែប្រែត្រង់នេះ៖ ពេលបើកមកដំបូង គឺមិនទាន់បង្ហាញទំព័រណាទាំងអស់ (ទុកជា null) ទាល់តែ User ជាអ្នក Add
-    const [globalOpenTab, setGlobalOpenTab] = useState<React.ReactNode>(null);
+    const [currentPageId, setCurrentPageId] = useState<string | null>(() => {
+        return localStorage.getItem('ishop_current_page_id');
+    });
 
-    // អនុគមន៍ពេល User ចុចជ្រើសរើសបើកទំព័រពី Dropdown List Add
+    // 🌟 កែសម្រួល៖ ជំនួសឱ្យការទុក Component ក្នុង State (ដែលរក្សាទុកក្នុង localStorage មិនកើត)
+    // យើងនឹងទុកតែ ID ហើយប្រើ Mapping ដើម្បីបង្ហាញ Component វិញ
+
+    // ២. បន្ថែម useEffect ដើម្បីធ្វើបច្ចុប្បន្នភាព localStorage រាល់ពេលមានការផ្លាស់ប្តូរ
+    useEffect(() => {
+        localStorage.setItem('ishop_opened_pages', JSON.stringify(openedPages));
+        if (currentPageId) {
+            localStorage.setItem('ishop_current_page_id', currentPageId);
+        } else {
+            localStorage.removeItem('ishop_current_page_id');
+        }
+    }, [openedPages, currentPageId]);
+
+    // ៣. បង្កើត Helper function ដើម្បី Map ID ទៅជា Component (ងាយស្រួលរក្សាទុក)
+    const getComponentById = (id: string | null): React.ReactNode => {
+        switch (id) {
+            case 'home-page': return <LandingPage />;
+            case 'user-login': return <LoginPage />;
+            default: return null;
+        }
+    };
+
     const handleNavbarOpenTab = (id: string, title: string, component: React.ReactNode, iconClass: string) => {
-        // ១. បើកបង្ហាញផ្ទាំងការងារ (Active Page) ដែល User បានចុចជ្រើសរើស
-        setGlobalOpenTab(component);
         setCurrentPageId(id);
-
-        // ២. រុញ Icon ទៅបង្ហាញនៅលើដង Navbar (ប្រសិនបមិនទាន់មាន)
         const isExist = openedPages.some(page => page.id === id);
         if (!isExist) {
             setOpenedPages([...openedPages, { id, title, icon: iconClass }]);
         }
     };
 
-    // អនុគមន៍ពេលចុចសញ្ញាខ្វែង ✕ ដើម្បីបិទ Tab Icon លើ Navbar
     const handleClosePage = (idToClose: string) => {
         const filtered = openedPages.filter(page => page.id !== idToClose);
         setOpenedPages(filtered);
@@ -70,14 +89,8 @@ const App: React.FC = () => {
             if (filtered.length > 0) {
                 const lastPage = filtered[filtered.length - 1];
                 setCurrentPageId(lastPage.id);
-
-                // បើកបង្ហាញ Component នៃ Tab ចុងក្រោយដែលនៅសល់នៅលើរបារ
-                if (lastPage.id === 'home-page') setGlobalOpenTab(<LandingPage />);
-                // ប្រសិនបើចង់ឱ្យវាបើកទំព័រផ្សេងទៀតដែលសល់ ប្អូនអាចថែមលក្ខខណ្ឌនៅត្រង់នេះបាន
             } else {
-                // 🌟 បើ User ចុចបិទ Icon អស់រលីងពីលើ Navbar ហើយ គឺត្រឡប់ទៅជាផ្ទាំងទំនេរ (null) វិញដដែល
                 setCurrentPageId(null);
-                setGlobalOpenTab(null);
             }
         }
     };
@@ -98,8 +111,8 @@ const App: React.FC = () => {
                             <div className="container-fluid p-0">
 
                                 {/* 🌟 បង្ហាញផ្ទាំងការងារតាមសកម្មភាពរបស់ User */}
-                                {globalOpenTab ? (
-                                    globalOpenTab
+                                {currentPageId ? (
+                                    getComponentById(currentPageId)
                                 ) : (
                                     /* 🎨 នេះជាផ្ទាំងទទេរ ឬផ្ទាំងស្វាគមន៍ដែលបង្ហាញមុនគេ ពេលទើបតែបើក Web មកភ្លាម */
                                     <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: '75vh' }}>

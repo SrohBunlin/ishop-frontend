@@ -3,7 +3,7 @@ import axios from 'axios';
 import AddOrderForm from '../components/AddOrderForm';
 import './OrderTracking.css';
 import 'jspdf-autotable';
-
+const API_BASE_URL=process.env.REACT_APP_API_URL;
 // ១. កំណត់ Interface សម្រាប់ធាតុនីមួយៗនៅក្នុង Order
 interface OrderItem {
     product_name: string;
@@ -35,7 +35,7 @@ const OrderTracking: React.FC = () => {
     const fetchOrders = useCallback(async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get<Order[]>('https://api.i-knet.com/api/orders/all', {
+            const response = await axios.get<Order[]>(`${API_BASE_URL}/api/orders/all`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -72,7 +72,7 @@ const OrderTracking: React.FC = () => {
         console.log("Sending token:", token);
 
         try {
-            await axios.put(`https://api.i-knet.com/api/orders/${orderId}/status`,
+            await axios.put(`${API_BASE_URL}/api/orders/${orderId}/status`,
                 { status: newStatus },
                 {
                     headers: {
@@ -186,7 +186,8 @@ const OrderTracking: React.FC = () => {
 
         if (printWindow) {
             printWindow.document.write(`
-                <html>
+                <
+                html>
                     <head>
                         <title>វិក្កយបត្រ iShop</title>
                         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">

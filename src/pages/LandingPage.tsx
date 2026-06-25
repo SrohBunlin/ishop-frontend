@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
 
-const API_BASE_URL = 'https://api.i-knet.com';
+const API_BASE_URL=process.env.REACT_APP_API_URL;
 
 interface Product {
     id: number;
@@ -18,7 +18,7 @@ const LandingPage: React.FC = () => {
     const LOCAL_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'><rect width='100%' height='100%' fill='%23eeeeee'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%23aaaaaa'>No Image</text></svg>";
 
     useEffect(() => {
-        axios.get<Product[]>('https://api.i-knet.com/api/products/all')
+        axios.get<Product[]>(`${API_BASE_URL}/api/products/all`)
             .then(res => setProducts(res.data))
             .catch(err => console.log(err));
     }, []);
