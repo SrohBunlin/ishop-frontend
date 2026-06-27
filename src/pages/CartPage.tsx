@@ -1,9 +1,12 @@
 import React from 'react';
-import { useCart, CartItem } from '../context/CartContext'; // ទាញយក useCart និង CartItem interface មកប្រើ
+import { useCart, CartItem } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
-// កំណត់រចនាសម្ព័ន្ធទិន្នន័យសម្រាប់ទំនិញដែលត្រូវផ្ញើទៅ API (API Order Item Interface)
+// 🌟 បន្ថែម API URL និង Placeholder
+const API_BASE_URL = process.env.REACT_APP_API_URL;
+const LOCAL_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'><rect width='100%' height='100%' fill='%23eeeeee'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%23aaaaaa'>No Image</text></svg>";
+
 interface APIOrderItem {
     product_id: number;
     product_name: string;
@@ -11,7 +14,6 @@ interface APIOrderItem {
     price: number;
 }
 
-// កំណត់រចនាសម្ព័ន្ធទិន្នន័យលំដាប់កុម្ម៉ង់ទាំងមូល (API Order Data Interface)
 interface APIOrderData {
     customer_name: string;
     total_amount: number;
@@ -21,12 +23,9 @@ interface APIOrderData {
 const CartPage: React.FC = () => {
     const { cartItems, updateQty, removeFromCart, clearCart } = useCart();
     const navigate = useNavigate();
-
-    // គណនាតម្លៃសរុប (TypeScript ដឹងច្បាស់ថា acc និង item គឺជាប្រភេទអ្វី)
     const totalAmount: number = cartItems.reduce((acc: number, item: CartItem) => acc + (item.price * item.qty), 0);
 
     const handleCheckout = async (): Promise<void> => {
-        // រៀបចំទិន្នន័យឱ្យត្រូវតាមឈ្មោះ Column ក្នុង Database (snake_case) ដោយភ្ជាប់ជាមួយប្រភេទ APIOrderData
         const orderData: APIOrderData = {
             customer_name: "Sroh Bunlin",
             total_amount: totalAmount,
@@ -72,8 +71,17 @@ const CartPage: React.FC = () => {
                     {cartItems.map((item: CartItem) => (
                         <div key={item.id} style={cartItemStyle}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                                {/* បើ cartItems មិនទាន់មាន imageUrl ទេ អាចប្រើ image ដែលមានក្នុង CartItem interface */}
-                                <img src={item.image || 'https://via.placeholder.com/60'} width="60" height="60" style={{ objectFit: 'cover', borderRadius: '5px' }} alt={item.name} />
+
+                                {/* 🌟 កែសម្រួលការបង្ហាញរូបភាពនៅទីនេះ */}
+                                <img
+                                    src={item.image && item.image !== "undefined" ? `${API_BASE_URL}${item.image}` : LOCAL_PLACEHOLDER}
+                                    width="60"
+                                    height="60"
+                                    style={{ objectFit: 'cover', borderRadius: '5px' }}
+                                    alt={item.name}
+                                    onError={(e) => (e.target as HTMLImageElement).src = LOCAL_PLACEHOLDER}
+                                />
+
                                 <div>
                                     <h4 style={{ margin: 0 }}>{item.name}</h4>
                                     <p style={{ margin: 0, color: '#666' }}>${item.price} x {item.qty}</p>
@@ -81,7 +89,6 @@ const CartPage: React.FC = () => {
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                                 <div style={qtyControlStyle}>
-                                    {/* ប៊ូតុងដក (-) */}
                                     <button
                                         style={qtyBtnStyle}
                                         onClick={() => updateQty(item.id, 'dec')}
@@ -91,7 +98,6 @@ const CartPage: React.FC = () => {
 
                                     <span style={{ fontWeight: 'bold', margin: '0 10px' }}>{item.qty}</span>
 
-                                    {/* ប៊ូតុងបូក (+) */}
                                     <button
                                         style={qtyBtnStyle}
                                         onClick={() => updateQty(item.id, 'inc')}
@@ -129,7 +135,6 @@ const CartPage: React.FC = () => {
     );
 };
 
-// Styles (ប្រើប្រាស់ React.CSSProperties សម្រាប់គ្រប់គ្រង Inline Styles)
 const cartItemStyle: React.CSSProperties = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 0', borderBottom: '1px solid #eee' };
 const deleteBtnStyle: React.CSSProperties = { backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' };
 const checkoutBtnStyle: React.CSSProperties = { backgroundColor: '#28a745', color: 'white', border: 'none', padding: '12px 25px', borderRadius: '8px', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' };
