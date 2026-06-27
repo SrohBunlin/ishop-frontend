@@ -78,19 +78,19 @@ const LandingPage: React.FC = () => {
             </div>
 
             {/* 🌟 នេះគឺជាប៊ូតុងកន្ត្រកអណ្តែតនៅខាងក្រោមឆ្វេង */}
-            <div
-                style={floatingCartStyle}
-                onClick={() => navigate('/cart')} // ពេលចុចឱ្យរត់ទៅកាន់ Route /cart
-            >
-                <i className="bi bi-cart3"></i>
+            {totalItems > 0 && (
+                <div
+                    style={floatingCartStyle}
+                    onClick={() => navigate('/cart')}
+                >
+                    <i className="bi bi-cart3"></i>
 
-                {/* បង្ហាញចំនួនទំនិញពណ៌ក្រហម (Badge) ប្រសិនបើមានទំនិញក្នុងកន្ត្រក */}
-                {totalItems > 0 && (
+                    {/* ដោយសារកន្ត្រកលេចឡើងទាល់តែមានទំនិញ ដូច្នេះយើងមិនបាច់ដាក់លក្ខខណ្ឌឆែក Badge ទៀតទេ */}
                     <span style={badgeStyle}>
                         {totalItems}
                     </span>
-                )}
-            </div>
+                </div>
+            )}
 
         </div>
     );
