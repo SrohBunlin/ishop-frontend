@@ -72,10 +72,12 @@ const App: React.FC = () => {
     };
 
     const handleNavbarOpenTab = (id: string, title: string, component: React.ReactNode, iconClass: string) => {
-        setCurrentPageId(id);
+        setCurrentPageId(id); // គ្រាន់តែ Set ID គឺគ្រប់គ្រាន់ហើយ
+
         const isExist = openedPages.some(page => page.id === id);
         if (!isExist) {
-            setOpenedPages([...openedPages, { id, title, icon: iconClass }]);
+            // បើទំព័រថ្មី ទើបបន្ថែមចូល List
+            setOpenedPages([...openedPages, { id, title: title || id, icon: iconClass || 'bi-window' }]);
         }
     };
 

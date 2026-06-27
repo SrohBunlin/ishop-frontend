@@ -43,8 +43,15 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
 
     const handleTabClick = (id: string) => {
         const page = AVAILABLE_PAGES[id];
+
+        // បើសិនជាមានក្នុង AVAILABLE_PAGES ប្រើ Data ពីនោះ
         if (page) {
             onOpenTab(id, page.title, page.component, page.icon);
+        } else {
+            // 🌟 នេះជាចំណុចសំខាន់៖ បើគ្មានក្នុង AVAILABLE_PAGES
+            // យើងនៅតែហៅ onOpenTab ដើម្បីឱ្យ App.tsx ដឹងថា User ចង់ប្តូរទៅទំព័រនោះ
+            // យើងអាចដាក់ Title/Icon បណ្តោះអាសន្នបាន (ឬទាញតាម ID)
+            onOpenTab(id, 'ទំព័រ', null, 'bi-window');
         }
     };
 
