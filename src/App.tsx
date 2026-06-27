@@ -51,10 +51,6 @@ const App: React.FC = () => {
         return localStorage.getItem('ishop_current_page_id');
     });
 
-    // 🌟 កែសម្រួល៖ ជំនួសឱ្យការទុក Component ក្នុង State (ដែលរក្សាទុកក្នុង localStorage មិនកើត)
-    // យើងនឹងទុកតែ ID ហើយប្រើ Mapping ដើម្បីបង្ហាញ Component វិញ
-
-    // ២. បន្ថែម useEffect ដើម្បីធ្វើបច្ចុប្បន្នភាព localStorage រាល់ពេលមានការផ្លាស់ប្តូរ
     useEffect(() => {
         localStorage.setItem('ishop_opened_pages', JSON.stringify(openedPages));
         if (currentPageId) {
@@ -64,11 +60,13 @@ const App: React.FC = () => {
         }
     }, [openedPages, currentPageId]);
 
-    // ៣. បង្កើត Helper function ដើម្បី Map ID ទៅជា Component (ងាយស្រួលរក្សាទុក)
     const getComponentById = (id: string | null): React.ReactNode => {
         switch (id) {
             case 'home-page': return <LandingPage />;
             case 'user-login': return <LoginPage />;
+            case 'dashboard': return <DashboardPage />;
+            case 'cart': return <CartPage />;
+            case 'invoice': return <InvoiceDetail />;
             default: return null;
         }
     };
@@ -109,12 +107,9 @@ const App: React.FC = () => {
                     <Routes>
                         <Route path="/" element={
                             <div className="container-fluid p-0">
-
-                                {/* 🌟 បង្ហាញផ្ទាំងការងារតាមសកម្មភាពរបស់ User */}
                                 {currentPageId ? (
                                     getComponentById(currentPageId)
                                 ) : (
-                                    /* 🎨 នេះជាផ្ទាំងទទេរ ឬផ្ទាំងស្វាគមន៍ដែលបង្ហាញមុនគេ ពេលទើបតែបើក Web មកភ្លាម */
                                     <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: '75vh' }}>
                                         <div className="text-center p-5 rounded-3 bg-white shadow-sm border" style={{ maxWidth: '450px' }}>
                                             <i className="bi bi-folder-plus text-primary" style={{ fontSize: '3.5rem' }}></i>
@@ -126,7 +121,6 @@ const App: React.FC = () => {
 
                             </div>
                         } />
-
                         <Route path="/cart" element={<CartPage />} />
                         <Route path="/orders-tracking" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
                         <Route path="/login" element={<LoginPage />} />

@@ -32,8 +32,6 @@ ChartJS.register(
 );
 
 const API_BASE_URL=process.env.REACT_APP_API_URL;
-
-// ១. បង្កើត Interfaces សម្រាប់កំណត់ប្រភេទ Type ឱ្យបានម៉ឺងម៉ាត់
 interface Product {
     id: number;
     name: string;
@@ -72,7 +70,6 @@ const DashboardPage: React.FC = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [currentId, setCurrentId] = useState<number | null>(null);
-
     const [products, setProducts] = useState<Product[]>([]);
     const [newProduct, setNewProduct] = useState<NewProductState>({ name: '', price: '', stockQuantity: '' });
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -80,13 +77,11 @@ const DashboardPage: React.FC = () => {
     const [reportData, setReportData] = useState<ReportStats>({ totalRevenue: 0, totalOrders: 0 });
     const [orders, setOrders] = useState<Order[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
-
     const [productPage, setProductPage] = useState<number>(1);
     const [orderPage, setOrderPage] = useState<number>(1);
     const recordsPerPage = 10;
     const LOCAL_PLACEHOLDER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'><rect width='100%' height='100%' fill='%23eeeeee'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='10' fill='%23aaaaaa'>No Image</text></svg>";
 
-    // 💡 គ្រប់គ្រងការបង្កើត និងសម្អាត Object URL សម្រាប់រូបភាព Preview ដើម្បីការពារ Memory Leak
     useEffect(() => {
         if (!imageFile) {
             setPreviewUrl('');
@@ -189,7 +184,6 @@ const DashboardPage: React.FC = () => {
 
     const totalProductPages = Math.ceil(filteredProducts.length / recordsPerPage) || 1;
     const safeProductPage = Math.min(productPage, totalProductPages);
-
     const lastProductIndex = safeProductPage * recordsPerPage;
     const firstProductIndex = lastProductIndex - recordsPerPage;
     const currentProductRecords = filteredProducts.slice(firstProductIndex, lastProductIndex);
@@ -362,12 +356,9 @@ const DashboardPage: React.FC = () => {
 
     const totalOrderPages = Math.ceil(filteredOrders.length / recordsPerPage) || 1;
     const safeOrderPage = Math.min(orderPage, totalOrderPages);
-
     const lastOrderIndex = safeOrderPage * recordsPerPage;
     const firstOrderIndex = lastOrderIndex - recordsPerPage;
     const currentOrderRecords = filteredOrders.slice(firstOrderIndex, lastOrderIndex);
-
-    // 💡 Helper Function សម្រាប់បង្កើត Pagination កាត់បន្ថយកូដស្ទួន (DRY)
     const renderPagination = (currentPage: number, totalPages: number, setPageAction: React.Dispatch<React.SetStateAction<number>>) => {
         const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
         return (
