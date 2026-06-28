@@ -16,7 +16,7 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
     const [showModal, setShowModal] = useState(false);
     const [editName, setEditName] = useState('');
     const [editAvatar, setEditAvatar] = useState('');
-
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     // មុខងារបើក Modal
     const handleOpenModal = () => {
         setEditName(userProfile?.name || '');
@@ -25,13 +25,58 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
     };
 
     // មុខងាររក្សាទុកទិន្នន័យថ្មី
-    const handleSave = () => {
-        if (setUser) {
-            setUser({ name: editName, avatar: editAvatar });
-        }
-        setShowModal(false);
-    };
+    const handleSave = async () => {
+        try {
+            // ១. រៀបចំទិន្នន័យជាទម្រង់ FormData (ដើម្បីអាចបញ្ជូន File បាន)
+            const formData = new FormData();
+            formData.append('name', editName);
 
+            // បើមានរើសរូបថតថ្មី ទើបបញ្ជូនទៅ
+            if (selectedFile) {
+                formData.append('avatar', selectedFile);
+            }
+
+            // ២. បញ្ជូនទិន្នន័យទៅកាន់ API (ឧទាហរណ៍: /api/users/profile)
+            const token = localStorage.getItem('token');
+            const response = await fetch('https://api.i-knet.com/api/profile', {
+                method: 'PUT', // ឬ POST អាស្រ័យលើ Backend របស់ប្អូន
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                    // ⚠️ កុំដាក់ 'Content-Type': 'application/json' ព្រោះយើងប្រើ FormData
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // ៣. បើជោគជ័យ Update State ក្នុង React ដើម្បីឱ្យវាប្តូរភ្លាមៗ
+                if (setUser) {
+                    // data.avatarUrl គឺជា Link រូបថតថ្មីដែល Backend ឆ្លើយតបមកវិញ
+                    setUser({ name: data.name, avatar: data.avatarUrl });
+                }
+
+                setShowModal(false);
+                alert("រក្សាទុកជោគជ័យ!");
+            } else {
+                alert("មានបញ្ហាក្នុងការរក្សាទុកទិន្នន័យ");
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("មិនអាចភ្ជាប់ទៅកាន់ Server បានទេ");
+        }
+    };
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file); // 🌟 រក្សាទុក File ពិតប្រាកដត្រៀមបញ្ជូនទៅ API
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setEditAvatar(reader.result as string); // សម្រាប់ Preview លើអេក្រង់
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     return (
         <>
             <aside
@@ -94,22 +139,29 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                             <div className="modal-body">
                                 <div className="mb-3">
                                     <label className="form-label text-muted">ឈ្មោះបង្ហាញ</label>
+                                    {/* 🌟 កន្លែងនេះហើយដែល editAvatar ត្រូវប្រើប្រាស់ (ដើម្បីបង្ហាញរូបដែលទើប Upload) */}
+                                    <img
+                                        src={editAvatar || userProfile?.avatar || 'https://via.placeholder.com/60'}
+                                        alt="Preview"
+                                        className="rounded-circle border"
+                                        style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                                    />
+
+                                    {/* 🌟 ត្រូវប្រាកដថាអត់មាន value={editAvatar} នៅលើ input file ទេ */}
                                     <input
-                                        type="text"
+                                        type="file"
                                         className="form-control"
-                                        value={editName}
-                                        onChange={(e) => setEditName(e.target.value)}
-                                        placeholder="បញ្ចូលឈ្មោះរបស់អ្នក"
+                                        accept="image/*"
+                                        onChange={handleImageUpload}
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label className="form-label text-muted">តំណភ្ជាប់រូបថត (Image URL)</label>
+                                    <label className="form-label text-muted">រូបថត (Image)</label>
                                     <input
-                                        type="text"
+                                        type="file"
                                         className="form-control"
-                                        value={editAvatar}
-                                        onChange={(e) => setEditAvatar(e.target.value)}
-                                        placeholder="https://example.com/photo.jpg"
+                                        accept="image/*"
+                                        onChange={handleImageUpload} // 🌟 នេះហើយជាកន្លែងដែលប្អូនត្រូវភ្ជាប់វា!
                                     />
                                 </div>
                             </div>
