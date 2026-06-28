@@ -23,10 +23,15 @@ interface OpenedPageItem {
 interface MainLayoutProps {
     children: ReactNode;
     userProfile?: {
-        name: string;
+        firstName: string;
+        lastName: string;
         avatar: string;
     };
-    setUser?: React.Dispatch<React.SetStateAction<{ name: string; avatar: string }>>;
+    setUser?: React.Dispatch<React.SetStateAction<{
+        firstName: string;
+        lastName: string;
+        avatar: string;
+    }>>;
 }
 
 const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ children, handleLogout, userProfile, setUser }) => {
@@ -50,7 +55,11 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
 
 const AppContent: React.FC=() =>{
     const navigate = useNavigate();
-    const [user, setUser] = useState({ name: 'ប៊ុនលីន', avatar: 'https://ui-avatars.com/api/?name=Bunlin' });
+    const [user, setUser] = useState({
+        firstName: 'ឈ្មោះដំបូង',
+        lastName: 'ឈ្មោះទីពីរ',
+        avatar: '...'
+    });
 
     const isAuthenticated = () => localStorage.getItem('token') !== null;
 
