@@ -156,12 +156,24 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
                             </div>
                             <div className="modal-body">
-                                <img
-                                    src={editAvatar || userProfile?.profilePictureUrl || ''}
-                                    alt="Preview"
-                                    className="rounded-circle border"
-                                    style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                                />
+                                {(editAvatar || userProfile?.profilePictureUrl) ? (
+                                    <img
+                                        src={
+                                            editAvatar.startsWith('data:')
+                                                ? editAvatar
+                                                : `https://api.i-knet.com${editAvatar || userProfile?.profilePictureUrl}`
+                                        }
+                                        alt="Preview"
+                                        className="rounded-circle border"
+                                        style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                    />
+                                ) : (
+                                    /* បើអត់មានរូប គឺបង្ហាញ Initials */
+                                    <div className="rounded-circle border d-flex align-items-center justify-content-center bg-light"
+                                         style={{ width: '80px', height: '80px', fontSize: '2rem', margin: '0 auto', fontWeight: 'bold', color: '#124F9C' }}>
+                                        {getInitials(editFirstName, editLastName)}
+                                    </div>
+                                )}
                                 <div className="mb-3">
                                     <label className="form-label text-muted">នាមត្រកូល</label>
                                     <input
