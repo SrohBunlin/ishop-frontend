@@ -41,7 +41,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 const App: React.FC = () => {
     const isAuthenticated = () => localStorage.getItem('token') !== null;
 
-    // ១. កែសម្រួល State ដើម្បីអានពី localStorage
     const [openedPages, setOpenedPages] = useState<OpenedPageItem[]>(() => {
         const saved = localStorage.getItem('ishop_opened_pages');
         return saved ? JSON.parse(saved) : [];
@@ -60,10 +59,26 @@ const App: React.FC = () => {
         }
     }, [openedPages, currentPageId]);
 
+    // 🌟 មុខងារថ្មី៖ ដំណើរការពេល Login ជោគជ័យ
+    const handleLoginSuccess = () => {
+        setOpenedPages(prevPages => {
+            // ១. លុប Tab Login ចេញ
+            const filtered = prevPages.filter(page => page.id !== 'user-login');
+            // ២. ឆែកមើលបើមិនទាន់មាន Tab Dashboard ទេ គឺបន្ថែមវាចូល
+            if (!filtered.some(page => page.id === 'dashboard')) {
+                return [...filtered, { id: 'dashboard', title: 'គណនីខ្ញុំ', icon: 'profile-img' }];
+            }
+            return filtered;
+        });
+        // ៣. ប្តូរ Focus ទៅកាន់ Tab Dashboard ភ្លាមៗ
+        setCurrentPageId('dashboard');
+    };
+
     const getComponentById = (id: string | null): React.ReactNode => {
         switch (id) {
             case 'home-page': return <LandingPage />;
-            case 'user-login': return <LoginPage />;
+            // 🌟 បញ្ជូន onLoginSuccess ទៅ LoginPage
+            case 'user-login': return <LoginPage onLoginSuccess={handleLoginSuccess} />;
             case 'dashboard': return <DashboardPage />;
             case 'cart': return <CartPage />;
             case 'invoice': return <InvoiceDetail />;
@@ -71,12 +86,11 @@ const App: React.FC = () => {
         }
     };
 
-    const handleNavbarOpenTab = (id: string, title: string, component: React.ReactNode, iconClass: string) => {
-        setCurrentPageId(id); // គ្រាន់តែ Set ID គឺគ្រប់គ្រាន់ហើយ
+    const handleNavbarOpenTab = (id: string, title: string, _component: React.ReactNode, iconClass: string) => {
+        setCurrentPageId(id);
 
         const isExist = openedPages.some(page => page.id === id);
         if (!isExist) {
-            // បើទំព័រថ្មី ទើបបន្ថែមចូល List
             setOpenedPages([...openedPages, { id, title: title || id, icon: iconClass || 'bi-window' }]);
         }
     };
@@ -125,7 +139,10 @@ const App: React.FC = () => {
                         } />
                         <Route path="/cart" element={<CartPage />} />
                         <Route path="/orders-tracking" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
-                        <Route path="/login" element={<LoginPage />} />
+
+                        {/* 🌟 បញ្ជូន onLoginSuccess ទៅ LoginPage ទី២ (ករណីចូលតាម URL ផ្ទាល់) */}
+                        <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+
                         <Route path="/admin/dashboard" element={isAuthenticated() ? <DashboardPage /> : <Navigate to="/login" replace />} />
                         <Route path="/invoice/:id" element={<InvoiceDetail />} />
                         <Route path="*" element={<Navigate to="/" replace />} />

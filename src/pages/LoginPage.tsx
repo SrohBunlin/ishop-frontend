@@ -9,21 +9,24 @@ interface LoginResponse {
     roles: string[];
 }
 
-const LoginPage: React.FC = () => {
+// 🌟 ២. បង្កើត Interface សម្រាប់ទទួល Props ពី App.tsx
+interface LoginPageProps {
+    onLoginSuccess?: () => void;
+}
+
+// 🌟 ៣. បញ្ចូល LoginPageProps ទៅក្នុង Component
+const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [error, setError] = useState<string>('');
     const navigate = useNavigate();
 
-    // ២. កំណត់ប្រភេទ Change Event ឱ្យត្រូវតាមស្តង់ដារ HTML Input
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
-    // ៣. កំណត់ប្រភេទ Form Submit Event និងការត្រឡប់មកវិញជា Promise<void>
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         try {
-            // ភ្ជាប់ Interface <LoginResponse> ជាមួយ axios.post ដើម្បីឱ្យស្គាល់ response.data ច្បាស់លាស់
             const response = await axios.post<LoginResponse>('https://api.i-knet.com/api/auth/login', credentials);
 
             // រក្សាទុក Token និង Role ទៅក្នុង LocalStorage
@@ -31,6 +34,11 @@ const LoginPage: React.FC = () => {
 
             if (response.data.roles && response.data.roles.length > 0) {
                 localStorage.setItem('role', response.data.roles[0]);
+            }
+
+            // 🌟 ៤. ហៅ Function ប្តូរ Tab នៅពេល Login ជោគជ័យ!
+            if (onLoginSuccess) {
+                onLoginSuccess();
             }
 
             Swal.fire({
@@ -73,7 +81,7 @@ const LoginPage: React.FC = () => {
     );
 };
 
-// --- Styles (ប្រើប្រាស់ React.CSSProperties ដើម្បីផ្ដល់ភាពម៉ឺងម៉ាត់ និងទប់ស្កាត់ Typo) ---
+// --- Styles ---
 const loginPageStyle: React.CSSProperties = { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f0f2f5' };
 const loginCardStyle: React.CSSProperties = { width: '400px', padding: '40px', backgroundColor: '#fff', borderRadius: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' };
 const inputGroup: React.CSSProperties = { marginBottom: '20px' };

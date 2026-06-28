@@ -2,6 +2,7 @@
 import React, { useRef, useEffect } from 'react';
 import LandingPage from '../pages/LandingPage';
 import LoginPage from "../pages/LoginPage";
+import { useNavigate } from 'react-router-dom'; // 🌟 បន្ថែម useNavigate បើសិនចង់ឱ្យ Navbar ជួយដូរ URL ដែរ
 
 interface OpenedPageItem {
     id: string;
@@ -15,7 +16,6 @@ interface NavbarProps {
     onClosePage: (id: string) => void;
 }
 
-// បង្កើត Object សម្រាប់ផ្ទុកទិន្នន័យទំព័រ ដើម្បីងាយស្រួលគ្រប់គ្រង និងមិនបាច់សរសេរកូដដដែលៗ
 const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNode, icon: string }> = {
     'home-page': { title: '🏠 ទំព័រដើម', component: <LandingPage />, icon: 'bi-house-door' },
     'user-login': { title: '👤 គណនីអ្នកប្រើប្រាស់', component: <LoginPage />, icon: 'bi-person-lock' }
@@ -23,8 +23,8 @@ const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNod
 
 const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, onClosePage }) => {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const navigate = useNavigate(); // 🌟 ប្រើសម្រាប់ប្តូរ Route
 
-    // បោសសម្អាត Timer នៅពេល Component ត្រូវបាន unmount ដើម្បីការពារ Memory Leak
     useEffect(() => {
         return () => {
             if (timerRef.current) clearTimeout(timerRef.current);
@@ -34,7 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
     const handlePressStart = (id: string) => {
         timerRef.current = setTimeout(() => {
             onClosePage(id);
-        }, 1000); // 1000ms = 1 វិនាទី (លុបចោលភ្លាមៗ)
+        }, 1000);
     };
 
     const handlePressEnd = () => {
@@ -44,15 +44,14 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
     const handleTabClick = (id: string) => {
         const page = AVAILABLE_PAGES[id];
 
-        // បើសិនជាមានក្នុង AVAILABLE_PAGES ប្រើ Data ពីនោះ
         if (page) {
             onOpenTab(id, page.title, page.component, page.icon);
         } else {
-            // 🌟 នេះជាចំណុចសំខាន់៖ បើគ្មានក្នុង AVAILABLE_PAGES
-            // យើងនៅតែហៅ onOpenTab ដើម្បីឱ្យ App.tsx ដឹងថា User ចង់ប្តូរទៅទំព័រនោះ
-            // យើងអាចដាក់ Title/Icon បណ្តោះអាសន្នបាន (ឬទាញតាម ID)
             onOpenTab(id, 'ទំព័រ', null, 'bi-window');
         }
+
+        // 🌟 រុញ URL ទៅកាន់ Page ដែលត្រូវគ្នា (ការពារកុំឱ្យនៅជាប់ URL ចាស់)
+        navigate(id === 'home-page' ? '/' : `/${id === 'dashboard' ? 'admin/dashboard' : id}`);
     };
 
     const isPageOpened = (id: string) => openedPages.some(page => page.id === id);
@@ -83,21 +82,31 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                 backgroundColor: currentPageId === page.id ? '#e7f1ff' : '#f8f9fa',
                                 border: currentPageId === page.id ? '2px solid #0d6efd' : '1px solid #dee2e6',
                                 cursor: 'pointer',
-                                userSelect: 'none' // ការពារកុំឱ្យ highlight ពេលសង្កត់យូរ
+                                userSelect: 'none'
                             }}
-
-                            // 🌟 មុខងារថ្មី៖ ចុចសង្កត់ (Hold) 1 វិនាទី គឺលុបចោលភ្លាម (សម្រាប់កុំព្យូទ័រ)
                             onMouseDown={() => handlePressStart(page.id)}
                             onMouseUp={handlePressEnd}
                             onMouseLeave={handlePressEnd}
-
-                            // 🌟 បន្ថែមសម្រាប់ទូរស័ព្ទដៃ (Touch Devices)
                             onTouchStart={() => handlePressStart(page.id)}
                             onTouchEnd={handlePressEnd}
                             onTouchCancel={handlePressEnd}
                             onClick={() => handleTabClick(page.id)}
                         >
-                            <i className={`bi ${page.icon} fs-4 ${currentPageId === page.id ? 'text-primary' : 'text-secondary'}`}></i>
+                            {/* 🌟 នេះគឺជាកន្លែងដែលយើងឆែកបង្ហាញរូប Profile ជំនួស Icon ធម្មតា */}
+                            {page.icon === 'profile-img' ? (
+                                <img
+                                    src="https://ui-avatars.com/api/?name=Admin&background=0d6efd&color=fff"
+                                    alt="User Profile"
+                                    style={{
+                                        width: '38px',
+                                        height: '38px',
+                                        borderRadius: '50%',
+                                        objectFit: 'cover'
+                                    }}
+                                />
+                            ) : (
+                                <i className={`bi ${page.icon} fs-4 ${currentPageId === page.id ? 'text-primary' : 'text-secondary'}`}></i>
+                            )}
                         </div>
                     ))}
 
@@ -116,7 +125,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                 </li>
                             )}
 
-                            {!isPageOpened('user-login') && (
+                            {!isPageOpened('user-login') && !localStorage.getItem('token') && (
                                 <li>
                                     <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick('user-login')}>
                                         <i className="bi bi-person-lock text-success me-3"></i> គណនីអ្នកប្រើប្រាស់
