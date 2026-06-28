@@ -102,7 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                         className="btn btn-link text-decoration-none text-center px-3 mb-4 w-100"
                     >
                         <img
-                            src={userProfile?.avatar || 'https://via.placeholder.com/80'}
+                            src={userProfile?.avatar || ''}
                             alt="Profile"
                             className="rounded-circle mb-2 shadow-sm"
                             style={{ width: '70px', height: '70px', objectFit: 'cover', border: '2px solid white' }}
@@ -144,7 +144,7 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                             </div>
                             <div className="modal-body">
                                 <img
-                                    src={editAvatar || userProfile?.avatar || 'https://via.placeholder.com/60'}
+                                    src={editAvatar || userProfile?.avatar || ''}
                                     alt="Preview"
                                     className="rounded-circle border"
                                     style={{ width: '60px', height: '60px', objectFit: 'cover' }}
