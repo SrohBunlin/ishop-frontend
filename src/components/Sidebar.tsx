@@ -62,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                     setUser({
                         firstName: data.firstName,
                         lastName: data.lastName,
-                        avatar: data.avatarUrl
+                        profilePictureUrl: data.profilePictureUrl
                     });
                 }
 
