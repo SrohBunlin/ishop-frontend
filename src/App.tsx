@@ -29,25 +29,13 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
     const isAdminPath = ['/admin', '/products', '/orders-tracking'].some(path => location.pathname.startsWith(path));
 
     return (
-        // ១. ប្រើ flex-column ដើម្បីឱ្យធាតុនៅខាងក្នុងរៀបចំពីលើមកក្រោម
-        <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
 
-            {/* ទីនេះគឺជាកន្លែងដែល Navbar ស្ថិតនៅ (វាបង្ហាញលើគេបង្អស់) */}
-
-            {/* ២. បង្កើត div ថ្មីមួយសម្រាប់ Sidebar និង Content ដើម្បីឱ្យវាស្ថិតនៅខាងក្រោម Navbar */}
-            <div className="d-flex flex-grow-1">
-                {/* Sidebar នៅខាងឆ្វេង */}
-                {isAdminPath && (
-                    <div style={{ width: '260px', flexShrink: 0 }}>
-                        <Sidebar handleLogout={handleLogout} />
-                    </div>
-                )}
-
-                {/* Content នៅខាងស្តាំ */}
+        <div className="d-flex" style={{ minHeight: '100vh', overflow: 'hidden' }}>
+                {/* ៤. បញ្ជូន handleLogout ទៅឱ្យ Sidebar */}
+                {isAdminPath && <Sidebar handleLogout={handleLogout} />}
                 <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
                     {children}
                 </div>
-            </div>
         </div>
     );
 };
