@@ -105,6 +105,26 @@ const AppContent: React.FC=() =>{
             localStorage.setItem('ishop_opened_pages', JSON.stringify(openedPages));
         }
     }, [openedPages, isLoaded]);
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const response = await fetch('https://api.i-knet.com/api/users/profile', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        setUser(data); // 🌟 Update state ឱ្យមានទិន្នន័យពេល Reload
+                    }
+                } catch (error) {
+                    console.error("មិនអាចទាញយក Profile បានទេ", error);
+                }
+            }
+        };
+
+        fetchUserProfile();
+    }, []); // ដាក់ Array ទទេ ដើម្បីឱ្យវាដំណើរការតែម្តងពេល Page Load
 
     // 🌟 មុខងារថ្មី៖ ដំណើរការពេល Login ជោគជ័យ
     const handleLoginSuccess = () => {
