@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
+const getInitials = (firstName: string, lastName: string) => {
+    if (!firstName && !lastName) return 'IS';
+    const f = firstName ? firstName.charAt(0) : '';
+    const l = lastName ? lastName.charAt(0) : '';
+    return `${f}${l}`.toUpperCase();
+};
 interface UserProfile {
     firstName: string;
     lastName: string;
@@ -102,11 +107,19 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                         onClick={handleOpenModal}
                         className="btn btn-link text-decoration-none text-center px-3 mb-4 w-100"
                     >
-                        <img
-                            src={`https://api.i-knet.com${userProfile?.profilePictureUrl}`} alt="Profile"
-                            className="rounded-circle mb-2 shadow-sm"
-                            style={{ width: '70px', height: '70px', objectFit: 'cover', border: '2px solid white' }}
-                        />
+                        {userProfile?.profilePictureUrl ? (
+                            <img
+                                src={`https://api.i-knet.com${userProfile.profilePictureUrl}`}
+                                alt="Profile"
+                                className="rounded-circle mb-2 shadow-sm"
+                                style={{ width: '70px', height: '70px', objectFit: 'cover', border: '2px solid white' }}
+                            />
+                        ) : (
+                            <div className="rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center bg-white text-primary"
+                                 style={{ width: '70px', height: '70px', fontSize: '1.5rem', fontWeight: 'bold', border: '2px solid white' }}>
+                                {getInitials(userProfile?.firstName || '', userProfile?.lastName || '')}
+                            </div>
+                        )}
                         <div className="text-white fw-bold">
                             {userProfile ? `${userProfile.firstName} ${userProfile.lastName}` : 'iShop Admin'}
                         </div>
