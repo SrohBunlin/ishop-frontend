@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 interface UserProfile {
-    firstName: string; // ត្រូវគ្នានឹង firstName ក្នុង Entity
-    lastName: string;  // ត្រូវគ្នានឹង lastName ក្នុង Entity
-    avatar: string;
+    firstName: string;
+    lastName: string;
+    profilePictureUrl: string;
 }
+
 interface SidebarProps {
     handleLogout: () => void;
-    userProfile?: UserProfile;
-    setUser?: React.Dispatch<React.SetStateAction<UserProfile>>;
+    userProfile: UserProfile | null; // ត្រូវប្រាកដថាមានផ្ទុក profilePictureUrl
+    setUser: (user: any) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser }) => {
@@ -26,7 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
     const handleOpenModal = () => {
         setEditFirstName(userProfile?.firstName || '');
         setEditLastName(userProfile?.lastName || '');
-        setEditAvatar(userProfile?.avatar || '');
+        setEditAvatar(userProfile?.profilePictureUrl || '');
         setShowModal(true);
     };
 
@@ -102,8 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                         className="btn btn-link text-decoration-none text-center px-3 mb-4 w-100"
                     >
                         <img
-                            src={userProfile?.avatar || ''}
-                            alt="Profile"
+                            src={`https://api.i-knet.com${userProfile?.profilePictureUrl}`} alt="Profile"
                             className="rounded-circle mb-2 shadow-sm"
                             style={{ width: '70px', height: '70px', objectFit: 'cover', border: '2px solid white' }}
                         />
@@ -144,7 +144,7 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                             </div>
                             <div className="modal-body">
                                 <img
-                                    src={editAvatar || userProfile?.avatar || ''}
+                                    src={editAvatar || userProfile?.profilePictureUrl || ''}
                                     alt="Preview"
                                     className="rounded-circle border"
                                     style={{ width: '60px', height: '60px', objectFit: 'cover' }}

@@ -25,14 +25,16 @@ interface MainLayoutProps {
     userProfile?: {
         firstName: string;
         lastName: string;
-        avatar: string;
+        profilePictureUrl: string;
+        avatar?: string; // បន្ថែមសញ្ញា ? ដើម្បីឱ្យវាជា optional (មិនចាំបាច់មានគ្រប់ពេល)
     };
     setUser?: React.Dispatch<React.SetStateAction<{
         firstName: string;
         lastName: string;
-        avatar: string;
+        profilePictureUrl: string;
     }>>;
 }
+
 
 const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ children, handleLogout, userProfile, setUser }) => {
     const location = useLocation();
@@ -43,7 +45,7 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
         <div className="d-flex flex-grow-1" style={{ overflow: 'hidden' }}>
             {isAdminPath && (
                 <div style={{ width: '260px', flexShrink: 0, backgroundColor: '#124F9C', overflowY: 'auto' }}>
-                    <Sidebar handleLogout={handleLogout} userProfile={userProfile} setUser={setUser}/>
+                    <Sidebar handleLogout={handleLogout} userProfile={userProfile as any} setUser={setUser as any}/>
                 </div>
             )}
             <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
@@ -161,7 +163,11 @@ const AppContent: React.FC=() =>{
                 onOpenTab={handleNavbarOpenTab}
                 onClosePage={handleClosePage}
             />
-        <MainLayout handleLogout={handleLogout} userProfile={user} setUser={setUser}>
+
+            {/* បើក MainLayout នៅទីនេះ */}
+            <MainLayout handleLogout={handleLogout} userProfile={user as any} setUser={setUser as any}>
+
+                {/* ដាក់ Routes ទាំងអស់នៅខាងក្នុង MainLayout */}
                 <Routes>
                     <Route path="/" element={
                         <div className="container-fluid p-0">
@@ -176,19 +182,21 @@ const AppContent: React.FC=() =>{
                                     </div>
                                 </div>
                             )}
-
                         </div>
                     } />
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/admin/orders-tracking" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
-                    {/* 🌟 បញ្ជូន onLoginSuccess ទៅ LoginPage ទី២ (ករណីចូលតាម URL ផ្ទាល់) */}
                     <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+
+                    {/* កែសម្រួលការបិទ div ឱ្យត្រឹមត្រូវនៅទីនេះ */}
                     <Route path="/admin/profile" element={isAuthenticated() ? <div>នេះជាទំព័រ User Profile របស់ប្អូន</div> : <Navigate to="/login" replace />} />
+
                     <Route path="/admin/dashboard" element={isAuthenticated() ? <DashboardPage /> : <Navigate to="/login" replace />} />
                     <Route path="/invoice/:id" element={<InvoiceDetail />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
-        </MainLayout>
+
+            </MainLayout> {/* បិទ MainLayout នៅចុងក្រោយបង្អស់ */}
         </div>
     );
 };
