@@ -110,7 +110,7 @@ const AppContent: React.FC=() =>{
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await fetch('https://api.i-knet.com/api/users/profile', {
+                    const response = await fetch('https://api.i-knet.com/api/users', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (response.ok) {
