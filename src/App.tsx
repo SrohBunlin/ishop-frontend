@@ -65,13 +65,13 @@ const App: React.FC = () => {
             // ១. លុប Tab Login ចេញ
             const filtered = prevPages.filter(page => page.id !== 'user-login');
             // ២. ឆែកមើលបើមិនទាន់មាន Tab Dashboard ទេ គឺបន្ថែមវាចូល
-            if (!filtered.some(page => page.id === 'dashboard')) {
-                return [...filtered, { id: 'dashboard', title: 'គណនីខ្ញុំ', icon: 'profile-img' }];
+            if (!filtered.some(page => page.id === 'user-profile')) {
+                return [...filtered, { id: 'user-profile', title: 'គណនីខ្ញុំ', icon: 'profile-img' }];
             }
             return filtered;
         });
         // ៣. ប្តូរ Focus ទៅកាន់ Tab Dashboard ភ្លាមៗ
-        setCurrentPageId('dashboard');
+        setCurrentPageId('user-profile');
     };
 
     const getComponentById = (id: string | null): React.ReactNode => {
@@ -139,10 +139,9 @@ const App: React.FC = () => {
                         } />
                         <Route path="/cart" element={<CartPage />} />
                         <Route path="/orders-tracking" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
-
                         {/* 🌟 បញ្ជូន onLoginSuccess ទៅ LoginPage ទី២ (ករណីចូលតាម URL ផ្ទាល់) */}
                         <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
-
+                        <Route path="/admin/profile" element={isAuthenticated() ? <div>នេះជាទំព័រ User Profile របស់ប្អូន</div> : <Navigate to="/login" replace />} />
                         <Route path="/admin/dashboard" element={isAuthenticated() ? <DashboardPage /> : <Navigate to="/login" replace />} />
                         <Route path="/invoice/:id" element={<InvoiceDetail />} />
                         <Route path="*" element={<Navigate to="/" replace />} />

@@ -51,7 +51,13 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
         }
 
         // 🌟 រុញ URL ទៅកាន់ Page ដែលត្រូវគ្នា (ការពារកុំឱ្យនៅជាប់ URL ចាស់)
-        navigate(id === 'home-page' ? '/' : `/${id === 'dashboard' ? 'admin/dashboard' : id}`);
+        if (id === 'home-page') {
+            navigate('/');
+        } else if (id === 'user-profile') {
+            navigate('/admin/profile'); // ពេលចុចរូប Profile ឱ្យទៅកាន់ទំព័រ Profile
+        } else {
+            navigate(`/${id}`);
+        }
     };
 
     const isPageOpened = (id: string) => openedPages.some(page => page.id === id);
