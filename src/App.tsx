@@ -29,28 +29,15 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
     const isAdminPath = ['/admin', '/products', '/orders-tracking'].some(path => location.pathname.startsWith(path));
 
     return (
-        <div className="d-flex flex-column" style={{ minHeight: '100vh', width: '100vw' }}>
-
-            {/* 1. Navbar នៅខាងលើគេបង្អស់ (Full Width) */}
-            {/* ប្អូនត្រូវដឹងថា Navbar ហៅចេញពីណា បើវានៅក្នុង AppContent សូមប្តូរមកដាក់ទីនេះវិញ */}
-
-            <div className="d-flex flex-grow-1" style={{ overflow: 'hidden' }}>
-                {/* 2. Sidebar នៅខាងឆ្វេង */}
-                {isAdminPath && (
-                    <div style={{
-                        width: '260px',
-                        flexShrink: 0,
-                        backgroundColor: '#124F9C',
-                        overflowY: 'auto'
-                    }}>
-                        <Sidebar handleLogout={handleLogout} />
-                    </div>
-                )}
-
-                {/* 3. Content នៅខាងស្តាំ */}
-                <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
-                    {children}
+        // ប្រើ d-flex ធម្មតា ព្រោះយើងបានប្រើ flex-column នៅខាងក្រៅរួចហើយ
+        <div className="d-flex flex-grow-1" style={{ overflow: 'hidden' }}>
+            {isAdminPath && (
+                <div style={{ width: '260px', flexShrink: 0, backgroundColor: '#124F9C', overflowY: 'auto' }}>
+                    <Sidebar handleLogout={handleLogout} />
                 </div>
+            )}
+            <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
+                {children}
             </div>
         </div>
     );
@@ -153,7 +140,7 @@ const AppContent: React.FC=() =>{
         }
     };
     return (
-
+        <div className="d-flex flex-column vh-100">
         <MainLayout handleLogout={handleLogout}>
             <Navbar
                 openedPages={openedPages}
@@ -188,6 +175,7 @@ const AppContent: React.FC=() =>{
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
         </MainLayout>
+        </div>
     );
 };
 const App: React.FC = () => {
