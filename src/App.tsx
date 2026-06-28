@@ -22,9 +22,14 @@ interface OpenedPageItem {
 
 interface MainLayoutProps {
     children: ReactNode;
+    userProfile?: {
+        name: string;
+        avatar: string;
+    };
+    setUser?: React.Dispatch<React.SetStateAction<{ name: string; avatar: string }>>;
 }
 
-const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ children, handleLogout }) => {
+const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ children, handleLogout, userProfile, setUser }) => {
     const location = useLocation();
     const isAdminPath = ['/admin', '/products', '/orders-tracking'].some(path => location.pathname.startsWith(path));
 
@@ -33,7 +38,7 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
         <div className="d-flex flex-grow-1" style={{ overflow: 'hidden' }}>
             {isAdminPath && (
                 <div style={{ width: '260px', flexShrink: 0, backgroundColor: '#124F9C', overflowY: 'auto' }}>
-                    <Sidebar handleLogout={handleLogout} />
+                    <Sidebar handleLogout={handleLogout} userProfile={userProfile} setUser={setUser}/>
                 </div>
             )}
             <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
@@ -45,7 +50,7 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
 
 const AppContent: React.FC=() =>{
     const navigate = useNavigate();
-
+    const [user, setUser] = useState({ name: 'ប៊ុនលីន', avatar: 'https://ui-avatars.com/api/?name=Bunlin' });
 
     const isAuthenticated = () => localStorage.getItem('token') !== null;
 
@@ -147,7 +152,7 @@ const AppContent: React.FC=() =>{
                 onOpenTab={handleNavbarOpenTab}
                 onClosePage={handleClosePage}
             />
-        <MainLayout handleLogout={handleLogout}>
+        <MainLayout handleLogout={handleLogout} userProfile={user} setUser={setUser}>
                 <Routes>
                     <Route path="/" element={
                         <div className="container-fluid p-0">
