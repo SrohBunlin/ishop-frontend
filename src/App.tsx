@@ -57,10 +57,13 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
 
 const AppContent: React.FC=() =>{
     const navigate = useNavigate();
-    const [user, setUser] = useState({
-        firstName: 'ឈ្មោះដំបូង',
-        lastName: 'ឈ្មោះទីពីរ',
-        avatar: '...'
+    const [user, setUser] = useState(() => {
+        const savedUser = localStorage.getItem('user_profile');
+        return savedUser ? JSON.parse(savedUser) : {
+            firstName: 'ឈ្មោះដំបូង',
+            lastName: 'ឈ្មោះទីពីរ',
+            profilePictureUrl: '' // ប្រើ profilePictureUrl ឱ្យត្រូវនឹង Interface
+        };
     });
 
     const isAuthenticated = () => localStorage.getItem('token') !== null;
