@@ -13,7 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Sidebar from "./components/Sidebar";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { useNavigate } from 'react-router-dom'; // ១. Import useNavigate
 interface OpenedPageItem {
     id: string;
     title: string;
@@ -24,13 +24,19 @@ interface MainLayoutProps {
     children: ReactNode;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ children, handleLogout }) => {
     const location = useLocation();
     const isAdminPath = ['/admin', '/products', '/orders-tracking'].some(path => location.pathname.startsWith(path));
 
     return (
         <div className="d-flex" style={{ minHeight: '100vh', overflow: 'hidden' }}>
-            {isAdminPath && <Sidebar handleLogout={() => { localStorage.clear(); window.location.href = '/login'; }} />}
+            <div className="d-flex" style={{ minHeight: '100vh', overflow: 'hidden' }}>
+                {/* ៤. បញ្ជូន handleLogout ទៅឱ្យ Sidebar */}
+                {isAdminPath && <Sidebar handleLogout={handleLogout} />}
+                <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
+                    {children}
+                </div>
+            </div>
             <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
                 {children}
             </div>
@@ -38,7 +44,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     );
 };
 
-const App: React.FC = () => {
+const AppContent: React.FC=() =>{
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.clear();       // លុប Token និងទិន្នន័យទាំងអស់
+        setOpenedPages([]);         // លុប Tab ទាំងអស់ចេញ
+        setCurrentPageId(null);     // Reset Tab ដែលកំពុងបើក
+
+        // ៣. ប្តូរពី window.location.href មកប្រើ navigate
+        navigate('/login', { replace: true });
+    };
     const isAuthenticated = () => localStorage.getItem('token') !== null;
 
     const [openedPages, setOpenedPages] = useState<OpenedPageItem[]>(() => {
@@ -108,45 +123,51 @@ const App: React.FC = () => {
             }
         }
     };
-
     return (
+        <MainLayout handleLogout={handleLogout}>
+            <Router>
+            <Navbar
+                openedPages={openedPages}
+                currentPageId={currentPageId}
+                onOpenTab={handleNavbarOpenTab}
+                onClosePage={handleClosePage}
+            />
+                <Routes>
+                    <Route path="/" element={
+                        <div className="container-fluid p-0">
+                            {currentPageId ? (
+                                getComponentById(currentPageId)
+                            ) : (
+                                <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: '75vh' }}>
+                                    <div className="text-center p-5 rounded-3 bg-white shadow-sm border" style={{ maxWidth: '450px' }}>
+                                        <i className="bi bi-folder-plus text-primary" style={{ fontSize: '3.5rem' }}></i>
+                                        <h4 className="fw-bold mt-3 text-dark">សូមស្វាគមន៍មកកាន់ iShop</h4>
+                                        <p className="text-muted small px-3">សូមចុចលើប៊ូតុងសញ្ញាបូក <strong className="text-dark">(+)</strong> នៅលើរបារខាងលើ ដើម្បីជ្រើសរើសបើកទំព័រការងាររបស់អ្នក។</p>
+                                    </div>
+                                </div>
+                            )}
+
+                        </div>
+                    } />
+                    <Route path="/cart" element={<CartPage />} />
+                    <Route path="/admin/orders-tracking" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
+                    {/* 🌟 បញ្ជូន onLoginSuccess ទៅ LoginPage ទី២ (ករណីចូលតាម URL ផ្ទាល់) */}
+                    <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+                    <Route path="/admin/profile" element={isAuthenticated() ? <div>នេះជាទំព័រ User Profile របស់ប្អូន</div> : <Navigate to="/login" replace />} />
+                    <Route path="/admin/dashboard" element={isAuthenticated() ? <DashboardPage /> : <Navigate to="/login" replace />} />
+                    <Route path="/invoice/:id" element={<InvoiceDetail />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+        </Router>
+        </MainLayout>
+    );
+};
+const App: React.FC = () => {
+    return (
+
         <CartProvider>
             <Router>
-                <Navbar
-                    openedPages={openedPages}
-                    currentPageId={currentPageId}
-                    onOpenTab={handleNavbarOpenTab}
-                    onClosePage={handleClosePage}
-                />
-
-                <MainLayout>
-                    <Routes>
-                        <Route path="/" element={
-                            <div className="container-fluid p-0">
-                                {currentPageId ? (
-                                    getComponentById(currentPageId)
-                                ) : (
-                                    <div className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: '75vh' }}>
-                                        <div className="text-center p-5 rounded-3 bg-white shadow-sm border" style={{ maxWidth: '450px' }}>
-                                            <i className="bi bi-folder-plus text-primary" style={{ fontSize: '3.5rem' }}></i>
-                                            <h4 className="fw-bold mt-3 text-dark">សូមស្វាគមន៍មកកាន់ iShop</h4>
-                                            <p className="text-muted small px-3">សូមចុចលើប៊ូតុងសញ្ញាបូក <strong className="text-dark">(+)</strong> នៅលើរបារខាងលើ ដើម្បីជ្រើសរើសបើកទំព័រការងាររបស់អ្នក។</p>
-                                        </div>
-                                    </div>
-                                )}
-
-                            </div>
-                        } />
-                        <Route path="/cart" element={<CartPage />} />
-                        <Route path="/admin/orders-tracking" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
-                        {/* 🌟 បញ្ជូន onLoginSuccess ទៅ LoginPage ទី២ (ករណីចូលតាម URL ផ្ទាល់) */}
-                        <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
-                        <Route path="/admin/profile" element={isAuthenticated() ? <div>នេះជាទំព័រ User Profile របស់ប្អូន</div> : <Navigate to="/login" replace />} />
-                        <Route path="/admin/dashboard" element={isAuthenticated() ? <DashboardPage /> : <Navigate to="/login" replace />} />
-                        <Route path="/invoice/:id" element={<InvoiceDetail />} />
-                        <Route path="*" element={<Navigate to="/" replace />} />
-                    </Routes>
-                </MainLayout>
+                <AppContent />
             </Router>
         </CartProvider>
     );

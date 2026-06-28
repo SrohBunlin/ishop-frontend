@@ -34,10 +34,11 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout }) => {
                 <Link to="/products" className={`sidebar-link d-flex align-items-center p-3 text-white text-decoration-none ${isActive('/products') ? 'bg-white bg-opacity-25' : ''}`}>
                     <i className="bi bi-box-seam me-3"></i> Inventory
                 </Link>
-                <Link to="/orders-tracking" className={`sidebar-link d-flex align-items-center p-3 text-white text-decoration-none ${isActive('/orders-tracking') ? 'bg-white bg-opacity-25' : ''}`}>
+                <Link to="/orders-tracking" className={`sidebar-link d-flex align-items-center p-3 text-white text-decoration-none ${isActive('/admin/orders-tracking') ? 'bg-white bg-opacity-25' : ''}`}>
                     <i className="bi bi-truck me-3"> </i> Order Tracking
                 </Link>
                 <hr className="mx-3 text-white opacity-50" />
+
                 <button onClick={handleLogout} className="sidebar-link d-flex align-items-center p-3 bg-transparent border-0 w-100 text-warning text-start">
                     <i className="bi bi-box-arrow-right me-3"></i> Logout
                 </button>
