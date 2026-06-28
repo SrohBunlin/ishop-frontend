@@ -37,23 +37,14 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
                     {children}
                 </div>
             </div>
-            <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
-                {children}
-            </div>
         </div>
     );
 };
 
 const AppContent: React.FC=() =>{
     const navigate = useNavigate();
-    const handleLogout = () => {
-        localStorage.clear();       // លុប Token និងទិន្នន័យទាំងអស់
-        setOpenedPages([]);         // លុប Tab ទាំងអស់ចេញ
-        setCurrentPageId(null);     // Reset Tab ដែលកំពុងបើក
 
-        // ៣. ប្តូរពី window.location.href មកប្រើ navigate
-        navigate('/login', { replace: true });
-    };
+
     const isAuthenticated = () => localStorage.getItem('token') !== null;
 
     const [openedPages, setOpenedPages] = useState<OpenedPageItem[]>(() => {
@@ -65,6 +56,14 @@ const AppContent: React.FC=() =>{
         return localStorage.getItem('ishop_current_page_id');
     });
 
+    const handleLogout = () => {
+        localStorage.clear();       // លុប Token និងទិន្នន័យទាំងអស់
+        setOpenedPages([]);         // លុប Tab ទាំងអស់ចេញ
+        setCurrentPageId(null);     // Reset Tab ដែលកំពុងបើក
+
+        // ៣. ប្តូរពី window.location.href មកប្រើ navigate
+        navigate('/login', { replace: true });
+    };
     useEffect(() => {
         localStorage.setItem('ishop_opened_pages', JSON.stringify(openedPages));
         if (currentPageId) {
@@ -125,7 +124,6 @@ const AppContent: React.FC=() =>{
     };
     return (
         <MainLayout handleLogout={handleLogout}>
-            <Router>
             <Navbar
                 openedPages={openedPages}
                 currentPageId={currentPageId}
@@ -158,7 +156,6 @@ const AppContent: React.FC=() =>{
                     <Route path="/invoice/:id" element={<InvoiceDetail />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
-        </Router>
         </MainLayout>
     );
 };
