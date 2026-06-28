@@ -137,22 +137,21 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
                             </div>
                             <div className="modal-body">
+                                {/* 🌟 កន្លែងនេះហើយដែល editAvatar ត្រូវប្រើប្រាស់ (ដើម្បីបង្ហាញរូបដែលទើប Upload) */}
+                                <img
+                                    src={editAvatar || userProfile?.avatar || 'https://via.placeholder.com/60'}
+                                    alt="Preview"
+                                    className="rounded-circle border"
+                                    style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                                />
                                 <div className="mb-3">
                                     <label className="form-label text-muted">ឈ្មោះបង្ហាញ</label>
-                                    {/* 🌟 កន្លែងនេះហើយដែល editAvatar ត្រូវប្រើប្រាស់ (ដើម្បីបង្ហាញរូបដែលទើប Upload) */}
-                                    <img
-                                        src={editAvatar || userProfile?.avatar || 'https://via.placeholder.com/60'}
-                                        alt="Preview"
-                                        className="rounded-circle border"
-                                        style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                                    />
-
-                                    {/* 🌟 ត្រូវប្រាកដថាអត់មាន value={editAvatar} នៅលើ input file ទេ */}
                                     <input
-                                        type="file"
+                                        type="text"
                                         className="form-control"
-                                        accept="image/*"
-                                        onChange={handleImageUpload}
+                                        value={editName}
+                                        onChange={(e) => setEditName(e.target.value)}
+                                        placeholder="បញ្ចូលឈ្មោះរបស់អ្នក"
                                     />
                                 </div>
                                 <div className="mb-3">
@@ -161,8 +160,9 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                                         type="file"
                                         className="form-control"
                                         accept="image/*"
-                                        onChange={handleImageUpload} // 🌟 នេះហើយជាកន្លែងដែលប្អូនត្រូវភ្ជាប់វា!
+                                        onChange={handleImageUpload}
                                     />
+
                                 </div>
                             </div>
                             <div className="modal-footer border-0 pt-0">
