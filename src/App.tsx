@@ -55,7 +55,7 @@ const AppContent: React.FC=() =>{
     });
 
     const handleLogout = () => {
-        localStorage.clear();       // លុប Token និងទិន្នន័យទាំងអស់
+        localStorage.removeItem('token');       // លុប Token និងទិន្នន័យទាំងអស់
         setOpenedPages([]);         // លុប Tab ទាំងអស់ចេញ
         setCurrentPageId(null);     // Reset Tab ដែលកំពុងបើក
 
