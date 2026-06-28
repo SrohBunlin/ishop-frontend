@@ -30,13 +30,11 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
 
     return (
         <div className="d-flex" style={{ minHeight: '100vh', overflow: 'hidden' }}>
-            <div className="d-flex" style={{ minHeight: '100vh', overflow: 'hidden' }}>
                 {/* ៤. បញ្ជូន handleLogout ទៅឱ្យ Sidebar */}
                 {isAdminPath && <Sidebar handleLogout={handleLogout} />}
                 <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
                     {children}
                 </div>
-            </div>
         </div>
     );
 };
