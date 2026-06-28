@@ -107,17 +107,22 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                         onClick={handleOpenModal}
                         className="btn btn-link text-decoration-none text-center px-3 mb-4 w-100"
                     >
-                        {userProfile?.profilePictureUrl ? (
+                        {(editAvatar || userProfile?.profilePictureUrl) ? (
                             <img
-                                src={`https://api.i-knet.com${userProfile.profilePictureUrl}`}
-                                alt="Profile"
-                                className="rounded-circle mb-2 shadow-sm"
-                                style={{ width: '70px', height: '70px', objectFit: 'cover', border: '2px solid white' }}
+                                src={
+                                    editAvatar.startsWith('data:')
+                                        ? editAvatar
+                                        : `https://api.i-knet.com${editAvatar || userProfile?.profilePictureUrl}`
+                                }
+                                alt="Preview"
+                                className="rounded-circle border"
+                                style={{ width: '80px', height: '80px', objectFit: 'cover' }}
                             />
                         ) : (
-                            <div className="rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center bg-white text-primary"
-                                 style={{ width: '70px', height: '70px', fontSize: '1.5rem', fontWeight: 'bold', border: '2px solid white' }}>
-                                {getInitials(userProfile?.firstName || '', userProfile?.lastName || '')}
+                            /* បើអត់មានរូប គឺបង្ហាញ Initials */
+                            <div className="rounded-circle border d-flex align-items-center justify-content-center bg-light"
+                                 style={{ width: '80px', height: '80px', fontSize: '2rem', margin: '0 auto', fontWeight: 'bold', color: '#124F9C' }}>
+                                {getInitials(editFirstName, editLastName)}
                             </div>
                         )}
                         <div className="text-white fw-bold">
