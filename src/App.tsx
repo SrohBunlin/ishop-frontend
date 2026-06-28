@@ -56,8 +56,8 @@ const AppContent: React.FC=() =>{
 
     const handleLogout = () => {
         localStorage.removeItem('token');       // លុប Token និងទិន្នន័យទាំងអស់
-        setOpenedPages([]);         // លុប Tab ទាំងអស់ចេញ
-        setCurrentPageId(null);     // Reset Tab ដែលកំពុងបើក
+        // setOpenedPages([]);         // លុប Tab ទាំងអស់ចេញ
+        // setCurrentPageId(null);     // Reset Tab ដែលកំពុងបើក
 
         // ៣. ប្តូរពី window.location.href មកប្រើ navigate
         navigate('/login', { replace: true });
