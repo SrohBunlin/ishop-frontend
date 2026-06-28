@@ -56,20 +56,18 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
 
             if (response.ok) {
                 const data = await response.json();
+                const newUser = {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    profilePictureUrl: data.profilePictureUrl
+                };
 
-                if (setUser) {
-                    // 🌟 កែត្រង់នេះឱ្យត្រូវនឹង UserProfile Interface
-                    setUser({
-                        firstName: data.firstName,
-                        lastName: data.lastName,
-                        profilePictureUrl: data.profilePictureUrl
-                    });
-                }
+                // Save ចូល state
+                setUser(newUser);
+                // Save ចូល LocalStorage ដើម្បីកុំឱ្យបាត់ពេល Reload
+                localStorage.setItem('user_profile', JSON.stringify(newUser));
 
                 setShowModal(false);
-                alert("រក្សាទុកជោគជ័យ!");
-            } else {
-                alert("មានបញ្ហាក្នុងការរក្សាទុកទិន្នន័យ");
             }
         } catch (error) {
             console.error("Error updating profile:", error);
