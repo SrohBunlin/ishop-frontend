@@ -137,7 +137,6 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
                             </div>
                             <div className="modal-body">
-                                {/* 🌟 កន្លែងនេះហើយដែល editAvatar ត្រូវប្រើប្រាស់ (ដើម្បីបង្ហាញរូបដែលទើប Upload) */}
                                 <img
                                     src={editAvatar || userProfile?.avatar || 'https://via.placeholder.com/60'}
                                     alt="Preview"
