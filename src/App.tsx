@@ -138,7 +138,7 @@ const App: React.FC = () => {
                             </div>
                         } />
                         <Route path="/cart" element={<CartPage />} />
-                        <Route path="/orders-tracking" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
+                        <Route path="/admin/orders-tracking" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
                         {/* 🌟 បញ្ជូន onLoginSuccess ទៅ LoginPage ទី២ (ករណីចូលតាម URL ផ្ទាល់) */}
                         <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
                         <Route path="/admin/profile" element={isAuthenticated() ? <div>នេះជាទំព័រ User Profile របស់ប្អូន</div> : <Navigate to="/login" replace />} />

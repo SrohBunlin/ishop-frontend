@@ -45,10 +45,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                 title: 'ជោគជ័យ!',
                 text: 'អ្នកបានចូលប្រើប្រាស់ក្នុងប្រព័ន្ធហើយ',
                 icon: 'success',
-                confirmButtonText: 'ទៅកាន់ Dashboard'
+                confirmButtonText: 'ទៅកាន់ Profile'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    navigate('/admin/dashboard');
+                    navigate('/admin/profile');
                 }
             });
         } catch (err) {
