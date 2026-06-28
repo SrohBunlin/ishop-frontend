@@ -46,8 +46,12 @@ const AppContent: React.FC=() =>{
     const isAuthenticated = () => localStorage.getItem('token') !== null;
 
     const [openedPages, setOpenedPages] = useState<OpenedPageItem[]>(() => {
-        const saved = localStorage.getItem('ishop_opened_pages');
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const saved = localStorage.getItem('ishop_opened_pages');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            return []; // ករណីទិន្នន័យក្នុង localStorage ខូច
+        }
     });
 
     const [currentPageId, setCurrentPageId] = useState<string | null>(() => {
@@ -62,18 +66,25 @@ const AppContent: React.FC=() =>{
         // ៣. ប្តូរពី window.location.href មកប្រើ navigate
         navigate('/login', { replace: true });
     };
+    // ប្រើ Flag ដើម្បីដឹងថាទិន្នន័យត្រូវបាន Load រួចរាល់ឬនៅ
+    const [isLoaded, setIsLoaded] = useState(false);
+
+// ១. Load ទិន្នន័យដំបូង
     useEffect(() => {
-        // គ្រាន់តែរក្សាទុក មិនត្រូវលុបទេ
-        if (openedPages.length > 0) {
+        const saved = localStorage.getItem('ishop_opened_pages');
+        if (saved) {
+            setOpenedPages(JSON.parse(saved));
+        }
+        setIsLoaded(true); // ប្រាប់ថាបាន Load រួចហើយ
+    }, []);
+
+// ២. Save ទិន្នន័យ
+    useEffect(() => {
+        // បើមិនទាន់ Load រួចទេ កុំទាន់ Save ដើម្បីការពារការសរសេរជាន់ (Overwrite)
+        if (isLoaded) {
             localStorage.setItem('ishop_opened_pages', JSON.stringify(openedPages));
         }
-    }, [openedPages]); // មិនបាច់ដាក់ currentPageId ក៏បាន ដើម្បីកុំឱ្យវារត់ញឹកញាប់ពេក
-
-    useEffect(() => {
-        if (currentPageId) {
-            localStorage.setItem('ishop_current_page_id', currentPageId);
-        }
-    }, [currentPageId]);
+    }, [openedPages, isLoaded]);
 
     // 🌟 មុខងារថ្មី៖ ដំណើរការពេល Login ជោគជ័យ
     const handleLoginSuccess = () => {
