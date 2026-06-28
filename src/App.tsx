@@ -63,13 +63,17 @@ const AppContent: React.FC=() =>{
         navigate('/login', { replace: true });
     };
     useEffect(() => {
-        localStorage.setItem('ishop_opened_pages', JSON.stringify(openedPages));
+        // គ្រាន់តែរក្សាទុក មិនត្រូវលុបទេ
+        if (openedPages.length > 0) {
+            localStorage.setItem('ishop_opened_pages', JSON.stringify(openedPages));
+        }
+    }, [openedPages]); // មិនបាច់ដាក់ currentPageId ក៏បាន ដើម្បីកុំឱ្យវារត់ញឹកញាប់ពេក
+
+    useEffect(() => {
         if (currentPageId) {
             localStorage.setItem('ishop_current_page_id', currentPageId);
-        } else {
-            localStorage.removeItem('ishop_current_page_id');
         }
-    }, [openedPages, currentPageId]);
+    }, [currentPageId]);
 
     // 🌟 មុខងារថ្មី៖ ដំណើរការពេល Login ជោគជ័យ
     const handleLoginSuccess = () => {
