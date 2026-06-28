@@ -24,9 +24,6 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout }) => {
                 flexShrink: 0     // ការពារកុំឱ្យ Sidebar រួញទទឹង
             }}
         >
-            <div className="p-4 fs-4 fw-bold text-white border-bottom border-light border-opacity-25">
-                📦 iShop Admin
-            </div>
             <div className="flex-grow-1 pt-3">
                 <Link to="/admin/dashboard" className={`sidebar-link d-flex align-items-center p-3 text-white text-decoration-none ${isActive('/admin/dashboard') ? 'bg-white bg-opacity-25' : ''}`}>
                     <i className="bi bi-speedometer2 me-3"></i> Dashboard

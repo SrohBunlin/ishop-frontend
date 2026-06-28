@@ -30,12 +30,24 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
 
     return (
 
-        <div className="d-flex" style={{ minHeight: '100vh', overflow: 'hidden' }}>
-                {/* ៤. បញ្ជូន handleLogout ទៅឱ្យ Sidebar */}
-                {isAdminPath && <Sidebar handleLogout={handleLogout} />}
+        // ប្រើ flex-column ដើម្បីតម្រៀប Navbar (ពីលើ) និង Content (ពីក្រោម)
+        <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
+
+            {/* Navbar នឹងស្ថិតនៅទីនេះដោយស្វ័យប្រវត្តិពីលើគេ */}
+
+            <div className="d-flex flex-grow-1">
+                {/* Sidebar នៅខាងឆ្វេង */}
+                {isAdminPath && (
+                    <div style={{ width: '260px', flexShrink: 0 }}>
+                        <Sidebar handleLogout={handleLogout} />
+                    </div>
+                )}
+
+                {/* Content នៅខាងស្តាំ */}
                 <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
                     {children}
                 </div>
+            </div>
         </div>
     );
 };
@@ -137,6 +149,7 @@ const AppContent: React.FC=() =>{
         }
     };
     return (
+
         <MainLayout handleLogout={handleLogout}>
             <Navbar
                 openedPages={openedPages}
