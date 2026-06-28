@@ -19,7 +19,8 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout }) => {
                 width: '260px',
                 backgroundColor: '#124F9C',
                 top: '0',        // ជាប់នៅខាងលើបំផុត
-                position: 'sticky',
+                height: '100%',      // ឱ្យវាលាតពេញកម្ពស់ដែលនៅសល់
+                position: 'relative', // ប្តូរពី sticky មក relative
                 overflowY: 'auto', // បើ Menu ច្រើន វានឹង Scroll ក្នុង Sidebar ខ្លួនឯង
                 flexShrink: 0     // ការពារកុំឱ្យ Sidebar រួញទទឹង
             }}
