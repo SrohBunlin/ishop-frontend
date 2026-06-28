@@ -131,7 +131,9 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                 </li>
                             )}
 
-                            {!isPageOpened('user-login') && !localStorage.getItem('token') && (
+                            {!isPageOpened('user-login')
+                                // && !localStorage.getItem('token')
+                                && (
                                 <li>
                                     <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick('user-login')}>
                                         <i className="bi bi-person-lock text-success me-3"></i> គណនីអ្នកប្រើប្រាស់
