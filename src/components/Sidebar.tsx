@@ -56,18 +56,17 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
 
             if (response.ok) {
                 const data = await response.json();
-                const newUser = {
+
+                // 🌟 ប្រើ data.profilePictureUrl ដែល API ផ្ញើមកវិញ
+                const updatedUser = {
                     firstName: data.firstName,
                     lastName: data.lastName,
-                    profilePictureUrl: data.profilePictureUrl
+                    profilePictureUrl: data.profilePictureUrl || userProfile?.profilePictureUrl // រក្សារូបចាស់បើមិនមានរូបថ្មី
                 };
 
-                // Save ចូល state
-                setUser(newUser);
-                // Save ចូល LocalStorage ដើម្បីកុំឱ្យបាត់ពេល Reload
-                localStorage.setItem('user_profile', JSON.stringify(newUser));
-
-                setShowModal(false);
+                setUser(updatedUser);
+                localStorage.setItem('user_profile', JSON.stringify(updatedUser)); // សំខាន់បំផុត!
+                alert("រក្សាទុកជោគជ័យ!");
             }
         } catch (error) {
             console.error("Error updating profile:", error);

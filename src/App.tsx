@@ -60,8 +60,8 @@ const AppContent: React.FC=() =>{
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user_profile');
         return savedUser ? JSON.parse(savedUser) : {
-            firstName: 'ឈ្មោះដំបូង',
-            lastName: 'ឈ្មោះទីពីរ',
+            firstName: 'គោត្តនាម',
+            lastName: 'នាម',
             profilePictureUrl: '' // ប្រើ profilePictureUrl ឱ្យត្រូវនឹង Interface
         };
     });
