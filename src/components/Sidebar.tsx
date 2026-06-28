@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
+interface UserProfile {
+    firstName: string; // ត្រូវគ្នានឹង firstName ក្នុង Entity
+    lastName: string;  // ត្រូវគ្នានឹង lastName ក្នុង Entity
+    avatar: string;
+}
 interface SidebarProps {
     handleLogout: () => void;
-    // ទទួលទិន្នន័យ Profile ពី App.tsx
-    userProfile?: { name: string; avatar: string };
-    setUser?: React.Dispatch<React.SetStateAction<{ name: string; avatar: string }>>;
+    userProfile?: UserProfile;
+    setUser?: React.Dispatch<React.SetStateAction<UserProfile>>;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser }) => {
@@ -14,12 +18,14 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
 
     // State សម្រាប់គ្រប់គ្រង Modal
     const [showModal, setShowModal] = useState(false);
-    const [editName, setEditName] = useState('');
+    const [editFirstName, setEditFirstName] = useState('');
+    const [editLastName, setEditLastName] = useState('');
     const [editAvatar, setEditAvatar] = useState('');
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     // មុខងារបើក Modal
     const handleOpenModal = () => {
-        setEditName(userProfile?.name || '');
+        setEditFirstName(userProfile?.firstName || '');
+        setEditLastName(userProfile?.lastName || '');
         setEditAvatar(userProfile?.avatar || '');
         setShowModal(true);
     };
@@ -27,33 +33,31 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
     // មុខងាររក្សាទុកទិន្នន័យថ្មី
     const handleSave = async () => {
         try {
-            // ១. រៀបចំទិន្នន័យជាទម្រង់ FormData (ដើម្បីអាចបញ្ជូន File បាន)
             const formData = new FormData();
-            formData.append('name', editName);
+            formData.append('first_name', editFirstName);
+            formData.append('last_name', editLastName);
 
-            // បើមានរើសរូបថតថ្មី ទើបបញ្ជូនទៅ
             if (selectedFile) {
                 formData.append('avatar', selectedFile);
             }
 
-            // ២. បញ្ជូនទិន្នន័យទៅកាន់ API (ឧទាហរណ៍: /api/users/profile)
             const token = localStorage.getItem('token');
-            const response = await fetch('https://api.i-knet.com/api/profile', {
-                method: 'PUT', // ឬ POST អាស្រ័យលើ Backend របស់ប្អូន
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                    // ⚠️ កុំដាក់ 'Content-Type': 'application/json' ព្រោះយើងប្រើ FormData
-                },
+            const response = await fetch('https://api.i-knet.com/api/users', {
+                method: 'PUT',
+                headers: {'Authorization': `Bearer ${token}`},
                 body: formData
             });
 
             if (response.ok) {
                 const data = await response.json();
 
-                // ៣. បើជោគជ័យ Update State ក្នុង React ដើម្បីឱ្យវាប្តូរភ្លាមៗ
                 if (setUser) {
-                    // data.avatarUrl គឺជា Link រូបថតថ្មីដែល Backend ឆ្លើយតបមកវិញ
-                    setUser({ name: data.name, avatar: data.avatarUrl });
+                    // 🌟 កែត្រង់នេះឱ្យត្រូវនឹង UserProfile Interface
+                    setUser({
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        avatar: data.avatarUrl
+                    });
                 }
 
                 setShowModal(false);
@@ -103,7 +107,9 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                             className="rounded-circle mb-2 shadow-sm"
                             style={{ width: '70px', height: '70px', objectFit: 'cover', border: '2px solid white' }}
                         />
-                        <div className="text-white fw-bold">{userProfile?.name || 'iShop Admin'}</div>
+                        <div className="text-white fw-bold">
+                            {userProfile ? `${userProfile.firstName} ${userProfile.lastName}` : 'iShop Admin'}
+                        </div>
                         <small className="text-white-50"><i className="bi bi-pencil-square"></i> កែសម្រួល</small>
                     </button>
 
@@ -144,13 +150,21 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                                     style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                                 />
                                 <div className="mb-3">
-                                    <label className="form-label text-muted">ឈ្មោះបង្ហាញ</label>
+                                    <label className="form-label text-muted">នាមត្រកូល</label>
                                     <input
                                         type="text"
                                         className="form-control"
-                                        value={editName}
-                                        onChange={(e) => setEditName(e.target.value)}
-                                        placeholder="បញ្ចូលឈ្មោះរបស់អ្នក"
+                                        value={editFirstName}
+                                        onChange={(e) => setEditFirstName(e.target.value)}
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label text-muted">នាមខ្លួន</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={editLastName}
+                                        onChange={(e) => setEditLastName(e.target.value)}
                                     />
                                 </div>
                                 <div className="mb-3">
