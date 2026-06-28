@@ -141,13 +141,13 @@ const AppContent: React.FC=() =>{
     };
     return (
         <div className="d-flex flex-column vh-100">
-        <MainLayout handleLogout={handleLogout}>
             <Navbar
                 openedPages={openedPages}
                 currentPageId={currentPageId}
                 onOpenTab={handleNavbarOpenTab}
                 onClosePage={handleClosePage}
             />
+        <MainLayout handleLogout={handleLogout}>
                 <Routes>
                     <Route path="/" element={
                         <div className="container-fluid p-0">
