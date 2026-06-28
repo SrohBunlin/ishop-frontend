@@ -30,20 +30,25 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
 
     return (
 
-        // ប្រើ flex-column ដើម្បីតម្រៀប Navbar (ពីលើ) និង Content (ពីក្រោម)
-        <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
+        // ១. ប្រើ flex-column ដើម្បីតម្រៀបពីលើមកក្រោម
+        <div className="d-flex flex-column" style={{ minHeight: '100vh', width: '100vw' }}>
 
-            {/* Navbar នឹងស្ថិតនៅទីនេះដោយស្វ័យប្រវត្តិពីលើគេ */}
+            {/* Navbar នឹងស្ថិតនៅទីនេះដោយស្វ័យប្រវត្តិ (ប្អូនហៅវាក្នុង AppContent) */}
 
-            <div className="d-flex flex-grow-1">
-                {/* Sidebar នៅខាងឆ្វេង */}
+            <div className="d-flex flex-grow-1" style={{ overflow: 'hidden' }}>
+                {/* ២. Sidebar ស្ថិតនៅខាងឆ្វេង */}
                 {isAdminPath && (
-                    <div style={{ width: '260px', flexShrink: 0 }}>
+                    <div style={{
+                        width: '260px',
+                        flexShrink: 0,
+                        backgroundColor: '#124F9C',
+                        overflowY: 'auto'
+                    }}>
                         <Sidebar handleLogout={handleLogout} />
                     </div>
                 )}
 
-                {/* Content នៅខាងស្តាំ */}
+                {/* ៣. Content ស្ថិតនៅខាងស្តាំ */}
                 <div className="flex-grow-1" style={{ overflowY: 'auto', backgroundColor: '#f8f9fa' }}>
                     {children}
                 </div>
