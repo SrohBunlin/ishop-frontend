@@ -113,7 +113,9 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                         onClick={handleOpenModal}
                         className="btn btn-link text-decoration-none text-center px-3 mb-4 w-100"
                     >
-                        {(editAvatar || userProfile?.profilePictureUrl) ? (
+                        {/* លក្ខខណ្ឌថ្មី៖ បង្ហាញរូបទាល់តែ editAvatar ឬ profilePictureUrl ពិតជាមានទិន្នន័យ (មិនមែនទទេរ) */}
+                        {/* លក្ខខណ្ឌថ្មី៖ បង្ហាញរូបទាល់តែ editAvatar ឬ profilePictureUrl ពិតជាមានទិន្នន័យ (មិនមែនទទេរ) */}
+                        {(editAvatar || (userProfile?.profilePictureUrl && userProfile.profilePictureUrl !== '')) ? (
                             <img
                                 src={
                                     editAvatar.startsWith('data:')
@@ -123,14 +125,25 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                                 alt="Preview"
                                 className="rounded-circle border"
                                 style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                // បន្ថែមមុខងារ onError ដើម្បីប្តូរទៅ Initials វិញបើ Link រូបភាពខូចពី Server
+                                onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                    e.currentTarget.nextElementSibling?.classList.remove('d-none');
+                                }}
                             />
                         ) : (
                             /* បើអត់មានរូប គឺបង្ហាញ Initials */
                             <div className="rounded-circle border d-flex align-items-center justify-content-center bg-light"
                                  style={{ width: '80px', height: '80px', fontSize: '2rem', margin: '0 auto', fontWeight: 'bold', color: '#124F9C' }}>
-                                {getInitials(editFirstName, editLastName)}
+                                {getInitials(editFirstName || userProfile?.firstName || '', editLastName || userProfile?.lastName || '')}
                             </div>
                         )}
+
+                        {/* សម្រាប់ Fallback ពេលរូបភាព Error (លាក់ទុកសិន) */}
+                        <div className="rounded-circle border align-items-center justify-content-center bg-light d-none"
+                             style={{ width: '80px', height: '80px', fontSize: '2rem', margin: '0 auto', fontWeight: 'bold', color: '#124F9C', display: 'flex' }}>
+                            {getInitials(editFirstName || userProfile?.firstName || '', editLastName || userProfile?.lastName || '')}
+                        </div>
                         <div className="text-white fw-bold">
                             {userProfile ? `${userProfile.firstName} ${userProfile.lastName}` : 'iShop Admin'}
                         </div>
@@ -167,7 +180,8 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
                             </div>
                             <div className="modal-body">
-                                {(editAvatar || userProfile?.profilePictureUrl) ? (
+                                {/* លក្ខខណ្ឌថ្មី៖ បង្ហាញរូបទាល់តែ editAvatar ឬ profilePictureUrl ពិតជាមានទិន្នន័យ (មិនមែនទទេរ) */}
+                                {(editAvatar || (userProfile?.profilePictureUrl && userProfile.profilePictureUrl !== '')) ? (
                                     <img
                                         src={
                                             editAvatar.startsWith('data:')
@@ -177,14 +191,25 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                                         alt="Preview"
                                         className="rounded-circle border"
                                         style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                                        // បន្ថែមមុខងារ onError ដើម្បីប្តូរទៅ Initials វិញបើ Link រូបភាពខូចពី Server
+                                        onError={(e) => {
+                                            e.currentTarget.style.display = 'none';
+                                            e.currentTarget.nextElementSibling?.classList.remove('d-none');
+                                        }}
                                     />
                                 ) : (
                                     /* បើអត់មានរូប គឺបង្ហាញ Initials */
                                     <div className="rounded-circle border d-flex align-items-center justify-content-center bg-light"
                                          style={{ width: '80px', height: '80px', fontSize: '2rem', margin: '0 auto', fontWeight: 'bold', color: '#124F9C' }}>
-                                        {getInitials(editFirstName, editLastName)}
+                                        {getInitials(editFirstName || userProfile?.firstName || '', editLastName || userProfile?.lastName || '')}
                                     </div>
                                 )}
+
+                                {/* សម្រាប់ Fallback ពេលរូបភាព Error (លាក់ទុកសិន) */}
+                                <div className="rounded-circle border align-items-center justify-content-center bg-light d-none"
+                                     style={{ width: '80px', height: '80px', fontSize: '2rem', margin: '0 auto', fontWeight: 'bold', color: '#124F9C', display: 'flex' }}>
+                                    {getInitials(editFirstName || userProfile?.firstName || '', editLastName || userProfile?.lastName || '')}
+                                </div>
                                 <div className="mb-3">
                                     <label className="form-label text-muted">នាមត្រកូល</label>
                                     <input
