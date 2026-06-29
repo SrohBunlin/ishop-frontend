@@ -47,12 +47,6 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
         };
     }, []);
 
-    const handlePressStart = (id: string) => {
-        timerRef.current = setTimeout(() => {
-            onClosePage(id);
-        }, 1000);
-    };
-
     const handlePressEnd = () => {
         if (timerRef.current) clearTimeout(timerRef.current);
     };
@@ -77,12 +71,25 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
     const isPageOpened = (id: string) => openedPages.some(page => page.id === id);
 
     // ១. ស្វែងរក visiblePages ហើយកែវាមកបែបនេះ
+    // ១. នៅក្នុង handlePressStart៖ លុបអ្វីៗទាំងអស់ដោយគ្មានលក្ខខណ្ឌការពារ
+    const handlePressStart = (id: string) => {
+        timerRef.current = setTimeout(() => {
+            onClosePage(id); // លុប Tab គ្រប់ប្រភេទដែលប្អូនសង្កត់យូរ
+        }, 1000);
+    };
+
+// ២. នៅក្នុង visiblePages៖ បង្កើត Logic ស្វ័យប្រវត្តិ
     const visiblePages = openedPages.filter(page => {
-        // គ្រាន់តែ Filter តាមស្ថានភាព Login ធម្មតា
         if (isLoggedIn && page.id === 'user-login') return false;
         if (!isLoggedIn && (page.id === 'user-profile' || page.icon === 'profile-img')) return false;
         return true;
     });
+
+// 🟢 នេះគឺជា "អ្នកគ្រប់គ្រង" ៖ បើមិនទាន់ Login ហើយអត់មាន Tab Login ទេ (ដោយសារប្អូនទើបលុបវាចោល)
+// វានឹងរុញវាចូលទៅវិញភ្លាមៗនៅពេល Logout
+    if (!isLoggedIn && !visiblePages.some(p => p.id === 'user-login')) {
+        visiblePages.push({ id: 'user-login', icon: 'bi-person-circle' });
+    }
 
 // 🟢 logic "Auto-Injection" សម្រាប់តែពេល Logout
 // យើងនឹងបង្ហាញ Icon គណនីតែនៅពេលដែលវាមិនមាននៅលើ Navbar ហើយ "មិនទាន់ត្រូវបានលុបដោយអ្នកប្រើ"

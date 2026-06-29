@@ -184,15 +184,12 @@ const AppContent: React.FC = () => {
     };
 
     const handleClosePage = (idToClose: string) => {
-        const filtered = openedPages.filter(page => page.id !== idToClose);
+        // ត្រូវប្រាកដថា state ត្រូវបាន update ពិតប្រាកដ
         setOpenedPages(prev => prev.filter(page => page.id !== idToClose));
+
+        // សម្អាត currentPageId បើទំព័រនោះជាទំព័រដែលកំពុងបើក
         if (currentPageId === idToClose) {
-            if (filtered.length > 0) {
-                const lastPage = filtered[filtered.length - 1];
-                setCurrentPageId(lastPage.id);
-            } else {
-                setCurrentPageId(null);
-            }
+            setCurrentPageId(null);
         }
     };
 
