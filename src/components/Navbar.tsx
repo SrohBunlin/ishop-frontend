@@ -33,13 +33,8 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
 
     const userProfileString = localStorage.getItem('user_profile');
     const userProfile = userProfileString ? JSON.parse(userProfileString) : null;
+    const firstLetter = userProfile?.firstName ? userProfile.firstName.charAt(0).toUpperCase() : 'U';
 
-    const getInitials = (firstName: string, lastName: string) => {
-        if (!firstName && !lastName) return 'A';
-        const f = firstName ? firstName.charAt(0) : '';
-        const l = lastName ? lastName.charAt(0) : '';
-        return `${f}${l}`.toUpperCase();
-    };
 
     useEffect(() => {
         return () => {
@@ -144,7 +139,9 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                         />
                                     ) : (
-                                        getInitials(userProfile?.firstName || '', userProfile?.lastName || '')
+                                        <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
+                                            {firstLetter}
+                                        </div>
                                     )}
                                 </div>
                             ) : (
