@@ -25,6 +25,17 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const navigate = useNavigate(); // 🌟 ប្រើសម្រាប់ប្តូរ Route
 
+    // ១. បន្ថែមកូដ ២ បន្ទាត់នេះដើម្បីទាញយក Profile ពី LocalStorage
+    const userProfileString = localStorage.getItem('user_profile');
+    const userProfile = userProfileString ? JSON.parse(userProfileString) : null;
+
+    // ២. បន្ថែមមុខងារ getInitials (ប្រសិនបើអ្នកមិនទាន់បានដាក់វានៅខាងលើ)
+    const getInitials = (firstName: string, lastName: string) => {
+        if (!firstName && !lastName) return 'A'; // លំនាំដើម
+        const f = firstName ? firstName.charAt(0) : '';
+        const l = lastName ? lastName.charAt(0) : '';
+        return `${f}${l}`.toUpperCase();
+    };
     useEffect(() => {
         return () => {
             if (timerRef.current) clearTimeout(timerRef.current);
@@ -100,16 +111,30 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                         >
                             {/* 🌟 នេះគឺជាកន្លែងដែលយើងឆែកបង្ហាញរូប Profile ជំនួស Icon ធម្មតា */}
                             {page.icon === 'profile-img' ? (
-                                <img
-                                    src="https://ui-avatars.com/api/?name=Admin&background=0d6efd&color=fff"
-                                    alt="User Profile"
+                                <div
+                                    className="rounded-circle d-flex align-items-center justify-content-center text-white"
                                     style={{
-                                        width: '38px',
-                                        height: '38px',
-                                        borderRadius: '50%',
-                                        objectFit: 'cover'
+                                        width: '40px',
+                                        height: '40px',
+                                        backgroundColor: '#0d6efd',
+                                        fontWeight: 'bold',
+                                        fontSize: '1.1rem',
+                                        cursor: 'pointer',
+                                        overflow: 'hidden' // សំខាន់ដើម្បីឱ្យរូបភាពនៅជាប់ក្នុងរង្វង់
                                     }}
-                                />
+                                >
+                                    {/* លក្ខខណ្ឌ conditional rendering ដើម្បីបង្ហាញរូបភាព ឬអក្សរកាត់ */}
+                                    {userProfile?.profilePictureUrl ? (
+                                        <img
+                                            src={userProfile.profilePictureUrl}
+                                            alt="User profile" // ឬដាក់ត្រឹម "Profile" ក៏បាន
+                                            className="rounded-circle"
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                    ) : (
+                                        getInitials(userProfile?.firstName || '', userProfile?.lastName || '')
+                                    )}
+                                </div>
                             ) : (
                                 <i className={`bi ${page.icon} fs-4 ${currentPageId === page.id ? 'text-primary' : 'text-secondary'}`}></i>
                             )}
