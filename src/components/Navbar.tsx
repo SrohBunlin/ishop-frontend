@@ -24,7 +24,7 @@ const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNod
 const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, onClosePage }) => {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const navigate = useNavigate(); // 🌟 ប្រើសម្រាប់ប្តូរ Route
-
+    const isLoggedIn = !!localStorage.getItem('token'); // បើមាន token មានន័យថា Login រួច
     // ១. បន្ថែមកូដ ២ បន្ទាត់នេះដើម្បីទាញយក Profile ពី LocalStorage
     const userProfileString = localStorage.getItem('user_profile');
     const userProfile = userProfileString ? JSON.parse(userProfileString) : null;
@@ -156,12 +156,23 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                 </li>
                             )}
 
-                            {!isPageOpened('user-login')
-                                // && !localStorage.getItem('token')
-                                && (
+                            {/* 🌟 ផ្លាស់ប្តូរលក្ខខណ្ឌនៅទីនេះ៖ បង្ហាញតែពេលមិនទាន់ Login */}
+                            {!isLoggedIn && !isPageOpened('user-login') && (
                                 <li>
                                     <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick('user-login')}>
                                         <i className="bi bi-person-lock text-success me-3"></i> គណនីអ្នកប្រើប្រាស់
+                                    </button>
+                                </li>
+                            )}
+
+                            {/* 🌟 បន្ថែមប៊ូតុង Logout បង្ហាញតែពេល Login រួច */}
+                            {isLoggedIn && (
+                                <li>
+                                    <button className="dropdown-item py-2 d-flex align-items-center text-danger" onClick={() => {
+                                        localStorage.clear();
+                                        window.location.reload(); // ផ្ទុកទំព័រឡើងវិញដើម្បីសម្អាត state
+                                    }}>
+                                        <i className="bi bi-box-arrow-right me-3"></i> ចាកចេញ (Logout)
                                     </button>
                                 </li>
                             )}
