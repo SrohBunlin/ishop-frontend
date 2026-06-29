@@ -3,6 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import LandingPage from '../pages/LandingPage';
 import LoginPage from "../pages/LoginPage";
 import { useNavigate } from 'react-router-dom';
+import DashboardPage from "../pages/DashboardPage";
 
 interface OpenedPageItem {
     id: string;
@@ -24,7 +25,8 @@ interface NavbarProps {
 
 const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNode, icon: string }> = {
     'home-page': { title: '🏠 ទំព័រដើម', component: <LandingPage />, icon: 'bi-house-door' },
-    'user-login': { title: '👤 គណនីអ្នកប្រើប្រាស់', component: <LoginPage />, icon: 'bi-person-lock' }
+    'user-login': { title: '👤 គណនីអ្នកប្រើប្រាស់', component: <LoginPage />, icon: 'bi-person-lock' },
+    'user-profile': { title: 'គណនីខ្ញុំ', component: <DashboardPage />, icon: 'profile-img' }
 };
 
 const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, onClosePage, userProfile, handleLogout }) => {
@@ -52,21 +54,22 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
     };
 
     const handleTabClick = (id: string) => {
-        // ១. បើក Tab
         const page = AVAILABLE_PAGES[id];
+
+        // ប្រើទិន្នន័យពី AVAILABLE_PAGES មកបើក Tab
         if (page) {
             onOpenTab(id, page.title, page.component, page.icon);
         } else {
             onOpenTab(id, 'ទំព័រ', null, 'bi-window');
         }
 
-        // ២. រុញទៅកាន់ Route ត្រឹមត្រូវ
+        // រុញ Route ទៅតាម ID
         if (id === 'home-page') {
             navigate('/');
         } else if (id === 'user-login') {
-            navigate('/login'); // រុញទៅទំព័រ Login
+            navigate('/login');
         } else if (id === 'user-profile') {
-            navigate('/admin/dashboard'); // រុញទៅ Dashboard
+            navigate('/admin/dashboard');
         } else {
             navigate(`/${id}`);
         }
