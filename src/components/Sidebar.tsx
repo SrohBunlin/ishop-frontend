@@ -107,14 +107,17 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                         {(editAvatar || (userProfile?.profilePictureUrl && userProfile.profilePictureUrl !== '')) ? (
                             <img
                                 src={
-                                    editAvatar.startsWith('data:')
+                                    // បើមានការជ្រើសរើស File ថ្មី (editAvatar) គឺបង្ហាញវាភ្លាមៗ (Base64)
+                                    // បើអត់ទេ ទើបទៅទាញរូបភាពពី Server (userProfile.profilePictureUrl)
+                                    selectedFile
                                         ? editAvatar
-                                        : `https://api.i-knet.com${editAvatar || userProfile?.profilePictureUrl}`
+                                        : (userProfile?.profilePictureUrl
+                                            ? `https://api.i-knet.com${userProfile.profilePictureUrl}`
+                                            : '')
                                 }
-                                alt="Preview"
+                                alt="Profile"
                                 className="rounded-circle border"
                                 style={{ width: '80px', height: '80px', objectFit: 'cover' }}
-                                // បន្ថែមមុខងារ onError ដើម្បីប្តូរទៅ Initials វិញបើ Link រូបភាពខូចពី Server
                                 onError={(e) => {
                                     e.currentTarget.style.display = 'none';
                                     e.currentTarget.nextElementSibling?.classList.remove('d-none');
