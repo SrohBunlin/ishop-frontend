@@ -117,16 +117,18 @@ const AppContent: React.FC=() =>{
                     const response = await fetch('https://api.i-knet.com/api/users', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
-                    if (response.ok) {
-                        const data = await response.json();
-                        setUser(data); // 🌟 Update state ឱ្យមានទិន្នន័យពេល Reload
-                    }
+
+                    const text = await response.text(); // អានជាអត្ថបទសិន
+                    console.log("ResponseពីServer:", text); // ពិនិត្យមើលក្នុង Console
+
+                    // បន្ទាប់មកទើបយើងព្យាយាម Parse
+                    const data = JSON.parse(text);
+                    setUser(data);
                 } catch (error) {
-                    console.error("មិនអាចទាញយក Profile បានទេ", error);
+                    console.error("កំហុសក្នុងការទាញយក Profile:", error);
                 }
             }
         };
-
         fetchUserProfile();
     }, []); // ដាក់ Array ទទេ ដើម្បីឱ្យវាដំណើរការតែម្តងពេល Page Load
 
