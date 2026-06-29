@@ -13,7 +13,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Sidebar from "./components/Sidebar";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom'; // ១. Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import Header from "./components/Header";
+import AdminLayout from "./layouts/AdminLayout"; // ១. Import useNavigate
 interface OpenedPageItem {
     id: string;
     title: string;
@@ -201,6 +203,10 @@ const AppContent: React.FC=() =>{
 
                 {/* ដាក់ Routes ទាំងអស់នៅខាងក្នុង MainLayout */}
                 <Routes>
+                    <Route path="/admin" element={<AdminLayout />}>
+                        <Route path="profile" element={<DashboardPage />} />
+                        {/* អ្នកអាចថែមទំព័រ Admin ផ្សេងទៀតនៅទីនេះបាន (ឧទាហរណ៍៖ products, orders) */}
+                    </Route>
                     <Route path="/" element={
                         <div className="container-fluid p-0">
                             {currentPageId ? (
@@ -237,6 +243,7 @@ const App: React.FC = () => {
 
         <CartProvider>
             <Router>
+                <Header />
                 <AppContent />
             </Router>
         </CartProvider>

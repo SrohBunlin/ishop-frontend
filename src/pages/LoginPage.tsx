@@ -3,18 +3,18 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-// ១. បង្កើត Interface សម្រាប់កំណត់ប្រភេទ Type នៃទិន្នន័យដែលបានមកពី API
+// ➕ បន្ថែម fields ថ្មី បើសិនជាអនាគត Backend របស់អ្នកមានបោះឈ្មោះពេញ និងរូបមក
 interface LoginResponse {
     token: string;
     roles: string[];
+    username?: string;     // អាចមាន ឬអត់
+    profileImage?: string; // អាចមាន ឬអត់
 }
 
-// 🌟 ២. បង្កើត Interface សម្រាប់ទទួល Props ពី App.tsx
 interface LoginPageProps {
     onLoginSuccess?: () => void;
 }
 
-// 🌟 ៣. បញ្ចូល LoginPageProps ទៅក្នុង Component
 const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [error, setError] = useState<string>('');
@@ -29,14 +29,24 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         try {
             const response = await axios.post<LoginResponse>('https://api.i-knet.com/api/auth/login', credentials);
 
-            // រក្សាទុក Token និង Role ទៅក្នុង LocalStorage
+            // ១. រក្សាទុក Token និង Role
             localStorage.setItem('token', response.data.token);
-
             if (response.data.roles && response.data.roles.length > 0) {
                 localStorage.setItem('role', response.data.roles[0]);
             }
 
-            // 🌟 ៤. ហៅ Function ប្តូរ Tab នៅពេល Login ជោគជ័យ!
+            // ➕ ២. រក្សាទុកឈ្មោះចូល LocalStorage (យកពី API បើអត់មាន យកអាវាយបញ្ចូល)
+            const loggedInName = response.data.username || credentials.username;
+            localStorage.setItem('username', loggedInName);
+
+            // ➕ ៣. រក្សាទុករូបភាព Profile (បើ Backend មានបោះមកឱ្យ)
+            if (response.data.profileImage) {
+                localStorage.setItem('profileImage', response.data.profileImage);
+            } else {
+                // បើអត់ទាន់មានរូបទេ អាចលុបរបស់ចាស់ចោល ការពារកុំឱ្យច្រឡំរូប User មុន
+                localStorage.removeItem('profileImage');
+            }
+
             if (onLoginSuccess) {
                 onLoginSuccess();
             }
