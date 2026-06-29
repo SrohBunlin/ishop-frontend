@@ -29,14 +29,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         try {
             const response = await axios.post<LoginResponse>('https://api.i-knet.com/api/auth/login', credentials);
 
-            // រក្សាទុក Token និង Role ទៅក្នុង LocalStorage
             localStorage.setItem('token', response.data.token);
-
             if (response.data.roles && response.data.roles.length > 0) {
                 localStorage.setItem('role', response.data.roles[0]);
             }
 
-            // 🌟 ៤. ហៅ Function ប្តូរ Tab នៅពេល Login ជោគជ័យ!
+            // 🌟 ថ្មី៖ ទាញយកទិន្នន័យ Profile ភ្លាមៗបន្ទាប់ពី Login
+            const profileResponse = await axios.get('https://api.i-knet.com/api/users/me', {
+                headers: { Authorization: `Bearer ${response.data.token}` }
+            });
+
+            // រក្សាទុក Profile ទៅក្នុង LocalStorage
+            localStorage.setItem('user_profile', JSON.stringify(profileResponse.data));
+
             if (onLoginSuccess) {
                 onLoginSuccess();
             }
@@ -45,11 +50,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                 title: 'ជោគជ័យ!',
                 text: 'អ្នកបានចូលប្រើប្រាស់ក្នុងប្រព័ន្ធហើយ',
                 icon: 'success',
-                confirmButtonText: 'ទៅកាន់ Profile'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    navigate('/admin/profile');
-                }
+                confirmButtonText: 'យល់ព្រម'
+            }).then(() => {
+                window.location.reload(); // 🌟 ប្រើ reload ដើម្បីឱ្យ Navbar អានទិន្នន័យថ្មី
             });
         } catch (err) {
             setError("រវល់តែនឹកគេម្នាក់ឯងបានជាភ្លេច Password!😂");
