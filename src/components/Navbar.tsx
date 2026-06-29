@@ -164,18 +164,6 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                     </button>
                                 </li>
                             )}
-
-                            {/* 🌟 បន្ថែមប៊ូតុង Logout បង្ហាញតែពេល Login រួច */}
-                            {isLoggedIn && (
-                                <li>
-                                    <button className="dropdown-item py-2 d-flex align-items-center text-danger" onClick={() => {
-                                        localStorage.clear();
-                                        window.location.reload(); // ផ្ទុកទំព័រឡើងវិញដើម្បីសម្អាត state
-                                    }}>
-                                        <i className="bi bi-box-arrow-right me-3"></i> ចាកចេញ (Logout)
-                                    </button>
-                                </li>
-                            )}
                         </ul>
                     </div>
                 </div>
