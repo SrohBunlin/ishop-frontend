@@ -49,27 +49,45 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
 
             const token = localStorage.getItem('token');
             const response = await fetch('https://api.i-knet.com/api/users', {
-                method: 'POST',
+                method: 'POST', // សូមប្រាកដថា API សម្រាប់ការ Update គឺពិតជាប្រើ POST មិនមែន PUT ឬ PATCH
                 headers: {'Authorization': `Bearer ${token}`},
                 body: formData
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                const updatedUser = {
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    profilePictureUrl: data.profilePictureUrl || userProfile?.profilePictureUrl
-                };
+            // ១. អានទិន្នន័យជា Text សិន ដើម្បីកុំឱ្យមានកំហុស SyntaxError
+            const responseText = await response.text();
 
-                setUser(updatedUser);
-                localStorage.setItem('user_profile', JSON.stringify(updatedUser));
-                alert("រក្សាទុកជោគជ័យ!");
-                setShowModal(false); // 🌟 បន្ថែមបន្ទាត់នេះ ដើម្បីបិទ Modal
+            // ២. ពិនិត្យមើលថាតើ Server ឆ្លើយតបជោគជ័យ (Status 200-299) ឬអត់
+            if (!response.ok) {
+                console.error("Server ឆ្លើយតបជាកំហុស (Error HTTP):", response.status);
+                console.error("សារពី Server:", responseText); // វានឹងបង្ហាញថា Server ជួបបញ្ហាអ្វីពិតប្រាកដ
+                throw new Error(`Server Error: ${response.status}`);
             }
+
+            // ៣. បំប្លែងទិន្នន័យ Text ទៅជា JSON ដោយសុវត្ថិភាព
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (jsonError) {
+                console.error("Server មិនបានបញ្ជូន JSON ត្រឡប់មកវិញទេ:", responseText);
+                throw new Error("ទម្រង់ទិន្នន័យពី Server មិនត្រឹមត្រូវ");
+            }
+
+            // ៤. ដំណើរការ Update State ពេលជោគជ័យ
+            const updatedUser = {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                profilePictureUrl: data.profilePictureUrl || userProfile?.profilePictureUrl
+            };
+
+            setUser(updatedUser);
+            localStorage.setItem('user_profile', JSON.stringify(updatedUser));
+            alert("រក្សាទុកជោគជ័យ!");
+            setShowModal(false);
+
         } catch (error) {
             console.error("Error updating profile:", error);
-            alert("មិនអាចភ្ជាប់ទៅកាន់ Server បានទេ");
+            alert("មិនអាចរក្សាទុកបានទេ! សូមពិនិត្យមើល Console សម្រាប់ព័ត៌មានបន្ថែម។");
         }
     };
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
