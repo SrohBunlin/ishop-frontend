@@ -204,6 +204,7 @@ const AppContent: React.FC = () => {
                 currentPageId={currentPageId}
                 onOpenTab={handleNavbarOpenTab}
                 onClosePage={handleClosePage}
+                userProfile={user}
             />
 
             <MainLayout handleLogout={handleLogout} userProfile={user as any} setUser={setUser as any}>

@@ -14,6 +14,11 @@ interface NavbarProps {
     currentPageId: string | null;
     onOpenTab: (id: string, title: string, component: React.ReactNode, iconClass: string) => void;
     onClosePage: (id: string) => void;
+    userProfile?: {               // ➕ បន្ថែមទម្រង់នេះចូលក្នុង Interface របស់ Navbar
+        firstName: string;
+        lastName: string;
+        profilePictureUrl: string;
+    };
 }
 
 const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNode, icon: string }> = {
