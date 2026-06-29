@@ -19,7 +19,7 @@ interface NavbarProps {
         lastName: string;
         profilePictureUrl: string;
     };
-    handleLogout?: () => void; // ➕ បន្ថែម Prop នេះដើម្បីហៅមុខងារ Logout រួមគ្នាពី App.tsx
+    handleLogout?: () => void;
 }
 
 const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNode, icon: string }> = {
@@ -27,16 +27,18 @@ const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNod
     'user-login': { title: '👤 គណនីអ្នកប្រើប្រាស់', component: <LoginPage />, icon: 'bi-person-lock' }
 };
 
-// 🟢 ដំណោះស្រាយ៖ បន្ថែម userProfile និង handleLogout ចូលក្នុងវង់ក្រចកខាងក្រោមនេះ
 const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, onClosePage, userProfile, handleLogout }) => {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const navigate = useNavigate();
 
-    // ឆែកមើលស្ថានភាព Login រស់រវើក (Reactive) តាមរយៈទិន្នន័យរបស់ userProfile Prop
-    const isLoggedIn = !!localStorage.getItem('token') && userProfile?.profilePictureUrl !== undefined;
+    // ឆែកស្ថានភាព Login
+    const isLoggedIn = !!localStorage.getItem('token');
+    const userProfileString = localStorage.getItem('user_profile');
+    const localUserProfile = userProfileString ? JSON.parse(userProfileString) : null;
 
-    // 🟢 លុបការអានពី localStorage ចេញ ហើយទាញពី userProfile Prop វិញដោយផ្ទាល់
-    const firstLetter = userProfile?.firstName ? userProfile.firstName.charAt(0).toUpperCase() : 'U';
+    // 🟢 រួមបញ្ចូលគ្នាទាំងទិន្នន័យពី Prop និង LocalStorage ដើម្បីកុំឱ្យគាំងទិន្នន័យចាស់
+    const currentUser = userProfile || localUserProfile;
+    const firstLetter = currentUser?.firstName ? currentUser.firstName.charAt(0).toUpperCase() : 'U';
 
     useEffect(() => {
         return () => {
@@ -80,6 +82,18 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
         return true;
     });
 
+    // បង្កើត Function ឡុកអ៊ោតរួមមួយ
+    const executeLogout = () => {
+        if (handleLogout) {
+            handleLogout();
+        } else {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('user_profile');
+            window.location.href = '/';
+        }
+    };
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top py-2 px-4 shadow-sm">
             <style>{`
@@ -87,6 +101,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
             `}</style>
 
             <div className="container-fluid flex-grow-1">
+                {/* ផ្នែកខាងឆ្វេង៖ Logo iShop */}
                 <div className="d-flex align-items-center" style={{ width: '100px' }}>
                     <span
                         className="navbar-brand fw-bold text-primary fs-3"
@@ -96,8 +111,9 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                         iShop
                     </span>
                 </div>
-                <div className="d-flex align-items-center justify-content-center flex-grow-1">
 
+                {/* ផ្នែកកណ្តាល៖ កន្លែង Tabs រត់ផ្លាស់ប្តូរ */}
+                <div className="d-flex align-items-center justify-content-center flex-grow-1">
                     {visiblePages.map((page) => (
                         <div
                             key={page.id}
@@ -127,10 +143,9 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                         cursor: 'pointer', overflow: 'hidden'
                                     }}
                                 >
-                                    {/* 🟢 បង្ហាញរូបភាព ឬអក្សរកាត់ដោយផ្អែកលើ userProfile ពី Prop ទាំងស្រុង */}
-                                    {userProfile && userProfile.profilePictureUrl ? (
+                                    {currentUser?.profilePictureUrl ? (
                                         <img
-                                            src={userProfile.profilePictureUrl}
+                                            src={currentUser.profilePictureUrl}
                                             alt="User profile"
                                             className="rounded-circle"
                                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -172,18 +187,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
 
                             {isLoggedIn && (
                                 <li>
-                                    <button
-                                        className="dropdown-item py-2 d-flex align-items-center text-danger"
-                                        onClick={() => {
-                                            // 🟢 ហៅមុខងារ handleLogout ពី App.tsx មកប្រើ ដើម្បីឱ្យប្រព័ន្ធទាំងមូលឡុកអ៊ោតដោយរលូន (SPA)
-                                            if (handleLogout) {
-                                                handleLogout();
-                                            } else {
-                                                localStorage.clear();
-                                                window.location.href = '/';
-                                            }
-                                        }}
-                                    >
+                                    <button className="dropdown-item py-2 d-flex align-items-center text-danger" onClick={executeLogout}>
                                         <i className="bi bi-box-arrow-right me-3"></i> ចាកចេញ (Logout)
                                     </button>
                                 </li>
@@ -191,7 +195,47 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                         </ul>
                     </div>
                 </div>
-                <div style={{ width: '100px' }}></div>
+
+                {/* 🟢 ផ្នែកខាងស្តាំបង្អស់៖ កែប្រែឱ្យជាប់ Icon គណនីអចិន្ត្រៃយ៍ ទោះជា Logout ក៏មិនបាត់ */}
+                <div className="d-flex align-items-center justify-content-end" style={{ width: '100px' }}>
+                    {isLoggedIn ? (
+                        <div className="dropdown">
+                            <div
+                                className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
+                                style={{ width: '40px', height: '40px', cursor: 'pointer', overflow: 'hidden' }}
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                {currentUser?.profilePictureUrl ? (
+                                    <img src={currentUser.profilePictureUrl} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                ) : (
+                                    <span>{firstLetter}</span>
+                                )}
+                            </div>
+                            <ul className="dropdown-menu dropdown-menu-end border-0 shadow-lg p-2 mt-2" style={{ borderRadius: '12px', minWidth: '180px' }}>
+                                <li className="px-3 py-1 fw-bold text-dark" style={{ fontSize: '14px' }}>
+                                    {currentUser?.firstName} {currentUser?.lastName}
+                                </li>
+                                <li><hr className="dropdown-divider" /></li>
+                                <li>
+                                    <button className="dropdown-item py-2 d-flex align-items-center text-danger" onClick={executeLogout}>
+                                        <i className="bi bi-box-arrow-right me-2"></i> ចាកចេញ
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    ) : (
+                        // បើបាន Logout រួច វានឹងបង្ហាញប៊ូតុង "ចូលប្រើ" ពណ៌ខៀវយ៉ាងស្អាតនៅកៀនខាងស្តាំជាប់ជានិច្ច!
+                        <button
+                            className="btn btn-outline-primary btn-sm d-flex align-items-center gap-1 fw-bold px-3 py-1.5"
+                            style={{ borderRadius: '20px', fontSize: '13px' }}
+                            onClick={() => handleTabClick('user-login')}
+                        >
+                            <i className="bi bi-person-circle fs-6"></i> ចូលប្រើ
+                        </button>
+                    )}
+                </div>
+
             </div>
         </nav>
     );
