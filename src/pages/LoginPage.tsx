@@ -29,38 +29,34 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         try {
             const response = await axios.post<LoginResponse>('https://api.i-knet.com/api/auth/login', credentials);
 
-            // ១. រក្សាទុក Token និង Role
             localStorage.setItem('token', response.data.token);
             if (response.data.roles && response.data.roles.length > 0) {
                 localStorage.setItem('role', response.data.roles[0]);
             }
-
-            // ➕ ២. រក្សាទុកឈ្មោះចូល LocalStorage (យកពី API បើអត់មាន យកអាវាយបញ្ចូល)
             const loggedInName = response.data.username || credentials.username;
             localStorage.setItem('username', loggedInName);
-
-            // ➕ ៣. រក្សាទុករូបភាព Profile (បើ Backend មានបោះមកឱ្យ)
             if (response.data.profileImage) {
                 localStorage.setItem('profileImage', response.data.profileImage);
             } else {
-                // បើអត់ទាន់មានរូបទេ អាចលុបរបស់ចាស់ចោល ការពារកុំឱ្យច្រឡំរូប User មុន
                 localStorage.removeItem('profileImage');
             }
 
-            if (onLoginSuccess) {
-                onLoginSuccess();
-            }
-
+            // 🟢 បង្ហាញ Swal រយៈពេលខ្លីរួចរត់ទៅ Dashboard តែម្តង
             Swal.fire({
                 title: 'ជោគជ័យ!',
-                text: 'អ្នកបានចូលប្រើប្រាស់ក្នុងប្រព័ន្ធហើយ',
+                text: 'កំពុងនាំអ្នកទៅកាន់ប្រព័ន្ធ...',
                 icon: 'success',
-                confirmButtonText: 'ទៅកាន់ Profile'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    navigate('/admin/profile');
+                timer: 1500, // ឱ្យវាបង្ហាញត្រឹម 1.5 វិនាទី
+                showConfirmButton: false // ដកប៊ូតុងចេញ
+            }).then(() => {
+                // ហៅទៅកាន់ App.tsx តាមរយៈ onLoginSuccess ដើម្បី Update State
+                if (onLoginSuccess) {
+                    onLoginSuccess();
                 }
+                // រត់ទៅកាន់ Dashboard ភ្លាមៗ
+                navigate('/admin/dashboard', { replace: true });
             });
+
         } catch (err) {
             setError("រវល់តែនឹកគេម្នាក់ឯងបានជាភ្លេច Password!😂");
         }
