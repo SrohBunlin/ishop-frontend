@@ -14,11 +14,12 @@ interface NavbarProps {
     currentPageId: string | null;
     onOpenTab: (id: string, title: string, component: React.ReactNode, iconClass: string) => void;
     onClosePage: (id: string) => void;
-    userProfile?: {               // ➕ បន្ថែមទម្រង់នេះចូលក្នុង Interface របស់ Navbar
+    userProfile?: {
         firstName: string;
         lastName: string;
         profilePictureUrl: string;
     };
+    handleLogout?: () => void; // ➕ បន្ថែម Prop នេះដើម្បីហៅមុខងារ Logout រួមគ្នាពី App.tsx
 }
 
 const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNode, icon: string }> = {
@@ -26,15 +27,16 @@ const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNod
     'user-login': { title: '👤 គណនីអ្នកប្រើប្រាស់', component: <LoginPage />, icon: 'bi-person-lock' }
 };
 
-const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, onClosePage }) => {
+// 🟢 ដំណោះស្រាយ៖ បន្ថែម userProfile និង handleLogout ចូលក្នុងវង់ក្រចកខាងក្រោមនេះ
+const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, onClosePage, userProfile, handleLogout }) => {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const navigate = useNavigate();
-    const isLoggedIn = !!localStorage.getItem('token');
 
-    const userProfileString = localStorage.getItem('user_profile');
-    const userProfile = userProfileString ? JSON.parse(userProfileString) : null;
+    // ឆែកមើលស្ថានភាព Login រស់រវើក (Reactive) តាមរយៈទិន្នន័យរបស់ userProfile Prop
+    const isLoggedIn = !!localStorage.getItem('token') && userProfile?.profilePictureUrl !== undefined;
+
+    // 🟢 លុបការអានពី localStorage ចេញ ហើយទាញពី userProfile Prop វិញដោយផ្ទាល់
     const firstLetter = userProfile?.firstName ? userProfile.firstName.charAt(0).toUpperCase() : 'U';
-
 
     useEffect(() => {
         return () => {
@@ -72,14 +74,9 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
 
     const isPageOpened = (id: string) => openedPages.some(page => page.id === id);
 
-    // ➕ 🛠️ ដំណោះស្រាយគន្លឹះ៖ ចំរាញ់យកតែ Tab ណាដែលត្រូវបង្ហាញតាមលក្ខខណ្ឌ Login/Logout
     const visiblePages = openedPages.filter(page => {
-        // ១. បើ Login រួចហើយ មិនត្រូវបង្ហាញ Tab គណនី (user-login) ឡើយ
         if (isLoggedIn && page.id === 'user-login') return false;
-
-        // ២. បើអត់ទាន់ Login (Logout រួច) មិនត្រូវបង្ហាញ Tab Profile ឡើយ
         if (!isLoggedIn && (page.id === 'user-profile' || page.icon === 'profile-img')) return false;
-
         return true;
     });
 
@@ -101,7 +98,6 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                 </div>
                 <div className="d-flex align-items-center justify-content-center flex-grow-1">
 
-                    {/* 🔄 ប្តូរពី openedPages.map មកប្រើ visiblePages.map វិញ */}
                     {visiblePages.map((page) => (
                         <div
                             key={page.id}
@@ -131,7 +127,8 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                         cursor: 'pointer', overflow: 'hidden'
                                     }}
                                 >
-                                    {userProfile?.profilePictureUrl ? (
+                                    {/* 🟢 បង្ហាញរូបភាព ឬអក្សរកាត់ដោយផ្អែកលើ userProfile ពី Prop ទាំងស្រុង */}
+                                    {userProfile && userProfile.profilePictureUrl ? (
                                         <img
                                             src={userProfile.profilePictureUrl}
                                             alt="User profile"
@@ -165,7 +162,6 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                 </li>
                             )}
 
-                            {/* បង្ហាញតែពេលមិនទាន់ Login និងមិនទាន់បើក Tab ប៉ុណ្ណោះ */}
                             {!isLoggedIn && !isPageOpened('user-login') && (
                                 <li>
                                     <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick('user-login')}>
@@ -174,17 +170,18 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                 </li>
                             )}
 
-                            {/* ➕ 🛠️ កែសម្រួលប៊ូតុង Logout ឱ្យសម្អាតទិន្នន័យ និងរុញទៅទំព័រដើមវិញ */}
                             {isLoggedIn && (
                                 <li>
                                     <button
                                         className="dropdown-item py-2 d-flex align-items-center text-danger"
                                         onClick={() => {
-                                            localStorage.removeItem('token');
-                                            localStorage.removeItem('username');
-                                            localStorage.removeItem('user_profile');
-                                            // បង្ខំឱ្យត្រឡប់ទៅទំព័រដើមវិញ និង Refresh កម្មវិធីដើម្បីសម្អាត State ចាស់ចោលទាំងអស់
-                                            window.location.href = '/';
+                                            // 🟢 ហៅមុខងារ handleLogout ពី App.tsx មកប្រើ ដើម្បីឱ្យប្រព័ន្ធទាំងមូលឡុកអ៊ោតដោយរលូន (SPA)
+                                            if (handleLogout) {
+                                                handleLogout();
+                                            } else {
+                                                localStorage.clear();
+                                                window.location.href = '/';
+                                            }
                                         }}
                                     >
                                         <i className="bi bi-box-arrow-right me-3"></i> ចាកចេញ (Logout)

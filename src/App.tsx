@@ -205,6 +205,7 @@ const AppContent: React.FC = () => {
                 onOpenTab={handleNavbarOpenTab}
                 onClosePage={handleClosePage}
                 userProfile={user}
+                handleLogout={handleLogout}
             />
 
             <MainLayout handleLogout={handleLogout} userProfile={user as any} setUser={setUser as any}>
