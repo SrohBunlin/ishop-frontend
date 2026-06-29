@@ -31,6 +31,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const navigate = useNavigate();
 
+
     // ឆែកស្ថានភាព Login
     const isLoggedIn = !!localStorage.getItem('token');
     const userProfileString = localStorage.getItem('user_profile');
@@ -77,10 +78,18 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
     const isPageOpened = (id: string) => openedPages.some(page => page.id === id);
 
     const visiblePages = openedPages.filter(page => {
+        // បើ Login ហើយ មិនបាច់បង្ហាញ Tab "user-login"
         if (isLoggedIn && page.id === 'user-login') return false;
+        // បើអត់ទាន់ Login កុំឱ្យបង្ហាញ Tab "user-profile"
         if (!isLoggedIn && (page.id === 'user-profile' || page.icon === 'profile-img')) return false;
         return true;
     });
+
+// 🟢 បន្ថែម Logic នេះដើម្បីឱ្យវា "លោត" ចេញមកក្រៅពេល Logout:
+// ប្រសិនបើអត់ទាន់ Login ហើយមិនទាន់មាន Tab 'user-login' នៅលើ Navbar ទេ ត្រូវថែមវាចូលឱ្យវាលោតបង្ហាញខ្លួន
+    if (!isLoggedIn && !visiblePages.some(p => p.id === 'user-login')) {
+        visiblePages.push({ id: 'user-login', icon: 'bi-person-circle' });
+    }
 
     // បង្កើត Function ឡុកអ៊ោតរួមមួយ
     const executeLogout = () => {
