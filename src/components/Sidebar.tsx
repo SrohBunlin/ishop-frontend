@@ -36,7 +36,6 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
         setShowModal(true);
     };
 
-    // មុខងាររក្សាទុកទិន្នន័យថ្មី
     const handleSave = async () => {
         try {
             const formData = new FormData();
@@ -49,45 +48,38 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
 
             const token = localStorage.getItem('token');
             const response = await fetch('https://api.i-knet.com/api/users', {
-                method: 'POST', // សូមប្រាកដថា API សម្រាប់ការ Update គឺពិតជាប្រើ POST មិនមែន PUT ឬ PATCH
+                method: 'POST',
                 headers: {'Authorization': `Bearer ${token}`},
                 body: formData
             });
 
-            // ១. អានទិន្នន័យជា Text សិន ដើម្បីកុំឱ្យមានកំហុស SyntaxError
             const responseText = await response.text();
 
-            // ២. ពិនិត្យមើលថាតើ Server ឆ្លើយតបជោគជ័យ (Status 200-299) ឬអត់
             if (!response.ok) {
-                console.error("Server ឆ្លើយតបជាកំហុស (Error HTTP):", response.status);
-                console.error("សារពី Server:", responseText); // វានឹងបង្ហាញថា Server ជួបបញ្ហាអ្វីពិតប្រាកដ
+                console.error("Error Response:", responseText);
                 throw new Error(`Server Error: ${response.status}`);
             }
 
-            // ៣. បំប្លែងទិន្នន័យ Text ទៅជា JSON ដោយសុវត្ថិភាព
-            let data;
-            try {
-                data = JSON.parse(responseText);
-            } catch (jsonError) {
-                console.error("Server មិនបានបញ្ជូន JSON ត្រឡប់មកវិញទេ:", responseText);
-                throw new Error("ទម្រង់ទិន្នន័យពី Server មិនត្រឹមត្រូវ");
-            }
+            // 🌟 ដំណោះស្រាយ៖ ដោយសារ Server បញ្ជូនមកជា Text (មិនមែន JSON)
+            // យើងឈប់ប្រើ JSON.parse ទៀតហើយ។ យើង Update State ដោយប្រើទិន្នន័យលើសំបកក្រៅ (Local) តែម្ដង។
 
-            // ៤. ដំណើរការ Update State ពេលជោគជ័យ
             const updatedUser = {
-                firstName: data.firstName,
-                lastName: data.lastName,
-                profilePictureUrl: data.profilePictureUrl || userProfile?.profilePictureUrl
+                firstName: editFirstName, // យកពី input ផ្ទាល់
+                lastName: editLastName,   // យកពី input ផ្ទាល់
+                // ប្រើរូប Preview សិន បើអត់មានរូបថ្មី ប្រើរូបចាស់
+                profilePictureUrl: selectedFile ? editAvatar : (userProfile?.profilePictureUrl || '')
             };
 
             setUser(updatedUser);
             localStorage.setItem('user_profile', JSON.stringify(updatedUser));
-            alert("រក្សាទុកជោគជ័យ!");
+
+            // បង្ហាញសារដែល Server ផ្ញើមក ("ទិន្នន័យ User ទទួលបានជោគជ័យ!")
+            alert(responseText);
             setShowModal(false);
 
         } catch (error) {
             console.error("Error updating profile:", error);
-            alert("មិនអាចរក្សាទុកបានទេ! សូមពិនិត្យមើល Console សម្រាប់ព័ត៌មានបន្ថែម។");
+            alert("មិនអាចរក្សាទុកបានទេ! សូមពិនិត្យមើល Console។");
         }
     };
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
