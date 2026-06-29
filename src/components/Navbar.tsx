@@ -221,9 +221,10 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                 }
                                 return null;
                             })}
-                            <li><hr className="dropdown-divider" /></li>
+
                             {isLoggedIn && (
                                 <li>
+                                    <hr className="dropdown-divider" />
                                     <button className="dropdown-item py-2 d-flex align-items-center text-danger" onClick={executeLogout}>
                                         <i className="bi bi-box-arrow-right me-3"></i> ចាកចេញ (Logout)
                                     </button>
