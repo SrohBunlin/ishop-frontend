@@ -118,12 +118,18 @@ const AppContent: React.FC=() =>{
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
 
-                    const text = await response.text(); // អានជាអត្ថបទសិន
-                    console.log("ResponseពីServer:", text); // ពិនិត្យមើលក្នុង Console
+                    const text = await response.text();
+                    console.log("Response ពី Server:", text);
 
-                    // បន្ទាប់មកទើបយើងព្យាយាម Parse
-                    const data = JSON.parse(text);
-                    setUser(data);
+                    // ត្រួតពិនិត្យមុននឹង Parse
+                    if (text.trim().startsWith('{')) {
+                        const data = JSON.parse(text);
+                        setUser(data);
+                    } else {
+                        console.warn("Server មិនបានបញ្ជូនទិន្នន័យ JSON មកទេ:", text);
+                        // ប្រសិនបើនេះជាការហៅដើម្បីទាញយក Profile តើមាន API ផ្សេងទៀតទេ?
+                        // បើអត់ទេ អ្នកត្រូវកែ Backend ឱ្យបញ្ជូន JSON ត្រឡប់មកវិញ
+                    }
                 } catch (error) {
                     console.error("កំហុសក្នុងការទាញយក Profile:", error);
                 }
