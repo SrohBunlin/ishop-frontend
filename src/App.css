@@ -43,13 +43,12 @@
 
 
 /* បង្ខំឱ្យ Sidebar វែងពេញអេក្រង់ និងជាប់នៅនឹងកន្លែង */
-aside.sticky-top {
-  height: 100vh !important;
-  top: 0 !important;
-  display: flex !important;
+aside.sidebar-container { /* ប្តូរឈ្មោះ Class តាមចិត្ត */
+  height: 100vh;
+  display: flex;
   flex-direction: column;
-  position: sticky !important;
-  z-index: 1020;
+  position: relative; /* ដក sticky ចេញ ហើយដាក់ relative ឬ static វិញ */
+  z-index: 1000;
 }
 
 /* ធានាថា Body មិនមានការកាត់កម្ពស់ */
@@ -98,4 +97,8 @@ body, html, #root {
   .sidebar.active {
     left: 0;        /* លោតចេញមកវិញពេល Active */
   }
+}
+.main-container {
+  display: flex;
+  flex-wrap: nowrap; /* កុំឱ្យវាធ្លាក់ចុះក្រោម លើកលែងតែយើងចង់ */
 }

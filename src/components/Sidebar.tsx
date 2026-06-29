@@ -84,8 +84,7 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
     };
     return (
         <>
-            <aside
-                className="d-none d-md-block shadow-sm"
+            <aside className="sidebar-container"
                 style={{
                     width: '260px',
                     backgroundColor: '#124F9C',
