@@ -104,7 +104,6 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                         className="btn btn-link text-decoration-none text-center px-3 mb-4 w-100"
                     >
                         {/* លក្ខខណ្ឌថ្មី៖ បង្ហាញរូបទាល់តែ editAvatar ឬ profilePictureUrl ពិតជាមានទិន្នន័យ (មិនមែនទទេរ) */}
-                        {/* លក្ខខណ្ឌថ្មី៖ បង្ហាញរូបទាល់តែ editAvatar ឬ profilePictureUrl ពិតជាមានទិន្នន័យ (មិនមែនទទេរ) */}
                         {(editAvatar || (userProfile?.profilePictureUrl && userProfile.profilePictureUrl !== '')) ? (
                             <img
                                 src={
