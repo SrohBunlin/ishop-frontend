@@ -74,7 +74,6 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
             navigate(`/${id}`);
         }
     };
-
     const isPageOpened = (id: string) => openedPages.some(page => page.id === id);
 
     const visiblePages = openedPages.filter(page => {
@@ -204,47 +203,6 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                         </ul>
                     </div>
                 </div>
-
-                {/* 🟢 ផ្នែកខាងស្តាំបង្អស់៖ កែប្រែឱ្យជាប់ Icon គណនីអចិន្ត្រៃយ៍ ទោះជា Logout ក៏មិនបាត់ */}
-                <div className="d-flex align-items-center justify-content-end" style={{ width: '100px' }}>
-                    {isLoggedIn ? (
-                        <div className="dropdown">
-                            <div
-                                className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold shadow-sm"
-                                style={{ width: '40px', height: '40px', cursor: 'pointer', overflow: 'hidden' }}
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                {currentUser?.profilePictureUrl ? (
-                                    <img src={currentUser.profilePictureUrl} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                ) : (
-                                    <span>{firstLetter}</span>
-                                )}
-                            </div>
-                            <ul className="dropdown-menu dropdown-menu-end border-0 shadow-lg p-2 mt-2" style={{ borderRadius: '12px', minWidth: '180px' }}>
-                                <li className="px-3 py-1 fw-bold text-dark" style={{ fontSize: '14px' }}>
-                                    {currentUser?.firstName} {currentUser?.lastName}
-                                </li>
-                                <li><hr className="dropdown-divider" /></li>
-                                <li>
-                                    <button className="dropdown-item py-2 d-flex align-items-center text-danger" onClick={executeLogout}>
-                                        <i className="bi bi-box-arrow-right me-2"></i> ចាកចេញ
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    ) : (
-                        // បើបាន Logout រួច វានឹងបង្ហាញប៊ូតុង "ចូលប្រើ" ពណ៌ខៀវយ៉ាងស្អាតនៅកៀនខាងស្តាំជាប់ជានិច្ច!
-                        <button
-                            className="btn btn-outline-primary btn-sm d-flex align-items-center gap-1 fw-bold px-3 py-1.5"
-                            style={{ borderRadius: '20px', fontSize: '13px' }}
-                            onClick={() => handleTabClick('user-login')}
-                        >
-                            <i className="bi bi-person-circle fs-6"></i> ចូលប្រើ
-                        </button>
-                    )}
-                </div>
-
             </div>
         </nav>
     );
