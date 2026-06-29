@@ -112,13 +112,9 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                         {(editAvatar || (userProfile?.profilePictureUrl && userProfile.profilePictureUrl !== '')) ? (
                             <img
                                 src={
-                                    // បើមានការជ្រើសរើស File ថ្មី (editAvatar) គឺបង្ហាញវាភ្លាមៗ (Base64)
-                                    // បើអត់ទេ ទើបទៅទាញរូបភាពពី Server (userProfile.profilePictureUrl)
-                                    selectedFile
-                                        ? editAvatar
-                                        : (userProfile?.profilePictureUrl
-                                            ? `https://api.i-knet.com${userProfile.profilePictureUrl}`
-                                            : '')
+                                    userProfile?.profilePictureUrl?.startsWith('data:')
+                                        ? userProfile.profilePictureUrl
+                                        : `https://api.i-knet.com${userProfile?.profilePictureUrl}`
                                 }
                                 alt="Profile"
                                 className="rounded-circle border"

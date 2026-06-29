@@ -115,7 +115,6 @@ const AppContent: React.FC=() =>{
             if (token) {
                 try {
                     const response = await fetch('https://api.i-knet.com/api/users', {
-                        method: 'POST',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (response.ok) {
