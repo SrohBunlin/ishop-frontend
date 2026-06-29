@@ -196,22 +196,22 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                         <ul className="dropdown-menu border-0 p-2 mt-2 shadow-lg" aria-labelledby="navbarDropdownAdd" style={{ minWidth: '220px', borderRadius: '16px' }}>
                             <li className="px-3 py-2 fw-bold text-muted" style={{ fontSize: '11px' }}>ជម្រើសការងាររហ័ស</li>
 
-                            {!isPageOpened('home-page') && (
-                                <li>
-                                    <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick('home-page')}>
-                                        <i className="bi bi-house-door text-primary me-3"></i> ទំព័រដើម
-                                    </button>
-                                </li>
-                            )}
-
-                            {!isLoggedIn && !isPageOpened('user-login') && (
-                                <li>
-                                    <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick('user-login')}>
-                                        <i className="bi bi-person-lock text-success me-3"></i> គណនីអ្នកប្រើប្រាស់
-                                    </button>
-                                </li>
-                            )}
-
+                            {/* បង្ហាញ Tab ទាំងអស់ដែលមានក្នុង AVAILABLE_PAGES ប៉ុន្តែមិនទាន់បង្ហាញលើ Navbar */}
+                            {Object.keys(AVAILABLE_PAGES).map((key) => {
+                                const page = AVAILABLE_PAGES[key];
+                                // បើមិនទាន់មាន Tab នេះនៅលើ Navbar ទេ ទើបបង្ហាញក្នុង List
+                                if (!isPageOpened(key)) {
+                                    return (
+                                        <li key={key}>
+                                            <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick(key)}>
+                                                <i className={`bi ${page.icon} me-3`}></i> {page.title}
+                                            </button>
+                                        </li>
+                                    );
+                                }
+                                return null;
+                            })}
+                            <li><hr className="dropdown-divider" /></li>
                             {isLoggedIn && (
                                 <li>
                                     <button className="dropdown-item py-2 d-flex align-items-center text-danger" onClick={executeLogout}>
