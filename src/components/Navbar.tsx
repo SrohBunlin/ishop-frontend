@@ -157,7 +157,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                             )}
 
                             {/* 🌟 ផ្លាស់ប្តូរលក្ខខណ្ឌនៅទីនេះ៖ បង្ហាញតែពេលមិនទាន់ Login */}
-                            {!isLoggedIn && !isPageOpened('user-login') && !localStorage.getItem('token') && (
+                            {!isLoggedIn && !isPageOpened('user-login') && (
                                 <li>
                                     <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick('user-login')}>
                                         <i className="bi bi-person-lock text-success me-3"></i> គណនីអ្នកប្រើប្រាស់
