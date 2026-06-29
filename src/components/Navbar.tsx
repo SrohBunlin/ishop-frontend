@@ -194,7 +194,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                             <i className="bi bi-plus-lg fs-4 fw-bold"></i>
                         </button>
                         <ul className="dropdown-menu border-0 p-2 mt-2 shadow-lg" aria-labelledby="navbarDropdownAdd" style={{ minWidth: '220px', borderRadius: '16px' }}>
-                            <li className="px-3 py-2 fw-bold text-muted" style={{ fontSize: '11px' }}>ជម្រើសការងាររហ័ស</li>
+                            <li className="px-3 py-2 fw-bold text-muted" style={{ fontSize: '11px' }}>កំពុងអភិវឌ្ឍ</li>
 
                             {Object.keys(AVAILABLE_PAGES).map((key) => {
                                 const page = AVAILABLE_PAGES[key];

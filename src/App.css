@@ -78,3 +78,24 @@ body, html, #root {
 .dropdown-toggle.hide-toggle::after {
   display: none !important;
 }
+
+/* កូដ CSS សម្រាប់ Sidebar */
+.sidebar {
+  width: 250px; /* ទំហំស្តង់ដារ */
+  min-height: 100vh; /* ឱ្យវាតែងតែពេញកម្ពស់អេក្រង់ */
+  transition: all 0.3s ease; /* សម្រាប់ Animation */
+  overflow-y: auto; /* បើក Scroll បើកុងតឺន័រតូចពេក */
+}
+
+/* សម្រាប់ទូរស័ព្ទ (Responsive) */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed; /* ឱ្យវាយកទីតាំងលើគេ */
+    left: -250px;    /* លាក់វាចូលទៅខាងឆ្វេងពេលមិនប្រើ */
+    z-index: 1000;
+  }
+
+  .sidebar.active {
+    left: 0;        /* លោតចេញមកវិញពេល Active */
+  }
+}
