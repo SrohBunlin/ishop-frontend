@@ -36,7 +36,6 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
         setShowModal(true);
     };
 
-    // ក្នុង Sidebar.tsx
     const handleSave = async () => {
         try {
             const formData = new FormData();
@@ -51,25 +50,31 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                 body: formData
             });
 
-            // ប្រើ response.json() ប្រសិនបើ Backend បញ្ជូន JSON មកវិញ
-            // បើ Backend បញ្ជូនត្រឹម Text សូមរក្សាទុករបៀបនេះ៖
-            const result = await response.json().catch(() => ({}));
+            // ១. អាន Response ជា Text ជំនួសឱ្យ JSON ដើម្បីបញ្ចៀស SyntaxError
+            const responseText = await response.text();
 
             if (response.ok) {
+                // ២. បង្កើត Object ថ្មីដោយដៃដោយប្រើទិន្នន័យដែលអ្នកមានស្រាប់
                 const updatedUser = {
                     firstName: editFirstName,
                     lastName: editLastName,
-                    // យក URL ដែលបានពី Server (ប្រសិនបើមាន) បើអត់ទេ ប្រើរូបចាស់
-                    profilePictureUrl: result.profilePictureUrl || userProfile?.profilePictureUrl
+                    // ប្រើរូបភាពដែលបាន Preview (Base64) ករណីមានការ Upload ថ្មី
+                    profilePictureUrl: selectedFile ? editAvatar : (userProfile?.profilePictureUrl || '')
                 };
 
+                // ៣. បច្ចុប្បន្នភាព State និង LocalStorage
                 setUser(updatedUser);
                 localStorage.setItem('user_profile', JSON.stringify(updatedUser));
-                alert("រក្សាទុកជោគជ័យ!");
+
+                alert(responseText); // បង្ហាញសារពី Server
                 setShowModal(false);
+            } else {
+                console.error("Server Error:", responseText);
+                alert("មានកំហុសពី Server!");
             }
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error updating profile:", error);
+            alert("មិនអាចតភ្ជាប់ទៅ Server បានទេ!");
         }
     };
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
