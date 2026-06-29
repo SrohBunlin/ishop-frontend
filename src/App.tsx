@@ -221,7 +221,7 @@ const AppContent: React.FC=() =>{
                     <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
 
                     {/* កែសម្រួលការបិទ div ឱ្យត្រឹមត្រូវនៅទីនេះ */}
-                    <Route path="/admin/profile" element={isAuthenticated() ? <div>នេះជាទំព័រ User Profile របស់ប្អូន</div> : <Navigate to="/login" replace />} />
+                    {/*<Route path="/admin/profile" element={isAuthenticated() ? <div>នេះជាទំព័រ User Profile របស់ប្អូន</div> : <Navigate to="/login" replace />} />*/}
 
                     <Route path="/admin/dashboard" element={isAuthenticated() ? <DashboardPage /> : <Navigate to="/login" replace />} />
                     <Route path="/invoice/:id" element={<InvoiceDetail />} />

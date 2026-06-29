@@ -65,7 +65,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
         if (id === 'home-page') {
             navigate('/');
         } else if (id === 'user-profile') {
-            navigate('/admin/profile'); // ពេលចុចរូប Profile ឱ្យទៅកាន់ទំព័រ Profile
+            navigate('/admin/dashboard'); // ពេលចុចរូប Profile ឱ្យទៅកាន់ទំព័រ Profile
         } else {
             navigate(`/${id}`);
         }
