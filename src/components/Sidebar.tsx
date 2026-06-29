@@ -36,15 +36,13 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
         setShowModal(true);
     };
 
+    // ក្នុង Sidebar.tsx
     const handleSave = async () => {
         try {
             const formData = new FormData();
             formData.append('first_name', editFirstName);
             formData.append('last_name', editLastName);
-
-            if (selectedFile) {
-                formData.append('avatar', selectedFile);
-            }
+            if (selectedFile) formData.append('avatar', selectedFile);
 
             const token = localStorage.getItem('token');
             const response = await fetch('https://api.i-knet.com/api/users', {
@@ -53,33 +51,25 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                 body: formData
             });
 
-            const responseText = await response.text();
+            // ប្រើ response.json() ប្រសិនបើ Backend បញ្ជូន JSON មកវិញ
+            // បើ Backend បញ្ជូនត្រឹម Text សូមរក្សាទុករបៀបនេះ៖
+            const result = await response.json().catch(() => ({}));
 
-            if (!response.ok) {
-                console.error("Error Response:", responseText);
-                throw new Error(`Server Error: ${response.status}`);
+            if (response.ok) {
+                const updatedUser = {
+                    firstName: editFirstName,
+                    lastName: editLastName,
+                    // យក URL ដែលបានពី Server (ប្រសិនបើមាន) បើអត់ទេ ប្រើរូបចាស់
+                    profilePictureUrl: result.profilePictureUrl || userProfile?.profilePictureUrl
+                };
+
+                setUser(updatedUser);
+                localStorage.setItem('user_profile', JSON.stringify(updatedUser));
+                alert("រក្សាទុកជោគជ័យ!");
+                setShowModal(false);
             }
-
-            // 🌟 ដំណោះស្រាយ៖ ដោយសារ Server បញ្ជូនមកជា Text (មិនមែន JSON)
-            // យើងឈប់ប្រើ JSON.parse ទៀតហើយ។ យើង Update State ដោយប្រើទិន្នន័យលើសំបកក្រៅ (Local) តែម្ដង។
-
-            const updatedUser = {
-                firstName: editFirstName, // យកពី input ផ្ទាល់
-                lastName: editLastName,   // យកពី input ផ្ទាល់
-                // ប្រើរូប Preview សិន បើអត់មានរូបថ្មី ប្រើរូបចាស់
-                profilePictureUrl: selectedFile ? editAvatar : (userProfile?.profilePictureUrl || '')
-            };
-
-            setUser(updatedUser);
-            localStorage.setItem('user_profile', JSON.stringify(updatedUser));
-
-            // បង្ហាញសារដែល Server ផ្ញើមក ("ទិន្នន័យ User ទទួលបានជោគជ័យ!")
-            alert(responseText);
-            setShowModal(false);
-
         } catch (error) {
-            console.error("Error updating profile:", error);
-            alert("មិនអាចរក្សាទុកបានទេ! សូមពិនិត្យមើល Console។");
+            console.error("Error:", error);
         }
     };
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
