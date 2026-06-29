@@ -196,11 +196,21 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                         <ul className="dropdown-menu border-0 p-2 mt-2 shadow-lg" aria-labelledby="navbarDropdownAdd" style={{ minWidth: '220px', borderRadius: '16px' }}>
                             <li className="px-3 py-2 fw-bold text-muted" style={{ fontSize: '11px' }}>ជម្រើសការងាររហ័ស</li>
 
-                            {/* បង្ហាញ Tab ទាំងអស់ដែលមានក្នុង AVAILABLE_PAGES ប៉ុន្តែមិនទាន់បង្ហាញលើ Navbar */}
                             {Object.keys(AVAILABLE_PAGES).map((key) => {
                                 const page = AVAILABLE_PAGES[key];
-                                // បើមិនទាន់មាន Tab នេះនៅលើ Navbar ទេ ទើបបង្ហាញក្នុង List
-                                if (!isPageOpened(key)) {
+
+                                // 🟢 កំណត់លក្ខខណ្ឌបង្ហាញ (Visibility Logic)
+                                const isAlreadyOpened = isPageOpened(key);
+                                const isLoginTab = key === 'user-login';
+                                const isProfileTab = key === 'user-profile';
+
+                                // ១. បើមិនទាន់បើក Tab នោះ
+                                // ២. បើបាន Login ហើយ ហាមបង្ហាញ 'user-login'
+                                // ៣. បើមិនទាន់ Login ហាមបង្ហាញ 'user-profile'
+                                const shouldShow = !isAlreadyOpened &&
+                                    (isLoggedIn ? !isLoginTab : !isProfileTab);
+
+                                if (shouldShow) {
                                     return (
                                         <li key={key}>
                                             <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick(key)}>
