@@ -52,18 +52,21 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
     };
 
     const handleTabClick = (id: string) => {
+        // ១. បើក Tab
         const page = AVAILABLE_PAGES[id];
-
         if (page) {
             onOpenTab(id, page.title, page.component, page.icon);
         } else {
             onOpenTab(id, 'ទំព័រ', null, 'bi-window');
         }
 
+        // ២. រុញទៅកាន់ Route ត្រឹមត្រូវ
         if (id === 'home-page') {
             navigate('/');
+        } else if (id === 'user-login') {
+            navigate('/login'); // រុញទៅទំព័រ Login
         } else if (id === 'user-profile') {
-            navigate('/admin/dashboard');
+            navigate('/admin/dashboard'); // រុញទៅ Dashboard
         } else {
             navigate(`/${id}`);
         }
@@ -85,12 +88,10 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
         return true;
     });
 
-    // 🟢 Logic ដ៏ឆ្លាតវៃ៖ បង្ខំឱ្យបង្ហាញ Icon ចូលប្រើ (Login) តែនៅពេលដែលមិនទាន់ Login
-// ហើយវាមិនទាន់មាននៅលើ Navbar (ព្រោះប្អូនបាន Long press លុបវាចោល)
     if (!isLoggedIn) {
         const hasLoginTab = visiblePages.some(p => p.id === 'user-login');
         if (!hasLoginTab) {
-            visiblePages.push({ id: 'user-login', icon: 'bi-person-circle' });
+            visiblePages.push({ id: 'user-login', icon: 'bi-person-lock' });
         }
     }
     // បង្កើត Function ឡុកអ៊ោតរួមមួយ
