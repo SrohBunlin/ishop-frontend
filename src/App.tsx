@@ -185,8 +185,7 @@ const AppContent: React.FC = () => {
 
     const handleClosePage = (idToClose: string) => {
         const filtered = openedPages.filter(page => page.id !== idToClose);
-        setOpenedPages(filtered);
-
+        setOpenedPages(prev => prev.filter(page => page.id !== idToClose));
         if (currentPageId === idToClose) {
             if (filtered.length > 0) {
                 const lastPage = filtered[filtered.length - 1];

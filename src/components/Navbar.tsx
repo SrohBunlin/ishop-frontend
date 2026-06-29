@@ -76,20 +76,22 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
     };
     const isPageOpened = (id: string) => openedPages.some(page => page.id === id);
 
+    // ១. ស្វែងរក visiblePages ហើយកែវាមកបែបនេះ
     const visiblePages = openedPages.filter(page => {
-        // បើ Login ហើយ មិនបាច់បង្ហាញ Tab "user-login"
+        // គ្រាន់តែ Filter តាមស្ថានភាព Login ធម្មតា
         if (isLoggedIn && page.id === 'user-login') return false;
-        // បើអត់ទាន់ Login កុំឱ្យបង្ហាញ Tab "user-profile"
         if (!isLoggedIn && (page.id === 'user-profile' || page.icon === 'profile-img')) return false;
         return true;
     });
 
-// 🟢 បន្ថែម Logic នេះដើម្បីឱ្យវា "លោត" ចេញមកក្រៅពេល Logout:
-// ប្រសិនបើអត់ទាន់ Login ហើយមិនទាន់មាន Tab 'user-login' នៅលើ Navbar ទេ ត្រូវថែមវាចូលឱ្យវាលោតបង្ហាញខ្លួន
-    if (!isLoggedIn && !visiblePages.some(p => p.id === 'user-login')) {
+// 🟢 logic "Auto-Injection" សម្រាប់តែពេល Logout
+// យើងនឹងបង្ហាញ Icon គណនីតែនៅពេលដែលវាមិនមាននៅលើ Navbar ហើយ "មិនទាន់ត្រូវបានលុបដោយអ្នកប្រើ"
+    const shouldShowAccountIcon = !isLoggedIn && !openedPages.some(p => p.id === 'user-login');
+
+// បើចាំបាច់ត្រូវបង្ហាញ គឺត្រូវបន្ថែមវាចូល
+    if (shouldShowAccountIcon) {
         visiblePages.push({ id: 'user-login', icon: 'bi-person-circle' });
     }
-
     // បង្កើត Function ឡុកអ៊ោតរួមមួយ
     const executeLogout = () => {
         if (handleLogout) {
