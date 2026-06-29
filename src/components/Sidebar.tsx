@@ -50,27 +50,21 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                 body: formData
             });
 
-            // ១. អាន Response ជា Text ជំនួសឱ្យ JSON ដើម្បីបញ្ចៀស SyntaxError
-            const responseText = await response.text();
-
             if (response.ok) {
-                // ២. បង្កើត Object ថ្មីដោយដៃដោយប្រើទិន្នន័យដែលអ្នកមានស្រាប់
                 const updatedUser = {
                     firstName: editFirstName,
                     lastName: editLastName,
-                    // ប្រើរូបភាពដែលបាន Preview (Base64) ករណីមានការ Upload ថ្មី
                     profilePictureUrl: selectedFile ? editAvatar : (userProfile?.profilePictureUrl || '')
                 };
 
-                // ៣. បច្ចុប្បន្នភាព State និង LocalStorage
                 setUser(updatedUser);
                 localStorage.setItem('user_profile', JSON.stringify(updatedUser));
 
-                alert(responseText); // បង្ហាញសារពី Server
+                alert("ការកែសម្រួលទិន្នន័យទទួលបានជោគជ័យ!");
                 setShowModal(false);
-            } else {
-                console.error("Server Error:", responseText);
-                alert("មានកំហុសពី Server!");
+
+                // ➕ បន្ថែមបន្ទាត់នេះ ដើម្បីឱ្យ Navbar និងផ្ទៃកម្មវិធីទាំងមូលរត់ទិន្នន័យថ្មីឡើងវិញភ្លាមៗ
+                window.location.reload();
             }
         } catch (error) {
             console.error("Error updating profile:", error);
@@ -108,13 +102,13 @@ const Sidebar: React.FC<SidebarProps> = ({ handleLogout, userProfile, setUser })
                         onClick={handleOpenModal}
                         className="btn btn-link text-decoration-none text-center px-3 mb-4 w-100"
                     >
-                        {/* លក្ខខណ្ឌថ្មី៖ បង្ហាញរូបទាល់តែ editAvatar ឬ profilePictureUrl ពិតជាមានទិន្នន័យ (មិនមែនទទេរ) */}
-                        {(editAvatar || (userProfile?.profilePictureUrl && userProfile.profilePictureUrl !== '')) ? (
+                        {userProfile?.profilePictureUrl || editAvatar ? (
                             <img
                                 src={
-                                    userProfile?.profilePictureUrl?.startsWith('data:')
-                                        ? userProfile.profilePictureUrl
-                                        : `https://api.i-knet.com${userProfile?.profilePictureUrl}`
+                                    // បើជារូបភាព Preview (Base64) ឱ្យយកមកបង្ហាញផ្ទាល់
+                                    (userProfile?.profilePictureUrl || editAvatar)?.startsWith('data:')
+                                        ? (userProfile?.profilePictureUrl || editAvatar)
+                                        : `https://api.i-knet.com${userProfile?.profilePictureUrl || editAvatar}`
                                 }
                                 alt="Profile"
                                 className="rounded-circle border"

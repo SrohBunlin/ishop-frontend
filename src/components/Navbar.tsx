@@ -2,7 +2,7 @@
 import React, { useRef, useEffect } from 'react';
 import LandingPage from '../pages/LandingPage';
 import LoginPage from "../pages/LoginPage";
-import { useNavigate } from 'react-router-dom'; // 🌟 បន្ថែម useNavigate បើសិនចង់ឱ្យ Navbar ជួយដូរ URL ដែរ
+import { useNavigate } from 'react-router-dom';
 
 interface OpenedPageItem {
     id: string;
@@ -23,19 +23,19 @@ const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNod
 
 const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, onClosePage }) => {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const navigate = useNavigate(); // 🌟 ប្រើសម្រាប់ប្តូរ Route
-    const isLoggedIn = !!localStorage.getItem('token'); // បើមាន token មានន័យថា Login រួច
-    // ១. បន្ថែមកូដ ២ បន្ទាត់នេះដើម្បីទាញយក Profile ពី LocalStorage
+    const navigate = useNavigate();
+    const isLoggedIn = !!localStorage.getItem('token');
+
     const userProfileString = localStorage.getItem('user_profile');
     const userProfile = userProfileString ? JSON.parse(userProfileString) : null;
 
-    // ២. បន្ថែមមុខងារ getInitials (ប្រសិនបើអ្នកមិនទាន់បានដាក់វានៅខាងលើ)
     const getInitials = (firstName: string, lastName: string) => {
-        if (!firstName && !lastName) return 'A'; // លំនាំដើម
+        if (!firstName && !lastName) return 'A';
         const f = firstName ? firstName.charAt(0) : '';
         const l = lastName ? lastName.charAt(0) : '';
         return `${f}${l}`.toUpperCase();
     };
+
     useEffect(() => {
         return () => {
             if (timerRef.current) clearTimeout(timerRef.current);
@@ -61,17 +61,27 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
             onOpenTab(id, 'ទំព័រ', null, 'bi-window');
         }
 
-        // 🌟 រុញ URL ទៅកាន់ Page ដែលត្រូវគ្នា (ការពារកុំឱ្យនៅជាប់ URL ចាស់)
         if (id === 'home-page') {
             navigate('/');
         } else if (id === 'user-profile') {
-            navigate('/admin/dashboard'); // ពេលចុចរូប Profile ឱ្យទៅកាន់ទំព័រ Profile
+            navigate('/admin/dashboard');
         } else {
             navigate(`/${id}`);
         }
     };
 
     const isPageOpened = (id: string) => openedPages.some(page => page.id === id);
+
+    // ➕ 🛠️ ដំណោះស្រាយគន្លឹះ៖ ចំរាញ់យកតែ Tab ណាដែលត្រូវបង្ហាញតាមលក្ខខណ្ឌ Login/Logout
+    const visiblePages = openedPages.filter(page => {
+        // ១. បើ Login រួចហើយ មិនត្រូវបង្ហាញ Tab គណនី (user-login) ឡើយ
+        if (isLoggedIn && page.id === 'user-login') return false;
+
+        // ២. បើអត់ទាន់ Login (Logout រួច) មិនត្រូវបង្ហាញ Tab Profile ឡើយ
+        if (!isLoggedIn && (page.id === 'user-profile' || page.icon === 'profile-img')) return false;
+
+        return true;
+    });
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top py-2 px-4 shadow-sm">
@@ -90,7 +100,9 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                     </span>
                 </div>
                 <div className="d-flex align-items-center justify-content-center flex-grow-1">
-                    {openedPages.map((page) => (
+
+                    {/* 🔄 ប្តូរពី openedPages.map មកប្រើ visiblePages.map វិញ */}
+                    {visiblePages.map((page) => (
                         <div
                             key={page.id}
                             className="position-relative mx-2 d-flex align-items-center justify-content-center shadow-sm"
@@ -109,25 +121,20 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                             onTouchCancel={handlePressEnd}
                             onClick={() => handleTabClick(page.id)}
                         >
-                            {/* 🌟 នេះគឺជាកន្លែងដែលយើងឆែកបង្ហាញរូប Profile ជំនួស Icon ធម្មតា */}
                             {page.icon === 'profile-img' ? (
                                 <div
                                     className="rounded-circle d-flex align-items-center justify-content-center text-white"
                                     style={{
-                                        width: '40px',
-                                        height: '40px',
+                                        width: '40px', height: '40px',
                                         backgroundColor: '#0d6efd',
-                                        fontWeight: 'bold',
-                                        fontSize: '1.1rem',
-                                        cursor: 'pointer',
-                                        overflow: 'hidden' // សំខាន់ដើម្បីឱ្យរូបភាពនៅជាប់ក្នុងរង្វង់
+                                        fontWeight: 'bold', fontSize: '1.1rem',
+                                        cursor: 'pointer', overflow: 'hidden'
                                     }}
                                 >
-                                    {/* លក្ខខណ្ឌ conditional rendering ដើម្បីបង្ហាញរូបភាព ឬអក្សរកាត់ */}
                                     {userProfile?.profilePictureUrl ? (
                                         <img
                                             src={userProfile.profilePictureUrl}
-                                            alt="User profile" // ឬដាក់ត្រឹម "Profile" ក៏បាន
+                                            alt="User profile"
                                             className="rounded-circle"
                                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                         />
@@ -156,8 +163,8 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                 </li>
                             )}
 
-                            {/* 🌟 ផ្លាស់ប្តូរលក្ខខណ្ឌនៅទីនេះ៖ បង្ហាញតែពេលមិនទាន់ Login */}
-                            {!isLoggedIn && !isPageOpened('user-login') && !localStorage.getItem('token')&&(
+                            {/* បង្ហាញតែពេលមិនទាន់ Login និងមិនទាន់បើក Tab ប៉ុណ្ណោះ */}
+                            {!isLoggedIn && !isPageOpened('user-login') && (
                                 <li>
                                     <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick('user-login')}>
                                         <i className="bi bi-person-lock text-success me-3"></i> គណនីអ្នកប្រើប្រាស់
@@ -165,13 +172,19 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                 </li>
                             )}
 
-                            {/* 🌟 បន្ថែមប៊ូតុង Logout បង្ហាញតែពេល Login រួច */}
+                            {/* ➕ 🛠️ កែសម្រួលប៊ូតុង Logout ឱ្យសម្អាតទិន្នន័យ និងរុញទៅទំព័រដើមវិញ */}
                             {isLoggedIn && (
                                 <li>
-                                    <button className="dropdown-item py-2 d-flex align-items-center text-danger" onClick={() => {
-                                        localStorage.clear();
-                                        window.location.reload(); // ផ្ទុកទំព័រឡើងវិញដើម្បីសម្អាត state
-                                    }}>
+                                    <button
+                                        className="dropdown-item py-2 d-flex align-items-center text-danger"
+                                        onClick={() => {
+                                            localStorage.removeItem('token');
+                                            localStorage.removeItem('username');
+                                            localStorage.removeItem('user_profile');
+                                            // បង្ខំឱ្យត្រឡប់ទៅទំព័រដើមវិញ និង Refresh កម្មវិធីដើម្បីសម្អាត State ចាស់ចោលទាំងអស់
+                                            window.location.href = '/';
+                                        }}
+                                    >
                                         <i className="bi bi-box-arrow-right me-3"></i> ចាកចេញ (Logout)
                                     </button>
                                 </li>

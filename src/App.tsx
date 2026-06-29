@@ -1,5 +1,5 @@
 // src/App.tsx
-import React, {ReactNode, useEffect, useState} from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import InvoiceDetail from './pages/InvoiceDetail';
 import LandingPage from './pages/LandingPage';
@@ -14,6 +14,7 @@ import Sidebar from "./components/Sidebar";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
+
 interface OpenedPageItem {
     id: string;
     title: string;
@@ -26,7 +27,7 @@ interface MainLayoutProps {
         firstName: string;
         lastName: string;
         profilePictureUrl: string;
-        avatar?: string; // បន្ថែមសញ្ញា ? ដើម្បីឱ្យវាជា optional (មិនចាំបាច់មានគ្រប់ពេល)
+        avatar?: string;
     };
     setUser?: React.Dispatch<React.SetStateAction<{
         firstName: string;
@@ -35,13 +36,11 @@ interface MainLayoutProps {
     }>>;
 }
 
-
 const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ children, handleLogout, userProfile, setUser }) => {
     const location = useLocation();
     const isAdminPath = ['/admin', '/products', '/orders-tracking'].some(path => location.pathname.startsWith(path));
 
     return (
-        // ប្រើ d-flex ធម្មតា ព្រោះយើងបានប្រើ flex-column នៅខាងក្រៅរួចហើយ
         <div className="d-flex flex-grow-1" style={{ overflow: 'hidden' }}>
             {isAdminPath && (
                 <div style={{ width: '260px', flexShrink: 0, backgroundColor: '#124F9C', overflowY: 'auto' }}>
@@ -55,14 +54,14 @@ const MainLayout: React.FC<MainLayoutProps & { handleLogout: () => void }> = ({ 
     );
 };
 
-const AppContent: React.FC=() =>{
+const AppContent: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(() => {
         const savedUser = localStorage.getItem('user_profile');
         return savedUser ? JSON.parse(savedUser) : {
             firstName: 'គោត្តនាម',
             lastName: 'នាម',
-            profilePictureUrl: '' // ប្រើ profilePictureUrl ឱ្យត្រូវនឹង Interface
+            profilePictureUrl: ''
         };
     });
 
@@ -73,7 +72,7 @@ const AppContent: React.FC=() =>{
             const saved = localStorage.getItem('ishop_opened_pages');
             return saved ? JSON.parse(saved) : [];
         } catch (e) {
-            return []; // ករណីទិន្នន័យក្នុង localStorage ខូច
+            return [];
         }
     });
 
@@ -82,33 +81,49 @@ const AppContent: React.FC=() =>{
     });
 
     const handleLogout = () => {
-        localStorage.removeItem('token');       // លុប Token និងទិន្នន័យទាំងអស់
+        localStorage.removeItem('token');
         localStorage.removeItem('user_profile');
-        // setOpenedPages([]);         // លុប Tab ទាំងអស់ចេញ
-        // setCurrentPageId(null);     // Reset Tab ដែលកំពុងបើក
+        localStorage.removeItem('ishop_current_page_id'); // សម្អាត ID ទំព័រចាស់ចោល
 
-        // ៣. ប្តូរពី window.location.href មកប្រើ navigate
+        // Reset state គណនីមកលំនាំដើមវិញភ្លាមៗ
+        setUser({
+            firstName: 'គោត្តនាម',
+            lastName: 'នាម',
+            profilePictureUrl: ''
+        });
+
         navigate('/login', { replace: true });
     };
-    // ប្រើ Flag ដើម្បីដឹងថាទិន្នន័យត្រូវបាន Load រួចរាល់ឬនៅ
+
     const [isLoaded, setIsLoaded] = useState(false);
 
-// ១. Load ទិន្នន័យដំបូង
+    // ១. Load ទិន្នន័យដំបូង
     useEffect(() => {
         const saved = localStorage.getItem('ishop_opened_pages');
         if (saved) {
             setOpenedPages(JSON.parse(saved));
         }
-        setIsLoaded(true); // ប្រាប់ថាបាន Load រួចហើយ
+        setIsLoaded(true);
     }, []);
 
-// ២. Save ទិន្នន័យ
+    // ២. Save ទិន្នន័យចំណងជើងទំព័រ (Opened Pages)
     useEffect(() => {
-        // បើមិនទាន់ Load រួចទេ កុំទាន់ Save ដើម្បីការពារការសរសេរជាន់ (Overwrite)
         if (isLoaded) {
             localStorage.setItem('ishop_opened_pages', JSON.stringify(openedPages));
         }
     }, [openedPages, isLoaded]);
+
+    // ➕ ៣. បន្ថែម useEffect នេះដើម្បីរក្សាទុក currentPageId ទៅក្នុង LocalStorage រាល់ពេលវាផ្លាស់ប្តូរ
+    useEffect(() => {
+        if (isLoaded) {
+            if (currentPageId) {
+                localStorage.setItem('ishop_current_page_id', currentPageId);
+            } else {
+                localStorage.removeItem('ishop_current_page_id');
+            }
+        }
+    }, [currentPageId, isLoaded]);
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             const token = localStorage.getItem('token');
@@ -121,14 +136,11 @@ const AppContent: React.FC=() =>{
                     const text = await response.text();
                     console.log("Response ពី Server:", text);
 
-                    // ត្រួតពិនិត្យមុននឹង Parse
                     if (text.trim().startsWith('{')) {
                         const data = JSON.parse(text);
                         setUser(data);
                     } else {
                         console.warn("Server មិនបានបញ្ជូនទិន្នន័យ JSON មកទេ:", text);
-                        // ប្រសិនបើនេះជាការហៅដើម្បីទាញយក Profile តើមាន API ផ្សេងទៀតទេ?
-                        // បើអត់ទេ អ្នកត្រូវកែ Backend ឱ្យបញ្ជូន JSON ត្រឡប់មកវិញ
                     }
                 } catch (error) {
                     console.error("កំហុសក្នុងការទាញយក Profile:", error);
@@ -136,28 +148,25 @@ const AppContent: React.FC=() =>{
             }
         };
         fetchUserProfile();
-    }, []); // ដាក់ Array ទទេ ដើម្បីឱ្យវាដំណើរការតែម្តងពេល Page Load
+    }, []);
 
-    // 🌟 មុខងារថ្មី៖ ដំណើរការពេល Login ជោគជ័យ
     const handleLoginSuccess = () => {
         setOpenedPages(prevPages => {
-            // ១. លុប Tab Login ចេញ
             const filtered = prevPages.filter(page => page.id !== 'user-login');
-            // ២. ឆែកមើលបើមិនទាន់មាន Tab Dashboard ទេ គឺបន្ថែមវាចូល
             if (!filtered.some(page => page.id === 'user-profile')) {
                 return [...filtered, { id: 'user-profile', title: 'គណនីខ្ញុំ', icon: 'profile-img' }];
             }
             return filtered;
         });
-        // ៣. ប្តូរ Focus ទៅកាន់ Tab Dashboard ភ្លាមៗ
         setCurrentPageId('user-profile');
     };
 
     const getComponentById = (id: string | null): React.ReactNode => {
         switch (id) {
             case 'home-page': return <LandingPage />;
-            // 🌟 បញ្ជូន onLoginSuccess ទៅ LoginPage
             case 'user-login': return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+            // 🌟 🛠️ ដំណោះស្រាយគន្លឹះ៖ បន្ថែម Case នេះដើម្បីកុំឱ្យចេញផ្ទាំងទទេរពណ៌ស ពេល Login រួច
+            case 'user-profile': return <DashboardPage />;
             case 'dashboard': return <DashboardPage />;
             case 'cart': return <CartPage />;
             case 'invoice': return <InvoiceDetail />;
@@ -187,6 +196,7 @@ const AppContent: React.FC=() =>{
             }
         }
     };
+
     return (
         <div className="d-flex flex-column vh-100">
             <Navbar
@@ -196,10 +206,7 @@ const AppContent: React.FC=() =>{
                 onClosePage={handleClosePage}
             />
 
-            {/* បើក MainLayout នៅទីនេះ */}
             <MainLayout handleLogout={handleLogout} userProfile={user as any} setUser={setUser as any}>
-
-                {/* ដាក់ Routes ទាំងអស់នៅខាងក្នុង MainLayout */}
                 <Routes>
                     <Route path="/" element={
                         <div className="container-fluid p-0">
@@ -219,22 +226,17 @@ const AppContent: React.FC=() =>{
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/admin/orders-tracking" element={<ProtectedRoute><OrderTracking /></ProtectedRoute>} />
                     <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
-
-                    {/* កែសម្រួលការបិទ div ឱ្យត្រឹមត្រូវនៅទីនេះ */}
-                    {/*<Route path="/admin/profile" element={isAuthenticated() ? <div>នេះជាទំព័រ User Profile របស់ប្អូន</div> : <Navigate to="/login" replace />} />*/}
-
                     <Route path="/admin/dashboard" element={isAuthenticated() ? <DashboardPage /> : <Navigate to="/login" replace />} />
                     <Route path="/invoice/:id" element={<InvoiceDetail />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
-
-            </MainLayout> {/* បិទ MainLayout នៅចុងក្រោយបង្អស់ */}
+            </MainLayout>
         </div>
     );
 };
+
 const App: React.FC = () => {
     return (
-
         <CartProvider>
             <Router>
                 <AppContent />
