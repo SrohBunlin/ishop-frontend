@@ -76,26 +76,38 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
     };
     const isPageOpened = (id: string) => openedPages.some(page => page.id === id);
 
-    // ១. ស្វែងរក visiblePages ហើយកែវាមកបែបនេះ
-    // ១. នៅក្នុង handlePressStart៖ លុបអ្វីៗទាំងអស់ដោយគ្មានលក្ខខណ្ឌការពារ
+    /// នៅក្នុង Navbar.tsx
     const handlePressStart = (id: string) => {
         timerRef.current = setTimeout(() => {
-            onClosePage(id); // លុប Tab គ្រប់ប្រភេទដែលប្អូនសង្កត់យូរ
+            // ១. ពេលសង្កត់យូរ ឱ្យវាកត់ត្រាទុកក្នុង localStorage ថា "Tab នេះត្រូវលាក់"
+            if (id === 'user-login' || id === 'user-profile') {
+                localStorage.setItem('hidden_account_tab', 'true');
+            }
+            // ២. បន្ទាប់មកលុប Tab នេះចេញ
+            onClosePage(id);
         }, 1000);
     };
 
-// ២. នៅក្នុង visiblePages៖ បង្កើត Logic ស្វ័យប្រវត្តិ
+// ៣. នៅក្នុង visiblePages៖ ឆែកមើលថាតើវាត្រូវបានលាក់ដោយអ្នកប្រើឬនៅ?
     const visiblePages = openedPages.filter(page => {
         if (isLoggedIn && page.id === 'user-login') return false;
         if (!isLoggedIn && (page.id === 'user-profile' || page.icon === 'profile-img')) return false;
         return true;
     });
 
-    if (!isLoggedIn) {
-        const hasLoginTab = visiblePages.some(p => p.id === 'user-login');
-        if (!hasLoginTab) {
-            visiblePages.push({ id: 'user-login', icon: 'bi-person-lock' });
+// ៤. លុប "hidden_account_tab" ចោលវិញពេល Logout (ដើម្បីឱ្យវាលោតមកវិញពេល Logout)
+// បើ !isLoggedIn គឺត្រូវកែ localStorage ឱ្យទៅជា false
+    useEffect(() => {
+        if (!isLoggedIn) {
+            localStorage.setItem('hidden_account_tab', 'false');
         }
+    }, [isLoggedIn]);
+
+// ៥. បង្ហាញ Icon តែបើវាមិនទាន់ត្រូវបានលាក់
+    const isHidden = localStorage.getItem('hidden_account_tab') === 'true';
+
+    if (!isLoggedIn && !isHidden && !visiblePages.some(p => p.id === 'user-login')) {
+        visiblePages.push({ id: 'user-login', icon: 'bi-person-lock' });
     }
     // បង្កើត Function ឡុកអ៊ោតរួមមួយ
     const executeLogout = () => {
