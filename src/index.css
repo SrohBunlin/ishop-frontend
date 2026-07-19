@@ -53,3 +53,167 @@ code {
     display: none !important;
   }
 }
+
+/* =========================================================
+   Night mode (dark theme) — global overrides
+   ========================================================= */
+[data-theme='dark'] html,
+[data-theme='dark'] body {
+  background-color: #10141f;
+  color: #e7ebf3;
+}
+
+[data-theme='dark'] .form-control,
+[data-theme='dark'] .form-select,
+[data-theme='dark'] input,
+[data-theme='dark'] textarea,
+[data-theme='dark'] select {
+  background-color: #1c2333 !important;
+  border-color: #333d55 !important;
+  color: #e7ebf3 !important;
+}
+
+[data-theme='dark'] .form-control::placeholder {
+  color: #7a86a1;
+}
+
+[data-theme='dark'] .form-control:focus,
+[data-theme='dark'] .form-select:focus {
+  background-color: #1c2333 !important;
+  color: #e7ebf3 !important;
+  border-color: #4f8fe0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(79, 143, 224, 0.25) !important;
+}
+
+[data-theme='dark'] .modal-content {
+  background-color: #171d2c;
+  color: #e7ebf3;
+}
+
+[data-theme='dark'] .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+[data-theme='dark'] .dropdown-menu {
+  background-color: #171d2c;
+  border-color: #2a3247;
+}
+
+[data-theme='dark'] .dropdown-item {
+  color: #e7ebf3 !important;
+}
+
+[data-theme='dark'] .dropdown-item:hover,
+[data-theme='dark'] .dropdown-item:focus {
+  background-color: #232b40 !important;
+}
+
+[data-theme='dark'] .dropdown-divider {
+  border-color: #2a3247;
+}
+
+[data-theme='dark'] .card {
+  background-color: #171d2c;
+  color: #e7ebf3;
+  border-color: #2a3247;
+}
+
+[data-theme='dark'] .table {
+  color: #e7ebf3;
+  --bs-table-color: #e7ebf3;
+  --bs-table-bg: transparent;
+  --bs-table-border-color: #2a3247;
+  --bs-table-striped-color: #e7ebf3;
+  --bs-table-striped-bg: rgba(255, 255, 255, 0.03);
+  --bs-table-hover-color: #e7ebf3;
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .table > :not(caption) > * > * {
+  border-bottom-color: #2a3247;
+  background-color: transparent;
+  color: inherit;
+}
+
+[data-theme='dark'] .btn-light {
+  background-color: #232b40;
+  border-color: #2a3247;
+  color: #e7ebf3;
+}
+
+[data-theme='dark'] .btn-light:hover {
+  background-color: #2a3350;
+  color: #e7ebf3;
+}
+
+[data-theme='dark'] .alert-info {
+  background-color: rgba(79, 143, 224, 0.14);
+  border-color: rgba(79, 143, 224, 0.3);
+  color: #9cc3ef;
+}
+
+[data-theme='dark'] .alert-success {
+  background-color: rgba(51, 199, 116, 0.14);
+  border-color: rgba(51, 199, 116, 0.3);
+  color: #7fe3ac;
+}
+
+[data-theme='dark'] .alert-warning {
+  background-color: rgba(242, 185, 61, 0.14);
+  border-color: rgba(242, 185, 61, 0.3);
+  color: #f2c15b;
+}
+
+[data-theme='dark'] .alert-danger {
+  background-color: rgba(242, 107, 111, 0.14);
+  border-color: rgba(242, 107, 111, 0.3);
+  color: #f79ea1;
+}
+
+/* Pagination in night mode */
+[data-theme='dark'] .pagination .page-item.active .page-link {
+  background-color: #4f8fe0 !important;
+  border-color: #4f8fe0 !important;
+  color: #10141f !important;
+}
+
+[data-theme='dark'] .pagination .page-link {
+  color: #4f8fe0 !important;
+  background-color: #171d2c !important;
+  border: 1px solid #2a3247 !important;
+}
+
+[data-theme='dark'] .pagination .page-link:hover {
+  background-color: #1c2333 !important;
+  color: #7bb0ec !important;
+}
+
+[data-theme='dark'] .pagination .page-item.disabled .page-link {
+  background-color: #131826 !important;
+  color: #4a5468 !important;
+  border-color: #2a3247 !important;
+}
+
+/* Smooth transition when switching themes */
+body,
+.app-navbar,
+.app-topbar,
+.db-card,
+.db-panel,
+.db-stat-card,
+.form-control,
+.modal-content {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* បង្វិលសញ្ញាព្រួញនៅពេល Dropdown មិនត្រូវបានបិទ (Expanded) */
+.side-nav__link[aria-expanded="true"] .bi-chevron-down {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+/* ដាក់ Transition ឱ្យវាវិលត្រឡប់មកវិញពេលបិទ */
+.side-nav__link[aria-expanded="false"] .bi-chevron-down {
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}

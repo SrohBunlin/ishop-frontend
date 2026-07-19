@@ -1,5 +1,12 @@
+# មិនឱ្យ copy យក node_modules ចូលទៅក្នុង image
 node_modules
+
+# មិនឱ្យ copy យក build output ចាស់
 build
-.idea
+
+# មិនឱ្យ copy យក folder .git (ការពារទំហំធំ)
 .git
-npm-debug.log
+
+# មិនឱ្យ copy យកឯកសារ config សម្រាប់ local machine
+.env.local
+.DS_Store

@@ -2,8 +2,13 @@
 import React, { useRef, useEffect } from 'react';
 import LandingPage from '../pages/LandingPage';
 import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 import { useNavigate } from 'react-router-dom';
-import DashboardPage from "../pages/DashboardPage";
+import AccountOverviewPage from "../pages/account/AccountOverviewPage";
+import ThemeToggle from './common/ThemeToggle';
+import LanguageToggle from './common/LanguageToggle';
+import { useLanguage } from '../context/LanguageContext';
+import '../styles/shop-ui.css';
 
 interface OpenedPageItem {
     id: string;
@@ -23,15 +28,42 @@ interface NavbarProps {
     handleLogout?: () => void;
 }
 
-const AVAILABLE_PAGES: Record<string, { title: string, component: React.ReactNode, icon: string }> = {
-    'home-page': { title: '🏠 ទំព័រដើម', component: <LandingPage />, icon: 'bi-house-door' },
-    'user-login': { title: '👤 គណនីអ្នកប្រើប្រាស់', component: <LoginPage />, icon: 'bi-person-lock' },
-    'user-profile': { title: 'គណនីខ្ញុំ', component: <DashboardPage />, icon: 'profile-img' }
+const AVAILABLE_PAGES: Record<string, { titleKey: string, component: React.ReactNode, icon: string }> = {
+    'home-page': { titleKey: 'nav.home', component: <LandingPage />, icon: 'bi-house-door' },
+    'user-login': { titleKey: 'nav.account', component: <LoginPage />, icon: 'bi-person-lock' },
+    'user-register': { titleKey: 'nav.register', component: <RegisterPage />, icon: 'bi-person-plus' },
+    'user-profile': { titleKey: 'nav.myAccount', component: <AccountOverviewPage />, icon: 'profile-img' }
 };
 
 const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, onClosePage, userProfile, handleLogout }) => {
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const navRef = useRef<HTMLElement | null>(null);
     const navigate = useNavigate();
+    const { t } = useLanguage();
+
+    // 📏 វាស់កម្ពស់ Navbar ជាក់ស្តែង ហើយផ្ទុកវាទុកជា CSS variable
+    // ដើម្បីឱ្យ Sidebar និងប៊ូតុងលាក់/បង្ហាញរបស់វា គណនាទីតាំងបានត្រឹមត្រូវនៅក្រោម Navbar
+    useEffect(() => {
+        const updateNavbarHeight = () => {
+            if (navRef.current) {
+                document.documentElement.style.setProperty('--navbar-height', `${navRef.current.offsetHeight}px`);
+            }
+        };
+
+        updateNavbarHeight();
+
+        let resizeObserver: ResizeObserver | null = null;
+        if (navRef.current && typeof ResizeObserver !== 'undefined') {
+            resizeObserver = new ResizeObserver(updateNavbarHeight);
+            resizeObserver.observe(navRef.current);
+        }
+
+        window.addEventListener('resize', updateNavbarHeight);
+        return () => {
+            window.removeEventListener('resize', updateNavbarHeight);
+            if (resizeObserver) resizeObserver.disconnect();
+        };
+    }, []);
 
 
     // ឆែកស្ថានភាព Login
@@ -58,9 +90,9 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
 
         // ប្រើទិន្នន័យពី AVAILABLE_PAGES មកបើក Tab
         if (page) {
-            onOpenTab(id, page.title, page.component, page.icon);
+            onOpenTab(id, t(page.titleKey), page.component, page.icon);
         } else {
-            onOpenTab(id, 'ទំព័រ', null, 'bi-window');
+            onOpenTab(id, t('nav.page'), null, 'bi-window');
         }
 
         // រុញ Route ទៅតាម ID
@@ -68,8 +100,10 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
             navigate('/');
         } else if (id === 'user-login') {
             navigate('/login');
+        } else if (id === 'user-register') {
+            navigate('/register');
         } else if (id === 'user-profile') {
-            navigate('/admin/dashboard');
+            navigate('/account');
         } else {
             navigate(`/${id}`);
         }
@@ -90,7 +124,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
 
 // ៣. នៅក្នុង visiblePages៖ ឆែកមើលថាតើវាត្រូវបានលាក់ដោយអ្នកប្រើឬនៅ?
     const visiblePages = openedPages.filter(page => {
-        if (isLoggedIn && page.id === 'user-login') return false;
+        if (isLoggedIn && (page.id === 'user-login' || page.id === 'user-register')) return false;
         if (!isLoggedIn && (page.id === 'user-profile' || page.icon === 'profile-img')) return false;
         return true;
     });
@@ -117,25 +151,23 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
             localStorage.removeItem('token');
             localStorage.removeItem('username');
             localStorage.removeItem('user_profile');
+            localStorage.removeItem('role'); // 🟢 សម្អាត role ចាស់ចោលផងដែរ
+            localStorage.removeItem('profileImage');
             window.location.href = '/';
         }
     };
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top py-2 px-4 shadow-sm">
-            <style>{`
-                .custom-dropdown-btn::after { display: none !important; }
-            `}</style>
-
+        <nav ref={navRef as React.RefObject<HTMLElement>} className="app-navbar navbar navbar-expand-lg navbar-light sticky-top py-2 px-4">
             <div className="container-fluid flex-grow-1">
                 {/* ផ្នែកខាងឆ្វេង៖ Logo iShop */}
-                <div className="d-flex align-items-center" style={{ width: '100px' }}>
+                <div className="d-flex align-items-center" style={{ width: '130px' }}>
                     <span
-                        className="navbar-brand fw-bold text-primary fs-3"
-                        style={{ cursor: 'pointer' }}
+                        className="navbar-brand-mark"
                         onClick={() => handleTabClick('home-page')}
                     >
-                        iShop
+                        <span className="brand-icon"><i className="bi bi-shop"></i></span>
+                        <span className="brand-name">iShop</span>
                     </span>
                 </div>
 
@@ -144,14 +176,7 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                     {visiblePages.map((page) => (
                         <div
                             key={page.id}
-                            className="position-relative mx-2 d-flex align-items-center justify-content-center shadow-sm"
-                            style={{
-                                width: '44px', height: '44px', borderRadius: '50%',
-                                backgroundColor: currentPageId === page.id ? '#e7f1ff' : '#f8f9fa',
-                                border: currentPageId === page.id ? '2px solid #0d6efd' : '1px solid #dee2e6',
-                                cursor: 'pointer',
-                                userSelect: 'none'
-                            }}
+                            className={`tab-chip mx-2 ${currentPageId === page.id ? 'is-active' : ''}`}
                             onMouseDown={() => handlePressStart(page.id)}
                             onMouseUp={handlePressEnd}
                             onMouseLeave={handlePressEnd}
@@ -159,62 +184,51 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                             onTouchEnd={handlePressEnd}
                             onTouchCancel={handlePressEnd}
                             onClick={() => handleTabClick(page.id)}
+                            title={t('nav.tabHint')}
                         >
                             {page.icon === 'profile-img' ? (
-                                <div
-                                    className="rounded-circle d-flex align-items-center justify-content-center text-white"
-                                    style={{
-                                        width: '40px', height: '40px',
-                                        backgroundColor: '#0d6efd',
-                                        fontWeight: 'bold', fontSize: '1.1rem',
-                                        cursor: 'pointer', overflow: 'hidden'
-                                    }}
-                                >
+                                <div className="tab-chip__avatar">
                                     {currentUser?.profilePictureUrl ? (
                                         <img
                                             src={currentUser.profilePictureUrl}
                                             alt="User profile"
-                                            className="rounded-circle"
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                         />
                                     ) : (
-                                        <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }}>
-                                            {firstLetter}
-                                        </div>
+                                        <span>{firstLetter}</span>
                                     )}
                                 </div>
                             ) : (
-                                <i className={`bi ${page.icon} fs-4 ${currentPageId === page.id ? 'text-primary' : 'text-secondary'}`}></i>
+                                <i className={`bi ${page.icon} fs-5`}></i>
                             )}
                         </div>
                     ))}
 
                     <div className="dropdown mx-2">
-                        <button className="btn d-flex align-items-center justify-content-center p-0 dropdown-toggle custom-dropdown-btn border-0" type="button" id="navbarDropdownAdd" data-bs-toggle="dropdown" aria-expanded="false" style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%)', color: '#fff', boxShadow: '0 4px 10px rgba(13, 110, 253, 0.3)' }}>
-                            <i className="bi bi-plus-lg fs-4 fw-bold"></i>
+                        <button className="add-tab-btn dropdown-toggle custom-dropdown-btn border-0" type="button" id="navbarDropdownAdd" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i className="bi bi-plus-lg fs-5 fw-bold"></i>
                         </button>
-                        <ul className="dropdown-menu border-0 p-2 mt-2 shadow-lg" aria-labelledby="navbarDropdownAdd" style={{ minWidth: '220px', borderRadius: '16px' }}>
-                            <li className="px-3 py-2 fw-bold text-muted" style={{ fontSize: '11px' }}>កំពុងអភិវឌ្ឍ</li>
+                        <ul className="dropdown-menu border-0 p-2 mt-2 shadow-lg" aria-labelledby="navbarDropdownAdd" style={{ minWidth: '220px' }}>
+                            <li className="px-3 py-2 fw-bold text-muted" style={{ fontSize: '11px' }}>{t('nav.inDevelopment')}</li>
 
                             {Object.keys(AVAILABLE_PAGES).map((key) => {
                                 const page = AVAILABLE_PAGES[key];
 
                                 // 🟢 កំណត់លក្ខខណ្ឌបង្ហាញ (Visibility Logic)
                                 const isAlreadyOpened = isPageOpened(key);
-                                const isLoginTab = key === 'user-login';
+                                const isGuestOnlyTab = key === 'user-login' || key === 'user-register';
                                 const isProfileTab = key === 'user-profile';
 
                                 // ១. បើមិនទាន់បើក Tab នោះ
-                                // ២. បើបាន Login ហើយ ហាមបង្ហាញ 'user-login'
+                                // ២. បើបាន Login ហើយ ហាមបង្ហាញ 'user-login' / 'user-register'
                                 // ៣. បើមិនទាន់ Login ហាមបង្ហាញ 'user-profile'
                                 const shouldShow = !isAlreadyOpened &&
-                                    (isLoggedIn ? !isLoginTab : !isProfileTab);
+                                    (isLoggedIn ? !isGuestOnlyTab : !isProfileTab);
 
                                 if (shouldShow) {
                                     return (
                                         <li key={key}>
                                             <button className="dropdown-item py-2 d-flex align-items-center" onClick={() => handleTabClick(key)}>
-                                                <i className={`bi ${page.icon} me-3`}></i> {page.title}
+                                                <i className={`bi ${page.icon} me-3`}></i> {t(page.titleKey)}
                                             </button>
                                         </li>
                                     );
@@ -226,12 +240,18 @@ const Navbar: React.FC<NavbarProps> = ({ openedPages, currentPageId, onOpenTab, 
                                 <li>
                                     <hr className="dropdown-divider" />
                                     <button className="dropdown-item py-2 d-flex align-items-center text-danger" onClick={executeLogout}>
-                                        <i className="bi bi-box-arrow-right me-3"></i> ចាកចេញ (Logout)
+                                        <i className="bi bi-box-arrow-right me-3"></i> {t('nav.logout')}
                                     </button>
                                 </li>
                             )}
                         </ul>
                     </div>
+                </div>
+
+                {/* ផ្នែកខាងស្តាំ៖ ប៊ូតុងប្តូរភាសា & Night Mode */}
+                <div className="d-flex align-items-center justify-content-end gap-2" style={{ width: '190px' }}>
+                    <LanguageToggle />
+                    <ThemeToggle />
                 </div>
             </div>
         </nav>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { useLanguage } from '../context/LanguageContext';
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 // ១. កំណត់ប្រភេទ Props សម្រាប់ Component នេះ
 interface AddOrderFormProps {
     onOrderAdded: () => void; // ជា Function ដែលមិនផ្ញើអ្វីទៅវិញ និងមិនមាន Return (void)
@@ -15,6 +16,7 @@ interface OrderFormData {
 }
 
 const AddOrderForm: React.FC<AddOrderFormProps> = ({ onOrderAdded }) => {
+    const { t } = useLanguage();
     // ៣. ប្រកាស State ដោយភ្ជាប់ជាមួយប្រភេទ OrderFormData
     const [formData, setFormData] = useState<OrderFormData>({
         customer_name: '',
@@ -28,14 +30,14 @@ const AddOrderForm: React.FC<AddOrderFormProps> = ({ onOrderAdded }) => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                "https://practical-light-production-55fd.up.railway.app/api/orders/add",
+                `${API_BASE_URL}/api/orders/add`,
                 formData
             );
 
             if (response.status === 200) {
-                alert("រក្សាទុកការបញ្ជាទិញបានជោគជ័យ!");
+                alert(t('addOrder.success'));
                 setFormData({ customer_name: '', total_amount: '', status: 'PENDING', items: [] }); // សម្អាត Form
-                onOrderAdded(); // ហៅអនុគមន៍ដើម្បី Update តារាង Dashboard ភ្លាមៗ
+                onOrderAdded();
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -44,18 +46,18 @@ const AddOrderForm: React.FC<AddOrderFormProps> = ({ onOrderAdded }) => {
             } else {
                 console.error("Unexpected error:", error);
             }
-            alert("មានបញ្ហាក្នុងការរក្សាទុក!");
+            alert(t('addOrder.fail'));
         }
     };
 
     return (
         <div className="card p-4 mb-4 shadow-sm">
-            <h5 className="mb-3" style={{ color: '#124F9C' }}>បន្ថែមការបញ្ជាទិញថ្មី</h5>
+            <h5 className="mb-3" style={{ color: 'var(--shop-primary, #124F9C)' }}>{t('addOrder.heading')}</h5>
             <form onSubmit={handleSubmit} className="row row-cols-3 g-3">
                 <div className="col">
                     <input
                         type="text"
-                        placeholder="ឈ្មោះអតិថិជន"
+                        placeholder={t('addOrder.customerNamePlaceholder')}
                         className="form-control"
                         value={formData.customer_name}
                         onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
@@ -65,7 +67,7 @@ const AddOrderForm: React.FC<AddOrderFormProps> = ({ onOrderAdded }) => {
                 <div className="col">
                     <input
                         type="number"
-                        placeholder="តម្លៃសរុប ($)"
+                        placeholder={t('addOrder.totalAmountPlaceholder')}
                         className="form-control"
                         value={formData.total_amount}
                         onChange={(e) => setFormData({ ...formData, total_amount: e.target.value })}
@@ -73,8 +75,8 @@ const AddOrderForm: React.FC<AddOrderFormProps> = ({ onOrderAdded }) => {
                     />
                 </div>
                 <div className="col">
-                    <button type="submit" className="btn btn-primary w-100" style={{ backgroundColor: '#124F9C' }}>
-                        រក្សាទុក
+                    <button type="submit" className="btn btn-primary w-100" style={{ backgroundColor: 'var(--shop-primary, #124F9C)' }}>
+                        {t('addOrder.save')}
                     </button>
                 </div>
             </form>

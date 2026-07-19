@@ -1,0 +1,33 @@
+.lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: var(--shop-card-bg, #f0f2f5);
+    border-radius: 999px;
+    padding: 4px;
+    cursor: pointer;
+    gap: 2px;
+    line-height: 1;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.lang-toggle:hover {
+    background: var(--shop-border, #e2e5ea);
+}
+
+.lang-toggle__option {
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--shop-text-muted, #8a92a3);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.lang-toggle__option--active {
+    background: var(--shop-primary, #124F9C);
+    color: #fff;
+}

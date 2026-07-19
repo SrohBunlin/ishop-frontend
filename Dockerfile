@@ -6,7 +6,7 @@ WORKDIR /app
 
 # ចម្លងហ្វាយ package.json ដើម្បី install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # ចម្លងកូដទាំងអស់ (src, public, ល) ចូលទៅក្នុង Container
 COPY . .
